@@ -26,7 +26,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/diinnaamrr/nasia-backend
+          images: ghcr.io/diinnaamrr/sham-el-ezz-backend
           tags: |
             type=ref,event=branch
             type=sha,prefix=dev-
@@ -52,6 +52,54 @@ jobs:
           if [ -n "${{ secrets.SSH_USER }}" ]; then echo "SSH_USER is set: YES"; else echo "SSH_USER is set: NO"; fi
           if [ -n "${{ secrets.SSH_PASSWORD }}" ]; then echo "SSH_PASSWORD is set: YES"; else echo "SSH_PASSWORD is set: NO"; fi
           if [ -n "${{ secrets.SSH_KEY }}" ]; then echo "SSH_KEY is set: YES"; else echo "SSH_KEY is set: NO"; fi
+
+      - name: Prepare server directories
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            mkdir -p /var/www/sham-elezz-dev/docker/ngnix
+            mkdir -p /var/www/sham-elezz-dev/docker/php
+            mkdir -p /var/www/sham-elezz-dev/storage
+            mkdir -p /var/www/sham-elezz-dev/bootstrap/cache
+            mkdir -p /var/www/sham-elezz-dev/backups
+
+      - name: Copy docker-compose.dev.yml to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "./docker-compose.dev.yml"
+          target: "/var/www/sham-elezz-dev/"
+
+      - name: Copy default-dev nginx config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "./docker/ngnix/default-dev.conf"
+          target: "/var/www/sham-elezz-dev/docker/ngnix/"
+
+      - name: Copy docker/php/local.ini
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "./docker/php/local.ini"
+          target: "/var/www/sham-elezz-dev/docker/php/"
       
       - name: Copy Dockerfile to server (optional)
         continue-on-error: true
@@ -63,7 +111,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT || 22 }}
           source: "./Dockerfile"
-          target: "/var/www/nasia-dev/"
+          target: "/var/www/sham-elezz-dev/"
           strip_components: 0
 
       - name: SSH to server & deploy
@@ -75,7 +123,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT || 22 }}
           script: |
-            cd /var/www/nasia-dev
+            cd /var/www/sham-elezz-dev
             # Ensure required directories exist
             mkdir -p docker/ngnix docker/php storage bootstrap/cache backups
             
@@ -161,7 +209,7 @@ jobs:
             fi
             
             # Try to pull image from GHCR, or build locally if it doesn't exist
-            echo "Attempting to pull image from GHCR: ghcr.io/diinnaamrr/nasia-backend:dev"
+            echo "Attempting to pull image from GHCR: ghcr.io/diinnaamrr/sham-el-ezz-backend:dev"
             
             # Check if Dockerfile exists first (for fallback)
             if [ ! -f Dockerfile ]; then
@@ -169,10 +217,10 @@ jobs:
             fi
             
             # Try to pull from GHCR (public image, no login needed)
-            echo "Pulling from GHCR: ghcr.io/diinnaamrr/nasia-backend:dev"
+            echo "Pulling from GHCR: ghcr.io/diinnaamrr/sham-el-ezz-backend:dev"
             
             # Pull and capture both stdout and stderr
-            PULL_OUTPUT=$(docker pull ghcr.io/diinnaamrr/nasia-backend:dev 2>&1)
+            PULL_OUTPUT=$(docker pull ghcr.io/diinnaamrr/sham-el-ezz-backend:dev 2>&1)
             PULL_EXIT_CODE=$?
             
             # Check if Docker is trying to use Docker Hub (wrong registry!)
@@ -200,12 +248,12 @@ jobs:
               
               if [ -f Dockerfile ]; then
                 echo "✅ Dockerfile found. Building image locally..."
-                docker build -t ghcr.io/diinnaamrr/nasia-backend:dev . || {
+                docker build -t ghcr.io/diinnaamrr/sham-el-ezz-backend:dev . || {
                   echo "❌ Failed to build image locally"
                   echo ""
                   echo "💡 The image may not exist in GHCR yet."
                   echo "   Wait for GitHub Actions to build and push it first, or check:"
-                  echo "   https://github.com/diinnaamrr/nasia-backend/pkgs/container/nasia-backend"
+                  echo "   https://github.com/diinnaamrr/sham-elezz-backend/pkgs/container/sham-el-ezz-backend"
                   exit 1
                 }
                 echo "✅ Image built successfully from Dockerfile"
@@ -215,7 +263,7 @@ jobs:
                 echo "💡 Solutions:"
                 echo "   1. Wait for GitHub Actions to build and push the image to GHCR first"
                 echo "   2. Or ensure the image exists and is public:"
-                echo "      https://github.com/diinnaamrr/nasia-backend/pkgs/container/nasia-backend"
+                echo "      https://github.com/diinnaamrr/sham-elezz-backend/pkgs/container/sham-el-ezz-backend"
                 echo ""
                 echo "Skipping deployment - image not available."
                 exit 1
@@ -227,7 +275,7 @@ jobs:
             echo "Copying application files from image to host..."
             
             # Always copy files from image (vendor directory is in the image)
-            docker run --rm -v $(pwd):/target ghcr.io/osama21245/nasia-backend:dev sh -c "
+            docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:dev sh -c "
               # Copy all files except storage and bootstrap/cache (preserve existing data)
               cd /var/www/html
               find . -mindepth 1 -maxdepth 1 ! -name 'storage' ! -name '.env' -exec cp -a {} /target/ \;
@@ -244,12 +292,12 @@ jobs:
               echo 'Files copied successfully'
             " || {
               echo "⚠️  Copy method 1 failed, trying alternative..."
-              docker run --rm -v $(pwd):/target ghcr.io/osama21245/nasia-backend:dev sh -c "
+              docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:dev sh -c "
                 cd /var/www/html
                 tar --exclude='storage' --exclude='bootstrap/cache' --exclude='.env' -cf - . | tar -xf - -C /target/ 2>&1 | head -50
               " || {
                 echo "⚠️  Copy method 2 failed, trying simple copy..."
-                docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/nasia-backend:dev sh -c "cp -a /var/www/html/. /target/ 2>&1 | head -100"
+                docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:dev sh -c "cp -a /var/www/html/. /target/ 2>&1 | head -100"
               }
             }
             
@@ -347,7 +395,7 @@ jobs:
             
             # Restart nginx to ensure new config is loaded
             echo "Restarting nginx to load new config..."
-            docker-compose -f docker-compose.dev.yml restart nginx || docker restart nasia_nginx_dev || true
+            docker-compose -f docker-compose.dev.yml restart nginx || docker restart sham_el_ezz_nginx_dev || true
             
             # Wait for containers to be ready
             sleep 5
@@ -361,7 +409,7 @@ jobs:
             
             # Update APP_URL and ASSET_URL for dev environment
             echo "=== Updating APP_URL and ASSET_URL ==="
-            DEV_URL="https://dev-nasia.duckdns.org"
+            DEV_URL="http://dev-sham-elezz.duckdns.org/"
             
             # Backup .env first
             cp .env .env.backup || true
@@ -397,10 +445,10 @@ jobs:
             
             # Check database container status
             echo "=== Checking database container ==="
-            docker logs nasia_db_dev --tail 30 || echo "Cannot get db logs"
+            docker logs sham_el_ezz_db_dev --tail 30 || echo "Cannot get db logs"
             
             # Wait a bit more if database is still starting
-            DB_STATUS=$(docker inspect -f '{{.State.Status}}' nasia_db_dev 2>/dev/null || echo "unknown")
+            DB_STATUS=$(docker inspect -f '{{.State.Status}}' sham_el_ezz_db_dev 2>/dev/null || echo "unknown")
             if [ "$DB_STATUS" != "running" ]; then
               echo "⚠️  Database container is not running. Status: $DB_STATUS"
               echo "Waiting 10 more seconds..."
@@ -409,35 +457,35 @@ jobs:
             
             # Verify containers are running
             echo "=== Checking container status ==="
-            docker ps | grep nasia || echo "No nasia containers found"
+            docker ps | grep sham_el_ezz || echo "No sham_el_ezz containers found"
             
             # Check if port 8112 is listening
             echo "=== Checking port 8112 ==="
-            netstat -tulpn | grep 8045 || ss -tulpn | grep 8045 || echo "Port 8045 not found in netstat/ss"
+            netstat -tulpn | grep 8015 || ss -tulpn | grep 8015 || echo "Port 8015 not found in netstat/ss"
             
             # Check firewall (if ufw is installed)
             echo "=== Checking firewall (ufw) ==="
             if command -v ufw &> /dev/null; then
-              ufw status | grep 8045 || echo "Port 8045 not in ufw rules"
+              ufw status | grep 8015 || echo "Port 8015 not in ufw rules"
             else
               echo "ufw not installed"
             fi
             
             # Check iptables
             echo "=== Checking iptables ==="
-            iptables -L -n | grep 8045 || echo "Port 8045 not in iptables rules"
+            iptables -L -n | grep 8015 || echo "Port 8015 not in iptables rules"
             
             # Check nginx logs
             echo "=== Nginx container logs ==="
-            docker logs nasia_nginx_dev --tail 20 || echo "Cannot get nginx logs"
+            docker logs sham_el_ezz_nginx_dev --tail 20 || echo "Cannot get nginx logs"
             
             # Check app container logs
             echo "=== App container logs ==="
-            docker logs nasia_app_dev --tail 20 || echo "Cannot get app logs"
+            docker logs sham_el_ezz_app_dev --tail 20 || echo "Cannot get app logs"
             
             # Test from inside server
             echo "=== Testing from server ==="
-            curl -I http://localhost:8045 || curl -I http://127.0.0.1:8045 || echo "Cannot connect to localhost:8045"
+            curl -I http://localhost:8015 || curl -I http://127.0.0.1:8015 || echo "Cannot connect to localhost:8015"
             
             # Run artisan commands (vendor should be in image now)
             echo ""
@@ -464,7 +512,7 @@ jobs:
             
             # Copy .env to container again (after restart it might be needed)
             echo "4. Copying .env to container..."
-            docker cp .env nasia_app_dev:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env"
+            docker cp .env sham_el_ezz_app_dev:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env"
             
             # Restart app container to reload .env
             echo "5. Restarting app container..."
@@ -474,7 +522,7 @@ jobs:
             sleep 8
             
             # Copy .env one more time after restart
-            docker cp .env nasia_app_dev:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env after restart"
+            docker cp .env sham_el_ezz_app_dev:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env after restart"
             
             # Verify .env is loaded correctly
             echo ""
@@ -491,10 +539,10 @@ jobs:
             echo "=== Verifying asset URLs ==="
             ASSET_URL=$(docker-compose -f docker-compose.dev.yml exec -T app php artisan tinker --execute="echo asset('public/landing-page/assets/css/bootstrap.min.css');" 2>/dev/null | tr -d '\r\n' || echo "")
             echo "Generated asset URL: $ASSET_URL"
-            if [[ "$ASSET_URL" == https://dev-nasia.duckdns.org* ]]; then
-              echo "✅ Asset URL is correct (starts with https://dev-nasia.duckdns.org)"
+            if [[ "$ASSET_URL" == http://dev-sham-elezz.duckdns.org/* ]]; then
+              echo "✅ Asset URL is correct (starts with http://dev-sham-elezz.duckdns.org/)"
             else
-              echo "❌ Asset URL is incorrect! Should start with https://dev-nasia.duckdns.org"
+              echo "❌ Asset URL is incorrect! Should start with http://dev-sham-elezz.duckdns.org/"
               echo "   Current: $ASSET_URL"
             fi
             
