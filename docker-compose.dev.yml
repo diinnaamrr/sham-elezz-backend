@@ -1,0 +1,75 @@
+services:
+  app:
+    image: ghcr.io/diinnaamrr/sham-el-ezz-backend:dev
+    container_name: sham_el_ezz_app_dev
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./bootstrap/cache:/var/www/html/bootstrap/cache
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - sham-dev-network
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    environment:
+      - APP_ENV=${APP_ENV:-local}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - APP_URL=http://dev-sham-elezz.duckdns.org/
+      - DB_HOST=db
+      - DB_PORT=3306
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  nginx:
+    image: nginx:alpine
+    container_name: sham_el_ezz_nginx_dev
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT:-8015}:80"
+      # - "443:443"  # Uncomment if you want SSL in Docker nginx (not recommended with CloudPanel)
+    volumes:
+      - ./:/var/www/html
+      - ./docker/ngnix/default-dev.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - sham-dev-network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: sham_el_ezz_db_dev
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-nasia_db}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-${DB_PASSWORD}}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME:-nasia_user}
+    volumes:
+      - dbdata_dev:/var/lib/mysql
+    networks:
+      - sham-dev-network
+    command: --default-authentication-plugin=mysql_native_password
+
+  redis:
+    image: redis:7-alpine
+    container_name: sham_el_ezz_redis_dev
+    restart: unless-stopped
+    volumes:
+      - redisdata_dev:/data
+    networks:
+      - sham-dev-network
+
+networks:
+  sham-dev-network:
+    driver: bridge
+
+volumes:
+  dbdata_dev:
+    driver: local
+  redisdata_dev:
+    driver: local
+
