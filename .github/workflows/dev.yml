@@ -46,6 +46,9 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code (for SCP)
+        uses: actions/checkout@v4
+
       - name: Debug - Check secrets (masked)
         run: |
           if [ -n "${{ secrets.SSH_HOST }}" ]; then echo "SSH_HOST is set: YES"; else echo "SSH_HOST is set: NO"; fi
