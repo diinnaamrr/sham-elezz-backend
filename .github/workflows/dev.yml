@@ -48,10 +48,10 @@ jobs:
     steps:
       - name: Debug - Check secrets (masked)
         run: |
-          echo "SSH_HOST is set: $([ -n '${{ secrets.SSH_HOST }}' ] && echo 'YES' || echo 'NO')"
-          echo "SSH_USER is set: $([ -n '${{ secrets.SSH_USER }}' ] && echo 'YES' || echo 'NO')"
-          echo "SSH_PASSWORD is set: $([ -n '${{ secrets.SSH_PASSWORD }}' ] && echo 'YES' || echo 'NO')"
-          echo "SSH_KEY is set: $([ -n '${{ secrets.SSH_KEY }}' ] && echo 'YES' || echo 'NO')"
+          if [ -n "${{ secrets.SSH_HOST }}" ]; then echo "SSH_HOST is set: YES"; else echo "SSH_HOST is set: NO"; fi
+          if [ -n "${{ secrets.SSH_USER }}" ]; then echo "SSH_USER is set: YES"; else echo "SSH_USER is set: NO"; fi
+          if [ -n "${{ secrets.SSH_PASSWORD }}" ]; then echo "SSH_PASSWORD is set: YES"; else echo "SSH_PASSWORD is set: NO"; fi
+          if [ -n "${{ secrets.SSH_KEY }}" ]; then echo "SSH_KEY is set: YES"; else echo "SSH_KEY is set: NO"; fi
       
       - name: Copy Dockerfile to server (optional)
         continue-on-error: true
