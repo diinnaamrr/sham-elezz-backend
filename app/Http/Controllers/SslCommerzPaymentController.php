@@ -27,6 +27,7 @@ class SslCommerzPaymentController extends Controller
 
     public function __construct(PaymentRequest $payment, User $user)
     {
+        $values = null;
         $config = $this->payment_config('ssl_commerz', 'payment_config');
         if (!is_null($config) && $config->mode == 'live') {
             $values = json_decode($config->live_values);
