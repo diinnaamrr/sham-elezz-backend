@@ -14,7 +14,7 @@
                 <div class="col-md-9 col-12">
                     <h1 class="page-header-title">
                         <span class="page-header-icon">
-                            <img src="{{asset('assets/admin/img/items.png')}}" class="w--22" alt="">
+                            <img src="{{asset('public/assets/admin/img/items.png')}}" class="w--22" alt="">
                         </span>
                         <span>
                             {{translate('messages.item_list')}} <span class="badge badge-soft-dark ml-2" id="foodCount">{{$items->total()}}</span>
@@ -154,13 +154,13 @@
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{ route('admin.item.export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('assets/admin') }}/svg/components/excel.svg"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{ route('admin.item.export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -226,9 +226,9 @@
                                 <a class="media align-items-center" href="{{route('admin.item.view',[$item['id']])}}">
                                     <img class="avatar avatar-lg mr-3 onerror-image"
 
-                                    src="{{ $item['image_full_url'] ?? asset('assets/admin/img/160x160/img2.jpg') }}"
+                                    src="{{ $item['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
 
-                                    data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}" alt="{{ $item->getRawOriginal('name') ?? $item->name }} image">
+                                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{ $item->getRawOriginal('name') ?? $item->name }} image">
                                     <div title="{{ $item->getRawOriginal('name') ?? $item['name'] }}" class="media-body">
                                         <h5 class="text-hover-primary mb-0">{{ Str::limit($item->getRawOriginal('name') ?? $item['name'], 20, '...') }}</h5>
                                     </div>
@@ -296,7 +296,7 @@
             </div>
             @if(count($items) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -350,7 +350,7 @@
           },
           language: {
             zeroRecords: '<div class="text-center p-4">' +
-                '<img class="w-7rem mb-3" src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
+                '<img class="w-7rem mb-3" src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
 
                 '</div>'
           }

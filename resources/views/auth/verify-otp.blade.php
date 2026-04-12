@@ -17,13 +17,13 @@
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="{{asset('assets/admin')}}/css/vendor.min.css">
-    <link rel="stylesheet" href="{{asset('assets/admin')}}/vendor/icon-set/style.css">
+    <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/vendor.min.css">
+    <link rel="stylesheet" href="{{asset('public/assets/admin')}}/vendor/icon-set/style.css">
     <!-- CSS Front Template -->
-    <link rel="stylesheet" href="{{asset('assets/admin/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/admin/css/theme.minc619.css?v=1.0')}}">
-    <link rel="stylesheet" href="{{asset('assets/admin/css/style.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/admin')}}/css/toastr.css">
+    <link rel="stylesheet" href="{{asset('public/assets/admin/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{asset('public/assets/admin/css/theme.minc619.css?v=1.0')}}">
+    <link rel="stylesheet" href="{{asset('public/assets/admin/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/toastr.css">
 </head>
 
 <body>
@@ -33,7 +33,7 @@
         <div class="auth-wrapper-left">
             <div class="auth-left-cont">
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
-                <img class="onerror-image"  data-onerror-image="{{ asset('assets/admin/img/favicon.png') }}"
+                <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/favicon.png') }}"
                 src="{{\App\CentralLogics\Helpers::get_full_url('business', $store_logo?->value?? '', $store_logo?->storage[0]?->value ?? 'public','favicon')}}"  alt="public/img">
                 <h2 class="title">{{translate('Your')}} <span class="d-block">{{translate('All Service')}}</span> <strong class="text--039D55">{{translate('in one field')}}....</strong></h2>
             </div>
@@ -45,7 +45,7 @@
             <!-- OTP Card -->
             <div class="otp-card">
                 <div class="text-center">
-                    <img class="mb-4" src="{{asset('assets/admin/img/lock.svg')}}" alt="">
+                    <img class="mb-4" src="{{asset('public/assets/admin/img/lock.svg')}}" alt="">
                     <div class="mb-2">
                         {{ translate('a_5_digit_verification_code_has_been') }} <br> {{ translate('sent_to') }} <strong>{{ substr($admin->phone, 0, 3) . str_repeat('X', strlen($admin->phone) - 5) . substr($admin->phone, -2) }}</strong>
                     </div>
@@ -82,11 +82,11 @@
 <!-- ========== END MAIN CONTENT ========== -->
 
 <!-- JS Implementing Plugins -->
-<script src="{{asset('assets/admin')}}/js/vendor.min.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/vendor.min.js"></script>
 
 <!-- JS Front -->
-<script src="{{asset('assets/admin')}}/js/theme.min.js"></script>
-<script src="{{asset('assets/admin')}}/js/toastr.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/theme.min.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/toastr.js"></script>
 {!! Toastr::message() !!}
 
 @if ($errors->any())
@@ -148,7 +148,7 @@
 
 <!-- IE Support -->
 <script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('public/assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
 </script>
 
 

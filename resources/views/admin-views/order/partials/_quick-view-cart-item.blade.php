@@ -12,7 +12,7 @@
             <img class="img-responsive initial--20 onerror-image"
             src="{{ $product['image_full_url']}}"
 
-                data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}" alt="Product image"
+                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" alt="Product image"
                 width="">
             <div class="cz-image-zoom-pane"></div>
         </div>
@@ -282,7 +282,7 @@
         </div>
     </div>
 </div>
-<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script type="text/javascript">
     cartQuantityInitialize();
     getVariantPrice();

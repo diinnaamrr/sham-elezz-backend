@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('assets/admin/img/sms.png')}}" class="w--26" alt="">
+                    <img src="{{asset('public/assets/admin/img/sms.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.sms_gateway_setup')}}
@@ -114,7 +114,7 @@
                         <div class="max-349 mx-auto mb-20">
                             <div>
                                 <div class="text-center">
-                                    <img src="{{ asset('assets/admin/img/modal/order-delivery-verification-on.png') }}" class="mb-20">
+                                    <img src="{{ asset('public/assets/admin/img/modal/order-delivery-verification-on.png') }}" class="mb-20">
                                     <h5 class="modal-title" >{{ translate('messages.Note') }} </h5>
                                 </div>
                                 <div class="text-center">

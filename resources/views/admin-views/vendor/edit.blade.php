@@ -2,7 +2,7 @@
 
 @section('title','Update restaurant info')
 @push('css_or_js')
-    {{-- <link rel="stylesheet" href="{{asset('assets/admin/css/intlTelInput.css')}}" /> --}}
+    {{-- <link rel="stylesheet" href="{{asset('public/assets/admin/css/intlTelInput.css')}}" /> --}}
 
     @endpush
 
@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
+                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>{{translate('messages.update_store')}}</span>
             </h1>
@@ -142,8 +142,8 @@
                                     </label>
                                     <label class="text-center position-relative">
                                         <img class="img--110 min-height-170px min-width-170px onerror-image image--border" id="viewer"
-                                        data-onerror-image="{{ asset('assets/admin/img/upload-img.png') }}"
-                                        src="{{ $store->logo_full_url ?? asset('assets/admin/img/upload-img.png') }}"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
+                                        src="{{ $store->logo_full_url ?? asset('public/assets/admin/img/upload-img.png') }}"
                                             alt="logo image" />
                                         <div class="icon-file-group">
                                             <div class="icon-file">
@@ -163,8 +163,8 @@
                                     </label>
                                     <label class="text-center position-relative">
                                         <img class="img--vertical min-height-170px min-width-170px onerror-image image--border" id="coverImageViewer"
-                                        data-onerror-image="{{ asset('assets/admin/img/upload-img.png') }}"
-                                        src="{{ $store->cover_photo_full_url ?? asset('assets/admin/img/upload-img.png') }}"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
+                                        src="{{ $store->cover_photo_full_url ?? asset('public/assets/admin/img/upload-img.png') }}"
                                             alt="Fav icon" />
                                         <div class="icon-file-group">
                                             <div class="icon-file">
@@ -183,7 +183,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title m-0 d-flex align-items-center">
-                                <img class="mr-2 align-self-start w--20" src="{{asset('assets/admin/img/resturant.png')}}" alt="instructions">
+                                <img class="mr-2 align-self-start w--20" src="{{asset('public/assets/admin/img/resturant.png')}}" alt="instructions">
                                 <span>{{translate('store_information')}}</span>
                             </h4>
                         </div>
@@ -239,7 +239,7 @@
                                     <div class="form-group">
                                         <label class="input-label" for="choice_zones">{{translate('messages.zone')}}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{translate('messages.select_zone_for_map')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.select_zone_for_map')}}"></span></label>
+        data-original-title="{{translate('messages.select_zone_for_map')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.select_zone_for_map')}}"></span></label>
                                         <select name="zone_id" id="choice_zones" data-placeholder="{{translate('messages.select_zone')}}"
                                                 class="form-control js-select2-custom get_zone_data">
                                             @foreach(\App\Models\Zone::active()->get() as $zone)
@@ -256,7 +256,7 @@
                                     <div class="form-group">
                                         <label class="input-label" for="latitude">{{translate('messages.latitude')}}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{translate('messages.store_lat_lng_warning')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}"></span></label>
+        data-original-title="{{translate('messages.store_lat_lng_warning')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}"></span></label>
                                         <input type="text" id="latitude"
                                                 name="latitude" class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} -94.22213" value="{{$store->latitude}}" required readonly>
@@ -264,7 +264,7 @@
                                     <div class="form-group mb-5">
                                         <label class="input-label" for="longitude">{{translate('messages.longitude')}}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{translate('messages.store_lat_lng_warning')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}"></span></label>
+        data-original-title="{{translate('messages.store_lat_lng_warning')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}"></span></label>
                                         <input type="text"
                                                 name="longitude" class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude" value="{{$store->longitude}}" required readonly>
@@ -334,7 +334,7 @@
                                 <div class="col-md-4 col-sm-6">
                                     <div class="js-form-message form-group mb-0">
                                         <label class="input-label" for="signupSrPassword">{{ translate('password') }}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                 data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
+                                 data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
 
                                         <div class="input-group input-group-merge">
                                             <input type="password" class="js-toggle-password form-control" name="password" id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
@@ -394,7 +394,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('assets/admin/js/spartan-multi-image-picker.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
     <script>
@@ -443,7 +443,7 @@
                 groupClassName: 'col-lg-2 col-md-4 col-sm-4 col-6',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: '{{asset('assets/admin/img/400x400/img2.jpg')}}',
+                    image: '{{asset('public/assets/admin/img/400x400/img2.jpg')}}',
                     width: '100%'
                 },
                 dropFileLabel: "Drop Here",
@@ -623,9 +623,9 @@
         });
 
     $('#reset_btn').click(function(){
-        $('#viewer').attr('src', "{{ asset('assets/admin/img/upload.png') }}");
+        $('#viewer').attr('src', "{{ asset('public/assets/admin/img/upload.png') }}");
         $('#customFileEg1').val(null);
-        $('#coverImageViewer').attr('src', "{{ asset('assets/admin/img/upload-img.png') }}");
+        $('#coverImageViewer').attr('src', "{{ asset('public/assets/admin/img/upload-img.png') }}");
         $('#coverImageUpload').val(null);
         $('#choice_zones').val(null).trigger('change');
         $('#module_id').val(null).trigger('change');

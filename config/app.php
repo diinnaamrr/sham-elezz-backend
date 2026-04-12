@@ -60,6 +60,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Strip leading "public/" from asset() paths
+    |--------------------------------------------------------------------------
+    |
+    | Legacy views use asset('public/assets/...'). With web root = public/, URLs must
+    | be /assets/... . Enable this (default) so those paths resolve without changing every Blade file.
+    | Set STRIP_PUBLIC_PREFIX_FROM_ASSET_URLS=false in .env to disable.
+    |
+    */
+
+    'strip_public_prefix_from_asset_urls' => (bool) env('STRIP_PUBLIC_PREFIX_FROM_ASSET_URLS', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

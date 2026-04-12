@@ -5,9 +5,9 @@
             <a class="media align-items-center" href="{{ route('admin.item.view', [$item['id']]) }}">
                 <img class="avatar avatar-lg mr-3 onerror-image"
             
-                src="{{ $item['image_full_url'] ?? asset('assets/admin/img/160x160/img2.jpg') }}"
+                src="{{ $item['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
 
-                data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
+                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                     alt="{{ $item->getRawOriginal('name') ?? $item->name }} image">
                 <div class="media-body">
                     <h5 class="text-hover-primary mb-0">{{ Str::limit($item->getRawOriginal('name') ?? $item['name'], 20, '...') }}</h5>
@@ -53,4 +53,4 @@
         </td>
     </tr>
 @endforeach
-<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>

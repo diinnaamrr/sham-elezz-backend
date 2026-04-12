@@ -4,7 +4,7 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="{{asset('assets/admin/css/tags-input.min.css')}}" rel="stylesheet">
+    <link href="{{asset('public/assets/admin/css/tags-input.min.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -13,7 +13,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('assets/admin/img/items.png')}}" class="w--22" alt="">
+                    <img src="{{asset('public/assets/admin/img/items.png')}}" class="w--22" alt="">
                 </span>
                 <span>
                     {{translate('messages.items_bulk_import')}}
@@ -67,12 +67,12 @@
                     <div class="btn--container justify-content-center export--template-btns">
 
                         @if ($store_data->module->module_type == 'food')
-                            <a href="{{asset('assets/restaurant_panel/foods_bulk_format.xlsx')}}" download="" class="btn btn-dark">{{translate('template_with_existing_data')}}</a>
+                            <a href="{{asset('public/assets/restaurant_panel/foods_bulk_format.xlsx')}}" download="" class="btn btn-dark">{{translate('template_with_existing_data')}}</a>
                         @else
-                            <a href="{{asset('assets/restaurant_panel/items_bulk_format.xlsx')}}" download="" class="btn btn-dark">{{translate('template_with_existing_data')}}</a>
+                            <a href="{{asset('public/assets/restaurant_panel/items_bulk_format.xlsx')}}" download="" class="btn btn-dark">{{translate('template_with_existing_data')}}</a>
                         @endif
 
-                        <a href="{{asset('assets/restaurant_panel/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn-dark">{{translate('template_without_data')}}</a>
+                        <a href="{{asset('public/assets/restaurant_panel/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn-dark">{{translate('template_without_data')}}</a>
                     </div>
                 </div>
             </div>
@@ -136,7 +136,7 @@
                     <div class="card-header border-0 p-0">
                         <div class="alert w-100 alert-soft-primary alert-dismissible fade show d-flex m-0" role="alert">
                             <div>
-                                <img src="{{asset('assets/admin/img/icons/intel.png')}}" width="22" alt="">
+                                <img src="{{asset('public/assets/admin/img/icons/intel.png')}}" width="22" alt="">
                             </div>
                             <div class="w-0 flex-grow-1 pl-3">
                                 <strong>{{ translate('Attention!') }}</strong>
@@ -170,15 +170,15 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_varient') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.This_field_is_for_geenrated_variation._copy_them_&_paste_into_excel_sheet') }} "><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ translate('messages.Generated_varient') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.This_field_is_for_geenrated_variation._copy_them_&_paste_into_excel_sheet') }} "><img src="{{ asset('public/assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="variation_output" class="form-control" rows="5" readonly></textarea>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_choice_option') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Choice_option_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ translate('messages.Generated_choice_option') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Choice_option_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('public/assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="choice_output" class="form-control" rows="5" readonly></textarea>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_attributes_field') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Attributes_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ translate('messages.Generated_attributes_field') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Attributes_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('public/assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="attributes" class="form-control" rows="5" readonly></textarea>
                             </div>
                         </div>
@@ -196,7 +196,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{ asset('assets/admin') }}/js/tags-input.min.js"></script>
+    <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
     <script>
         "use strict";
         let count = 0;

@@ -3,9 +3,9 @@
 @section('title',translate('messages.edit_store'))
 @push('css_or_js')
     <!-- Custom styles for this page -->
-    <link href="{{asset('assets/admin')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="{{asset('public/assets/admin')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
      <!-- Custom styles for this page -->
-     <link href="{{asset('assets/admin/css/croppie.css')}}" rel="stylesheet">
+     <link href="{{asset('public/assets/admin/css/croppie.css')}}" rel="stylesheet">
      <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
 @section('content')
@@ -13,7 +13,7 @@
     <div class="content container-fluid">
         <div class="page-header">
             <h2 class="page-header-title text-capitalize">
-                <img class="w--26" src="{{asset('assets/admin/img/store.png')}}" alt="public">
+                <img class="w--26" src="{{asset('public/assets/admin/img/store.png')}}" alt="public">
                 <span>
                     {{translate('messages.edit_store_info')}}
                 </span>
@@ -150,7 +150,7 @@
                         <div class="card-body d-flex flex-column pt-0">
                             <div class="text-center my-auto py-4 py-xl-5">
                                 <img class="store-banner onerror-image" id="viewer"
-                                data-onerror-image="{{asset('assets/admin/img/image-place-holder.png')}}"
+                                data-onerror-image="{{asset('public/assets/admin/img/image-place-holder.png')}}"
                                 src="{{ $shop->logo_full_url }}" alt="Product thumbnail"/>
                             </div>
                             <div class="custom-file">
@@ -171,7 +171,7 @@
                         <div class="card-body d-flex flex-column pt-0">
                             <div class="text-center my-auto py-4 py-xl-5">
                                 <img class="store-banner onerror-image" id="coverImageViewer"
-                                data-onerror-image="{{asset('assets/admin/img/restaurant_cover.jpg')}}"
+                                data-onerror-image="{{asset('public/assets/admin/img/restaurant_cover.jpg')}}"
                                 src="{{ $shop->cover_photo_full_url }}" alt="Product thumbnail"/>
                             </div>
                             <div class="custom-file">
@@ -192,5 +192,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('assets/admin')}}/js/view-pages/vendor/shop-edit.js"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/shop-edit.js"></script>
 @endpush

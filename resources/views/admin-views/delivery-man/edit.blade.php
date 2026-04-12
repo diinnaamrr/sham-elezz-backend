@@ -9,7 +9,7 @@
         <div class="page-header">
             <h1 class="page-header-title text-break">
                 <span class="page-header-icon">
-                    <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
+                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>{{translate('messages.update_deliveryman')}}</span>
             </h1>
@@ -123,7 +123,7 @@
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--100 rounded onerror-image" id="viewer"
                                     src="{{$deliveryMan['image_full_url'] }}"
-                                            data-onerror-image="{{asset('assets/admin/img/admin.png')}}"
+                                            data-onerror-image="{{asset('public/assets/admin/img/admin.png')}}"
                                             alt="delivery-man image"/>
                                 </div>
                                 <div class="custom-file">
@@ -231,7 +231,7 @@
                             <div class="js-form-message form-group mb-0">
                                 <label class="input-label" for="signupSrPassword">{{translate('messages.password')}}
                                     <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span>
+        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span>
                                 </label>
 
                                 <div class="input-group input-group-merge">
@@ -293,7 +293,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('assets/admin/js/spartan-multi-image-picker.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
 <script>
     "use strict";
         function readURL(input) {
@@ -321,7 +321,7 @@
                 groupClassName: 'col-6 spartan_item_wrapper size--sm',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: '{{asset('assets/admin/img/400x400/img2.jpg')}}',
+                    image: '{{asset('public/assets/admin/img/400x400/img2.jpg')}}',
                     width: '100%'
                 },
                 dropFileLabel: "Drop Here",
@@ -358,7 +358,7 @@
                 groupClassName: 'col-6 spartan_item_wrapper size--sm',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: '{{asset('assets/admin/img/400x400/img2.jpg')}}',
+                    image: '{{asset('public/assets/admin/img/400x400/img2.jpg')}}',
                     width: '100%'
                 },
                 dropFileLabel: "Drop Here",

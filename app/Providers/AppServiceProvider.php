@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\CentralLogics\Helpers;
+use App\Routing\UrlGenerator as AppUrlGenerator;
 use App\Traits\AddonHelper;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
-use App\CentralLogics\Helpers;
+use Illuminate\Support\ServiceProvider;
+use ReflectionObject;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,7 +20,38 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->extend('url', function (FrameworkUrlGenerator $original) {
+            if (! config('app.strip_public_prefix_from_asset_urls', true)) {
+                return $original;
+            }
+
+            $reflection = new ReflectionObject($original);
+            $routes = $reflection->getProperty('routes')->getValue($original);
+            $request = $reflection->getProperty('request')->getValue($original);
+            $assetRoot = $reflection->getProperty('assetRoot')->getValue($original);
+
+            $url = new AppUrlGenerator($routes, $request, $assetRoot);
+            $targetReflection = new ReflectionObject($url);
+
+            foreach ($reflection->getProperties() as $property) {
+                if ($property->isStatic()) {
+                    continue;
+                }
+                $name = $property->getName();
+                if (in_array($name, ['routes', 'request', 'assetRoot'], true)) {
+                    continue;
+                }
+                if (! $targetReflection->hasProperty($name)) {
+                    continue;
+                }
+                $property->setAccessible(true);
+                $targetProp = $targetReflection->getProperty($name);
+                $targetProp->setAccessible(true);
+                $targetProp->setValue($url, $property->getValue($original));
+            }
+
+            return $url;
+        });
     }
 
     /**

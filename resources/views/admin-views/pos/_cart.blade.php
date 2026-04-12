@@ -44,7 +44,7 @@
             <tr>
                 <td class="media align-items-center cursor-pointer quick-View-Cart-Item" data-product-id="{{$cartItem['id']}}" data-item-key="{{$key}}">
                     <img class="avatar avatar-sm mr-1 onerror-image"
-                    src="{{ $cartItem['image_full_url'] }}" data-onerror-image="{{asset('assets/admin/img/100x100/2.png')}}" alt="{{$cartItem['name']}} image">
+                    src="{{ $cartItem['image_full_url'] }}" data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}" alt="{{$cartItem['name']}} image">
                     <div class="media-body">
                         <h6 class="text-hover-primary mb-0 fs-12">{{Str::limit($cartItem['name'], 14)}}</h6>
                         <small>{{Str::limit($cartItem['variant'], 20)}}</small>
@@ -377,7 +377,7 @@
 </div>
 
 @push('script_2')
-    <script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
     <script>
         $(document).ready(function(){
             $('.coupon-slider').owlCarousel({

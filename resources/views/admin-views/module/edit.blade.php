@@ -3,7 +3,7 @@
 @section('title',translate('Update_Business_Module'))
 
 @push('css_or_js')
-<link rel="stylesheet" href="{{asset('assets/admin/css/radio-image.css')}}">
+<link rel="stylesheet" href="{{asset('public/assets/admin/css/radio-image.css')}}">
 @endpush
 
 @section('content')
@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('assets/admin/img/module.png')}}" alt="">
+                    <img src="{{asset('public/assets/admin/img/module.png')}}" alt="">
                 </span>
                 <span>
                     {{translate('Edit_Business_Module')}}
@@ -49,7 +49,7 @@
                                 <label class="input-label d-flex" for="module_type">{{translate('messages.description')}} ({{ translate('messages.default') }})<span class="form-label-secondary text-danger d-flex"
                                     data-toggle="tooltip" data-placement="right"
                                     data-original-title="{{ translate('messages.Write_a_short_description_of_your_new_business_module_within_100_words_(550_characters)')}}"><img
-                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                        src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                         alt="{{ translate('messages.veg_non_veg') }}"></span></label>
                                 <textarea  data-value="{!! $module->description !!}" id="description"  class="ckeditor form-control" name="description[]">{!! $module?->getRawOriginal('description') !!}</textarea>
                             </div>
@@ -81,7 +81,7 @@
                                     <label class="input-label d-flex" for="module_type">{{translate('messages.description')}} ({{strtoupper($lang)}})<span class="form-label-secondary text-danger d-flex"
                                         data-toggle="tooltip" data-placement="right"
                                         data-original-title="{{ translate('messages.Write_a_short_description_of_your_new_business_module_within_100_words_(550_characters)')}}"><img
-                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                            src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                             alt="{{ translate('messages.veg_non_veg') }}"></span></label>
                                     <textarea  data-value="{!! $translate[$lang]['description']??'' !!}" id="description{{ $lang }}" class="ckeditor form-control" name="description[]">{!! $translate[$lang]['description']??'' !!}</textarea>
                                 </div>
@@ -142,7 +142,7 @@
                                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
                                                 </label>
                                                 <label class="text-center my-auto position-relative">
-                                                    <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer" data-onerror-image="{{asset('assets/admin/img/upload-img.png')}}" src="{{ $module['icon_full_url'] }}"
+                                                    <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer" data-onerror-image="{{asset('public/assets/admin/img/upload-img.png')}}" src="{{ $module['icon_full_url'] }}"
                                                     alt="image" />
                                                     <div class="icon-file-group">
                                                         <div class="icon-file">
@@ -160,7 +160,7 @@
                                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
                                                 </label>
                                                 <label class="text-center my-auto position-relative">
-                                                    <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer2" data-onerror-image="{{asset('assets/admin/img/upload-img.png')}}" src="{{ $module['thumbnail_full_url'] }}"
+                                                    <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer2" data-onerror-image="{{asset('public/assets/admin/img/upload-img.png')}}" src="{{ $module['thumbnail_full_url'] }}"
                                                     alt="image" />
                                                     <div class="icon-file-group">
                                                         <div class="icon-file">
@@ -190,7 +190,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
     <script>
         "use strict";
         $('.module-change').on('click', function (){

@@ -1,9 +1,9 @@
 @extends('layouts.landing.app')
 @section('title', translate('messages.store_registration'))
 @push('css_or_js')
-    <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/admin/css/view-pages/vendor-registration.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/landing/css/select2.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('public/assets/admin/css/toastr.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/assets/admin/css/view-pages/vendor-registration.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/assets/landing/css/select2.min.css') }}"/>
 @endpush
 @section('content')
     <section class="m-0 py-5">
@@ -57,8 +57,8 @@
                                 <input type="radio" class="d-none" checked value="free_trial" name="payment">
                                 <div class="payment-item-inner justify-content-center">
                                     <div class="check">
-                                        {{-- <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt=""> --}}
-                                        <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
+                                        {{-- <img src="{{asset('public/assets/admin/img/check-1.png')}}" class="uncheck" alt=""> --}}
+                                        <img src="{{asset('public/assets/admin/img/check-2.png')}}" class="check" alt="">
                                     </div>
                                     <span>{{ translate('Continue with') }} {{ $trial_period }}  {{ data_get($free_trial_settings, 'subscription_free_trial_type') }} {{ translate('Free_Trial') }}</span>
                                 </div>
@@ -78,8 +78,8 @@
                                     <input type="radio" class="d-none" value="{{ $item['gateway'] }}" name="payment">
                                     <div class="payment-item-inner">
                                         <div class="check">
-                                            <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                            <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
+                                            <img src="{{asset('public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                            <img src="{{asset('public/assets/admin/img/check-2.png')}}" class="check" alt="">
                                         </div>
                                         <span>{{ $item['gateway_title'] }}</span>
                                         <img class="ms-auto" height="30"

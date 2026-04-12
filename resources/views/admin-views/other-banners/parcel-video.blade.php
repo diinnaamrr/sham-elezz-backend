@@ -7,7 +7,7 @@
     <div class="page-header">
         <h1 class="page-header-title">
             <span class="page-header-icon">
-                <img src="{{asset('assets/admin/img/3rd-party.png')}}" class="w--26" alt="">
+                <img src="{{asset('public/assets/admin/img/3rd-party.png')}}" class="w--26" alt="">
             </span>
             <span>
                 {{translate('messages.Other_Promotional_Content_Setup')}}
@@ -70,7 +70,7 @@
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input type="text" id="section_title" maxlength="20" name="section_title[]" value="{{ $section_title?->getRawOriginal('value') }}" class="form-control"
@@ -98,7 +98,7 @@
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input type="text" id="section_title{{$lang}}" maxlength="20" name="section_title[]" value="{{ $section_title_translate[$lang]['value'] ?? '' }}" class="form-control"
@@ -120,7 +120,7 @@
                                                 <input class="form-check-input" type="radio" value="video" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video' ? 'checked' : '') : '' }}>
                                                 <span class="form-check-label">
                                                     {{translate('YouTube_Video_URL')}} <span class="input-label-secondary"
-                                                    data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Go_to_YouTube,_click_share_option_then_get_a_popup_of_share._Select_embed_&_get_a_embed_video_then_copy_the_generated_code_for_the_embedded_link')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}"
+                                                    data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Go_to_YouTube,_click_share_option_then_get_a_popup_of_share._Select_embed_&_get_a_embed_video_then_copy_the_generated_code_for_the_embedded_link')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}"
                                                         alt="public/img"></span>
                                                 </span>
                                             </label>
@@ -145,7 +145,7 @@
                                             <img class="onerror-image"
 
                                             src="{{\App\CentralLogics\Helpers::get_full_url('promotional_banner', $banner_image?->value?? '', $banner_image?->storage[0]?->value ?? 'public','upload_placeholder')}}"
-                                            data-onerror-image="{{ asset('assets/admin/img/upload-placeholder.png') }}" alt="">
+                                            data-onerror-image="{{ asset('public/assets/admin/img/upload-placeholder.png') }}" alt="">
                                         </div>
 
                                         <div class="">
@@ -155,8 +155,8 @@
                                             <span id="banner_image" class="remove_image_button dynamic-checkbox"
                                                   data-id="banner_image"
                                                   data-type="status"
-                                                  data-image-on="{{asset('assets/admin/img/modal')}}/mail-success"
-                                                  data-image-off="{{asset('assets/admin/img/modal')}}/mail-warning"
+                                                  data-image-on="{{asset('public/assets/admin/img/modal')}}/mail-success"
+                                                  data-image-off="{{asset('public/assets/admin/img/modal')}}/mail-warning"
                                                   data-title-on="{{translate('Important!')}}"
                                                   data-title-off="{{translate('Warning!')}}"
                                                   data-text-on="<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>"
@@ -189,7 +189,7 @@
                                                             <div class="mt-5 card px-3 py-2 d--none" id="progress-bar">
                                                                 <div class="d-flex flex-wrap align-items-center gap-3">
                                                                     <div class="">
-                                                                        <img width="24" src="{{asset('assets/admin/img/zip.png')}}" alt="">
+                                                                        <img width="24" src="{{asset('public/assets/admin/img/zip.png')}}" alt="">
                                                                     </div>
                                                                     <div class="flex-grow-1 text-start">
                                                                         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
@@ -256,7 +256,7 @@
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
-                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input type="text" id="content1_title" maxlength="80" name="content1_title[]"
@@ -268,7 +268,7 @@
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
-                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input type="text" id="content1_subtitle" maxlength="240" name="content1_subtitle[]"
@@ -285,7 +285,7 @@
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
-                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input type="text" id="content2_title" maxlength="80" name="content2_title[]"
@@ -297,7 +297,7 @@
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
-                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="content2_subtitle" type="text" maxlength="240" name="content2_subtitle[]"
@@ -314,7 +314,7 @@
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
-                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="content3_title" type="text" maxlength="80" name="content3_title[]"
@@ -326,7 +326,7 @@
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
-                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input type="text" id="content3_subtitle" maxlength="240" name="content3_subtitle[]"
@@ -395,7 +395,7 @@
                                                 <div class="col-sm-6">
                                                     <label for="content1_title{{$lang}}" class="form-label">{{ translate('Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
-                                                        <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
+                                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
                                                 <input type="text" id="content1_title{{$lang}}"  maxlength="80" name="content1_title[]"
                                                         value="{{ $content1_title_translate[$lang]['value'] ?? '' }}"
@@ -405,7 +405,7 @@
                                                 <div class="col-sm-6">
                                                     <label for="content1_subtitle{{$lang}}" class="form-label">{{ translate('messages.Sub Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
-                                                        <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
+                                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
                                                 <input type="text" id="content1_subtitle{{$lang}}"  maxlength="240" name="content1_subtitle[]"
                                                         value="{{ $content1_subtitle_translate[$lang]['value'] ?? '' }}"
@@ -420,7 +420,7 @@
                                                 <div class="col-sm-6">
                                                     <label for="content2_title{{$lang}}" class="form-label">{{ translate('Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
-                                                        <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
+                                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
                                                 <input type="text" id="content2_title{{$lang}}"  maxlength="80" name="content2_title[]"
                                                         value="{{ $content2_title_translate[$lang]['value'] ?? '' }}"
@@ -430,7 +430,7 @@
                                                 <div class="col-sm-6">
                                                     <label for="content2_subtitle{{$lang}}" class="form-label">{{ translate('messages.Sub Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
-                                                        <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
+                                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
                                                 <input type="text"  id="content2_subtitle{{$lang}}" maxlength="240" name="content2_subtitle[]"
                                                         value="{{ $content2_subtitle_translate[$lang]['value'] ?? '' }}"
@@ -445,7 +445,7 @@
                                                 <div class="col-sm-6">
                                                     <label for="content3_title{{$lang}}" class="form-label">{{ translate('Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
-                                                        <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
+                                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
                                                 <input type="text" id="content3_title{{$lang}}"  maxlength="80" name="content3_title[]"
                                                         value="{{ $content3_title_translate[$lang]['value'] ?? '' }}"
@@ -455,7 +455,7 @@
                                                 <div class="col-sm-6">
                                                     <label for="content3_subtitle{{$lang}}" class="form-label">{{ translate('messages.Sub Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
-                                                        <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
+                                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
                                                 <input type="text"  maxlength="240" id="content3_subtitle{{$lang}}" name="content3_subtitle[]"
                                                         value="{{ $content3_subtitle_translate[$lang]['value'] ?? '' }}"
@@ -490,7 +490,7 @@
     </form>
 @endsection
 @push('script_2')
-    <script src="{{asset('assets/admin/js/view-pages/other-banners.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/view-pages/other-banners.js')}}"></script>
     <script>
         "use strict";
         const input = document.getElementById('inputFile');

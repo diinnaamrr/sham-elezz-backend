@@ -339,7 +339,7 @@
 <div class="hero">
     <div class="video-container"> 
         <video autoplay muted loop>
-            <source src="{{ asset('assets/landing/v.mp4') }}" type="video/mp4">
+            <source src="{{ asset('public/assets/landing/v.mp4') }}" type="video/mp4">
             {{ __('messages.Your browser does not support video.') }}
         </video>
     </div>
@@ -373,7 +373,7 @@
 
         <!-- كارت 1 -->
         <div class="offer-card">
-            <img src="{{ asset('assets/landing/img/mashawy.jpg') }}" alt="مشويات مشكلة">
+            <img src="{{ asset('public/assets/landing/img/mashawy.jpg') }}" alt="مشويات مشكلة">
 
             <div class="offer-content"> 
                 <div class="offer-title">{{ __('messages.Mix grill') }}</div>
@@ -390,7 +390,7 @@
 
         <!-- كارت 2 -->
         <div class="offer-card">
-            <img src="{{ asset('assets/landing/img/mesahb.png') }}" alt="مسحب دجاج">
+            <img src="{{ asset('public/assets/landing/img/mesahb.png') }}" alt="مسحب دجاج">
 
             <div class="offer-content">
                 <div class="offer-title">{{ __('messages.Boneless chicken') }}</div>
@@ -421,7 +421,7 @@
         <!-- كارت 1 -->
         <div class="testimonial-card">
             <div class="testimonial-header">
-                <img src="{{ asset('assets/landing/img/u.jpg') }}" alt="عميل">
+                <img src="{{ asset('public/assets/landing/img/u.jpg') }}" alt="عميل">
                 <div>
                     <div class="testimonial-name">@lang('messages.mohamed')</div>
                     <div class="testimonial-stars">★★★★★</div>
@@ -436,7 +436,7 @@
         <!-- كارت 2 -->
         <div class="testimonial-card">
             <div class="testimonial-header">
-                <img src="{{ asset('assets/landing/img/u.jpg') }}" alt="عميل">
+                <img src="{{ asset('public/assets/landing/img/u.jpg') }}" alt="عميل">
                 <div>
                     <div class="testimonial-name">@lang('messages.Wasam')</div>
                     <div class="testimonial-stars">★★★★★</div>
@@ -451,7 +451,7 @@
         <!-- كارت 3 -->
         <div class="testimonial-card">
             <div class="testimonial-header">
-                <img src="{{ asset('assets/landing/img/u.jpg') }}" alt="عميل">
+                <img src="{{ asset('public/assets/landing/img/u.jpg') }}" alt="عميل">
                 <div>
                     <div class="testimonial-name">@lang('messages.Lamis')</div>
                     <div class="testimonial-stars">★★★★★</div>
@@ -472,7 +472,7 @@
     <section class="learn-feature-section"
         style="background: 
         linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)),
-        url({{ asset('assets/landing/img/food.jpg') }}) 
+        url({{ asset('public/assets/landing/img/food.jpg') }}) 
         no-repeat center center / cover;">
         <div class="container position-relative">
             <div class="row gy-5 gx-0 gx-xl-4 align-items-center">
@@ -506,7 +506,7 @@
                                             <div class="col-12">
                                                 <div class="learn-feature-item">
                                                     <div class="learn-feature-icon">
-                                                        <img src="{{ asset('assets/landing/img/ar4.jpeg') }}"
+                                                        <img src="{{ asset('public/assets/landing/img/ar4.jpeg') }}"
                                                             alt="{{ $item['title'] ?? '' }}">
                                                     </div>
                                                     <div class="learn-feature-item-content">
@@ -526,7 +526,7 @@
                                             <div class="col-12">
                                                 <div class="learn-feature-item">
                                                     <div class="learn-feature-icon">
-                                                        <img src="{{ asset('assets/landing/img/ar2.jpeg') }}"
+                                                        <img src="{{ asset('public/assets/landing/img/ar2.jpeg') }}"
                                                             alt="{{ $item['title'] ?? '' }}">
                                                     </div>
                                                     <div class="learn-feature-item-content">
@@ -569,7 +569,7 @@
 
             <div class="featuree-card">
                 <div class="icon-box"> 
-                    <img src="{{ asset('assets/landing/img/c.png') }}" alt="شيف">
+                    <img src="{{ asset('public/assets/landing/img/c.png') }}" alt="شيف">
                 </div>
                 <h3 class="feature-title">{{ __('messages.Professional chefs') }}</h3>
                 <p class="feature-desc">{{ __('messages.An elite group of the most skilled professional chefs are keen to present the most delicious traditional Levantine dishes.') }}</p>
@@ -577,7 +577,7 @@
 
             <div class="featuree-card">
                 <div class="icon-box">
-                    <img src="{{ asset('assets/landing/img/kn.png') }}" alt="مكونات">
+                    <img src="{{ asset('public/assets/landing/img/kn.png') }}" alt="مكونات">
                 </div>
                 <h3 class="feature-title">{{ __('messages.Fresh ingredients and high quality') }}</h3> 
                 <p class="feature-desc">{{ __('messages.We use the finest fresh ingredients selected with great care to ensure the authentic taste.') }}</p>
@@ -585,7 +585,7 @@
 
             <div class="featuree-card"> 
                 <div class="icon-box">
-                    <img src="{{ asset('assets/landing/img/km.png') }}" alt="طعم">
+                    <img src="{{ asset('public/assets/landing/img/km.png') }}" alt="طعم">
                 </div>
                 <h3 class="feature-title">{{ __('messages.Authentic Damascus flavor') }}</h3>
                 <p class="feature-desc">{{ __('messages.We bring you the authentic taste of Damascus through our traditional recipes passed down through generations.') }}</p>
@@ -605,15 +605,15 @@
 
             <!-- الصورة الكبيرة -->
             <div class="main-image">
-                <img id="currentImage" src="{{ asset('assets/landing/img/z1.jpg') }}">
+                <img id="currentImage" src="{{ asset('public/assets/landing/img/z1.jpg') }}">
             </div>
 
             <!-- الصور الصغيرة --> 
             <div class="thumbs"> 
-                <img src="{{ asset('assets/landing/img/z1.jpg') }}" class="active" onclick="changeImage(this)">
-                <img src="{{ asset('assets/landing/img/z2.jpg') }}" onclick="changeImage(this)">
-                <img src="{{ asset('assets/landing/img/z3.jpg') }}" onclick="changeImage(this)">
-                <img src="{{ asset('assets/landing/img/z.jpg') }}" onclick="changeImage(this)">
+                <img src="{{ asset('public/assets/landing/img/z1.jpg') }}" class="active" onclick="changeImage(this)">
+                <img src="{{ asset('public/assets/landing/img/z2.jpg') }}" onclick="changeImage(this)">
+                <img src="{{ asset('public/assets/landing/img/z3.jpg') }}" onclick="changeImage(this)">
+                <img src="{{ asset('public/assets/landing/img/z.jpg') }}" onclick="changeImage(this)">
             </div>
 
         </div>
@@ -646,7 +646,7 @@
                     </div>
                     <div class="modal-body px-sm-5 pb-5">
                         <div class="text-center">
-                            <img src="{{ asset('assets/landing/img/welcome.svg') }}" class="mw-100 mb-3"
+                            <img src="{{ asset('public/assets/landing/img/welcome.svg') }}" class="mw-100 mb-3"
                                 alt="">
                             <h5 class="mb-3">{{ translate('Welcome_to') }} {{ $business_name }}!</h5>
                             <p class="m-0 mb-4">

@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
                 <div class="d-flex gap-2">
                     <div class="page-header-icon">
-                        <img src="{{ asset('assets/admin/img/delivery-man.png') }}" class="w--26" alt="">
+                        <img src="{{ asset('public/assets/admin/img/delivery-man.png') }}" class="w--26" alt="">
                     </div>
                     <div>
                         <h1 class="page-header-title text-break mb-1">
@@ -67,7 +67,7 @@
                     <div class="color-card">
                         <div class="img-box">
                             <img class="resturant-icon w--30"
-                                src="{{ asset('assets/admin/img/icons/color-icon-1.png') }}" alt="img">
+                                src="{{ asset('public/assets/admin/img/icons/color-icon-1.png') }}" alt="img">
                         </div>
                         <div>
                             <h2 class="title">
@@ -85,7 +85,7 @@
                     <div class="color-card color-2">
                         <div class="img-box">
                             <img class="resturant-icon w--30"
-                                src="{{ asset('assets/admin/img/icons/color-icon-2.png') }}" alt="transactions">
+                                src="{{ asset('public/assets/admin/img/icons/color-icon-2.png') }}" alt="transactions">
                         </div>
                         <div>
                             <h2 class="title">
@@ -103,7 +103,7 @@
                     <div class="color-card color-3">
                         <div class="img-box">
                             <img class="resturant-icon w--30"
-                                src="{{ asset('assets/admin/img/icons/color-icon-3.png') }}" alt="transactions">
+                                src="{{ asset('public/assets/admin/img/icons/color-icon-3.png') }}" alt="transactions">
                         </div>
                         <div>
                             <h2 class="title">
@@ -131,7 +131,7 @@
                             <div class="color-card color-4">
                                 <div class="img-box">
                                     <img class="resturant-icon w--30"
-                                        src="{{ asset('assets/admin/img/icons/group.png') }}"
+                                        src="{{ asset('public/assets/admin/img/icons/group.png') }}"
                                         alt="transactions">
                                 </div>
                                 <div>
@@ -149,7 +149,7 @@
                             <div class="color-card color-4">
                                 <div class="img-box">
                                     <img class="resturant-icon w--30"
-                                        src="{{ asset('assets/admin/img/icons/color-icon-4.png') }}"
+                                        src="{{ asset('public/assets/admin/img/icons/color-icon-4.png') }}"
                                         alt="transactions">
                                 </div>
                                 <div>
@@ -167,7 +167,7 @@
                             <div class="color-card color-4">
                                 <div class="img-box">
                                     <img class="resturant-icon w--30"
-                                        src="{{ asset('assets/admin/img/icons/group.png') }}"
+                                        src="{{ asset('public/assets/admin/img/icons/group.png') }}"
                                         alt="transactions">
                                 </div>
                                 <div>
@@ -187,7 +187,7 @@
                         <div class="color-card color-5">
                             <div class="img-box">
                                 <img class="resturant-icon w--30"
-                                    src="{{ asset('assets/admin/img/icons/color-icon-5.png') }}"
+                                    src="{{ asset('public/assets/admin/img/icons/color-icon-5.png') }}"
                                     alt="transactions">
                             </div>
                             <div>
@@ -205,7 +205,7 @@
                         <div class="color-card color-6">
                             <div class="img-box">
                                 <img class="resturant-icon w--30"
-                                    src="{{ asset('assets/admin/img/icons/color-icon-6.png') }}"
+                                    src="{{ asset('public/assets/admin/img/icons/color-icon-6.png') }}"
                                     alt="transactions">
                             </div>
                             <div>
@@ -298,7 +298,7 @@
 @endif
                 <div class="d-flex flex-column flex-md-row align-items-center gap-3 border rounded p-3">
                     <div class="d-flex gap-3">
-                        <img class="rounded" data-onerror-image="{{ asset('assets/admin/img/160x160/img1.jpg') }}"
+                        <img class="rounded" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
                             src="{{ $deliveryMan['image_full_url']}}"
                             width="115" height="115" alt="Delivery man image">
                     </div>
@@ -320,7 +320,7 @@
                             <div class="col-md-6 col-xl-4 col-xxl-3">
                                 <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                     <img class="rounded-circle"
-                                        src="{{ asset('assets/admin/img/icons/job-type.png') }}" width="35"
+                                        src="{{ asset('public/assets/admin/img/icons/job-type.png') }}" width="35"
                                         height="35" alt="">
                                     <div class="">
                                         <h6 class="mb-1">{{ translate('messages.Job_Type') }} </h6>
@@ -333,7 +333,7 @@
                             <div class="col-md-6 col-xl-4 col-xxl-3">
                                 <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                     <img class="rounded-circle"
-                                        src="{{ asset('assets/admin/img/icons/vehicle-type.png') }}"
+                                        src="{{ asset('public/assets/admin/img/icons/vehicle-type.png') }}"
                                         width="35" height="35" alt="">
                                     <div class="">
                                         <h6 class="mb-1">{{ translate('messages.Vehicle_Type') }}</h6>
@@ -344,7 +344,7 @@
                             <div class="col-md-6 col-xl-4 col-xxl-3">
                                 <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                     <img class="rounded-circle"
-                                        src="{{ asset('assets/admin/img/icons/zone.png') }}" width="35"
+                                        src="{{ asset('public/assets/admin/img/icons/zone.png') }}" width="35"
                                         height="35" alt="">
                                     <div class="">
                                         <h6 class="mb-1">{{ translate('messages.Zone') }}</h6>
@@ -362,7 +362,7 @@
                                 @if ($total > 0)
                                 <div class="d-flex flex-column align-items-center justify-content-center px-4">
                                     <img class="" width="80" height="80"
-                                        src="{{ asset('assets/admin/img/icons/rating-stars.png') }}"
+                                        src="{{ asset('public/assets/admin/img/icons/rating-stars.png') }}"
                                         alt="">
 
                                     <div class="d-block">
@@ -456,7 +456,7 @@
 
                                 <div class="d-flex flex-column align-items-center justify-content-center px-4 m-auto">
                                     <img class=" w-100"
-                                        src="{{ asset('assets/admin/img/icons/no_rating.png') }}"
+                                        src="{{ asset('public/assets/admin/img/icons/no_rating.png') }}"
                                         alt="">
                                     <p class="mb-0 font-weight-normal">
                                         {{ translate('messages.no_review/rating_given_yet') }}
@@ -470,7 +470,7 @@
                 </div>
 
                 <div class="d-flex gap-2 align-items-center mt-5">
-                    <img src="{{ asset('assets/admin/img/entypo_image-inverted.png') }}" width="20" height="20"
+                    <img src="{{ asset('public/assets/admin/img/entypo_image-inverted.png') }}" width="20" height="20"
                         alt="">
                         @if ($deliveryMan->application_status == 'approved')
                         <h5 class="mb-0">{{ translate('Identity_Documents') }}</h5>
@@ -538,7 +538,7 @@
                                 <button class="btn" data-toggle="modal" data-target="#image-{{ $key }}">
                                     <div class="gallary-card">
                                         <img class="rounded mx-h150 mx-w-100"
-                                            data-onerror-image="{{ asset('assets/admin/img/900x400/img1.jpg') }}"
+                                            data-onerror-image="{{ asset('public/assets/admin/img/900x400/img1.jpg') }}"
                                             src="{{ $img }}"
                                             width="275" height="150" alt="">
                                     </div>
@@ -555,7 +555,7 @@
                                                         class="sr-only">{{ translate('messages.Close') }}</span></button>
                                             </div>
                                             <div class="modal-body">
-                                                <img data-onerror-image="{{ asset('assets/admin/img/900x400/img1.jpg') }}"
+                                                <img data-onerror-image="{{ asset('public/assets/admin/img/900x400/img1.jpg') }}"
                                                 src="{{ $img }}"
                                                     class="w-100 onerror-image">
                                             </div>
@@ -607,14 +607,14 @@
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.users.delivery-man.review-export', ['type' => 'excel', 'id' => $deliveryMan->id, request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('assets/admin') }}/svg/components/excel.svg"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('admin.users.delivery-man.review-export', ['type' => 'csv', 'id' => $deliveryMan->id, request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -706,7 +706,7 @@
                 </div>
                 @if (count($reviews) === 0)
                     <div class="empty--data">
-                        <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
+                        <img src="{{ asset('public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                         <h5>
                             {{ translate('no_data_found') }}
                         </h5>
@@ -803,7 +803,7 @@
                 </div>
                 @if (count($reviews) === 0)
                     <div class="empty--data">
-                        <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
+                        <img src="{{ asset('public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                         <h5>
                             {{ translate('no_data_found') }}
                         </h5>

@@ -12,7 +12,7 @@ active
 
 
 @push('css_or_js')
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/admin/css/daterangepicker.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="{{asset('public/assets/admin/css/daterangepicker.css')}}"/>
 @endpush
 
 @section('content')
@@ -204,7 +204,7 @@ active
                                             data-target="profile-prev-image" name="profile_image"
                                             accept=".png,.jpg,.jpeg,.gif, |image/*">
                                         <div class="upload-file__img">
-                                            <img src="{{asset('assets/admin/img/media/upload-file.png')}}" alt="" >
+                                            <img src="{{asset('public/assets/admin/img/media/upload-file.png')}}" alt="" >
                                         </div>
                                         <button class="remove-file-button" type="button">
                                             <i class="tio-clear"></i>
@@ -224,7 +224,7 @@ active
                                             data-target="main-image" name="cover_image"
                                             accept=".png,.jpg,.jpeg,.gif, |image/*">
                                         <div class="upload-file__img upload-file__img_banner">
-                                            <img src="{{asset('assets/admin/img/media/banner-upload-file.png')}}" alt="" >
+                                            <img src="{{asset('public/assets/admin/img/media/banner-upload-file.png')}}" alt="" >
                                         </div>
                                         <button class="remove-file-button" type="button">
                                             <i class="tio-clear"></i>
@@ -343,8 +343,8 @@ active
 
 @push('script_2')
 
-    <script type="text/javascript" src="{{asset('assets/admin/js/moment.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('assets/admin/js/daterangepicker.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/assets/admin/js/moment.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('public/assets/admin/js/daterangepicker.min.js')}}"></script>
 
     <script>
         $(function() {
@@ -400,7 +400,7 @@ active
             $(".video_attachment").closest('.upload-file').find('.remove-file-button').show()
             $(".video_attachment").closest('.upload-file').find('.remove-file-button').on('click', function () {
                 $(this).hide()
-                $(this).closest('.upload-file').find('.upload-file__img').html('<img src="{{asset('assets/admin/img/media/video-banner.png')}}" alt="">');
+                $(this).closest('.upload-file').find('.upload-file__img').html('<img src="{{asset('public/assets/admin/img/media/video-banner.png')}}" alt="">');
                 $(this).closest('.upload-file').find('.video_attachment').val('');
                 $(this).closest('.upload-file').find('.video > video').css('display', 'none');
                 videoEl.css('display', 'none');

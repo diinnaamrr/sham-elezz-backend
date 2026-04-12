@@ -7,10 +7,10 @@
 
                 @php($store_data=\App\CentralLogics\Helpers::get_store_data())
                 <a class="navbar-brand" href="{{route('vendor.dashboard')}}" aria-label="Front">
-                    <img class="navbar-brand-logo initial--36  onerror-image"  data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}"
+                    <img class="navbar-brand-logo initial--36  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"
                          src="{{ $store_data->logo_full_url }}"
  alt="Logo">
-                    <img class="navbar-brand-logo-mini initial--36 onerror-image"  data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}"
+                    <img class="navbar-brand-logo-mini initial--36 onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"
                          src="{{ $store_data->logo_full_url }}"
  alt="Logo">
                 </a>
@@ -663,7 +663,7 @@
                          <li class="nav-item px-20 pb-5">
                         <div class="promo-card">
                             <div class="position-relative">
-                                <img src="{{asset('assets/admin/img/promo-2.png')}}" class="mw-100" alt="">
+                                <img src="{{asset('public/assets/admin/img/promo-2.png')}}" class="mw-100" alt="">
                                 <h4 class="mb-2 mt-3">{{ translate('Want_to_get_highlighted?') }}</h4>
                                 <p class="mb-4">
                                     {{ translate('Create_ads_to_get_highlighted_on_the_app_and_web_browser') }}

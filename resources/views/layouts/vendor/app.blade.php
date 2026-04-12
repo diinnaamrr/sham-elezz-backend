@@ -22,21 +22,21 @@ $countryCode= strtolower($country?$country->value:'auto');
     <link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}">
     <!-- Font -->
-    <link href="{{asset('assets/admin/css/fonts.css')}}" rel="stylesheet">
+    <link href="{{asset('public/assets/admin/css/fonts.css')}}" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="{{asset('assets/admin')}}/css/vendor.min.css">
-    <link rel="stylesheet" href="{{asset('assets/admin')}}/vendor/icon-set/style.css">
+    <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/vendor.min.css">
+    <link rel="stylesheet" href="{{asset('public/assets/admin')}}/vendor/icon-set/style.css">
     <!-- CSS Front Template -->
-    <link rel="stylesheet" href="{{asset('assets/admin')}}/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{asset('assets/admin')}}/css/theme.minc619.css?v=1.0">
-    <link rel="stylesheet" href="{{asset('assets/admin/css/emogi-area.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/admin/css/style.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/admin/intltelinput/css/intlTelInput.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/admin/css/owl.min.css')}}">
+    <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/theme.minc619.css?v=1.0">
+    <link rel="stylesheet" href="{{asset('public/assets/admin/css/emogi-area.css')}}">
+    <link rel="stylesheet" href="{{asset('public/assets/admin/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('public/assets/admin/intltelinput/css/intlTelInput.css')}}">
+    <link rel="stylesheet" href="{{asset('public/assets/admin/css/owl.min.css')}}">
     @stack('css_or_js')
 
-    <script src="{{asset('assets/admin')}}/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js"></script>
-    <link rel="stylesheet" href="{{asset('assets/admin')}}/css/toastr.css">
+    <script src="{{asset('public/assets/admin')}}/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js"></script>
+    <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/toastr.css">
 </head>
 
 <body class="footer-offset">
@@ -51,7 +51,7 @@ $countryCode= strtolower($country?$country->value:'auto');
         <div class="col-md-12">
             <div id="loading" class="initial-hidden">
                 <div class="loading-inner">
-                    <img width="200" src="{{asset('assets/admin/img/loader.gif')}}">
+                    <img width="200" src="{{asset('public/assets/admin/img/loader.gif')}}">
                 </div>
             </div>
         </div>
@@ -204,22 +204,22 @@ $countryCode= strtolower($country?$country->value:'auto');
 <!-- ========== END MAIN CONTENT ========== -->
 
 <!-- ========== END SECONDARY CONTENTS ========== -->
-<script src="{{asset('assets/admin')}}/js/custom.js"></script>
-<script src="{{asset('assets/admin')}}/js/firebase.min.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/custom.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/firebase.min.js"></script>
 <!-- JS Implementing Plugins -->
 
 @stack('script')
 
 <!-- JS Front -->
-<script src="{{asset('assets/admin')}}/js/vendor.min.js"></script>
-<script src="{{asset('assets/admin')}}/js/theme.min.js"></script>
-<script src="{{asset('assets/admin')}}/js/sweet_alert.js"></script>
-<script src="{{asset('assets/admin')}}/js/toastr.js"></script>
-<script src="{{asset('assets/admin')}}/js/emogi-area.js"></script>
-<script src="{{asset('assets/admin/js/owl.min.js')}}"></script>
-<script src="{{asset('assets/admin/js/app-blade/vendor.js')}}"></script>
+<script src="{{asset('public/assets/admin')}}/js/vendor.min.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/theme.min.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/sweet_alert.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/toastr.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/emogi-area.js"></script>
+<script src="{{asset('public/assets/admin/js/owl.min.js')}}"></script>
+<script src="{{asset('public/assets/admin/js/app-blade/vendor.js')}}"></script>
 {!! Toastr::message() !!}
-<script src="{{asset('assets/admin/intltelinput/js/intlTelInput.min.js')}}"></script>
+<script src="{{asset('public/assets/admin/intltelinput/js/intlTelInput.min.js')}}"></script>
 
 @if ($errors->any())
 
@@ -236,9 +236,9 @@ $countryCode= strtolower($country?$country->value:'auto');
 
 @stack('script_2')
 <audio id="myAudio">
-    <source src="{{asset('assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
+    <source src="{{asset('public/assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
 </audio>
-    <script src="{{asset('assets/admin/js/view-pages/common.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
 
 <script>
     var audio = document.getElementById("myAudio");
@@ -527,7 +527,7 @@ $countryCode= strtolower($country?$country->value:'auto');
             inputs.forEach(input => {
                 window.intlTelInput(input, {
                     initialCountry: "{{$countryCode}}",
-                    utilsScript: "{{ asset('assets/admin/intltelinput/js/utils.js') }}",
+                    utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
                     autoInsertDialCode: true,
                     nationalMode: false,
                     formatOnDisplay: false,
@@ -550,7 +550,7 @@ $countryCode= strtolower($country?$country->value:'auto');
 
 <!-- IE Support -->
 <script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('public/assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
 </script>
 </body>
 </html>

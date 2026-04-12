@@ -26,7 +26,7 @@
             <div class="card-body">
                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                     <div class="d-flex gap-2 align-items-center">
-                        <img src="{{asset('assets/admin/img/icons/coupon-icon.png')}}" width="16" height="16" alt="">
+                        <img src="{{asset('public/assets/admin/img/icons/coupon-icon.png')}}" width="16" height="16" alt="">
                         <p class="mb-0">{{ translate('If you want to make a customized COUPON for this customer, click the Create Coupon button and influence them buy more from your store.') }}</p>
                     </div>
 
@@ -46,7 +46,7 @@
                         <div class="d-flex flex-wrap gap-3">
                             <div class="color-card flex-column align-items-center justify-content-center color-2 flex-grow-1">
                                 <div class="img-box">
-                                    <img class="resturant-icon w--30" src="{{asset('assets/admin/img/icons/order-icon-1.png')}}" alt="">
+                                    <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/icons/order-icon-1.png')}}" alt="">
                                 </div>
                                 <div class="d-flex flex-column align-items-center">
                                     <h2 class="title"> {{ $orders->total() }} </h2>
@@ -57,7 +57,7 @@
                             </div>
                             <div class="color-card flex-column align-items-center justify-content-center color-5 flex-grow-1">
                                 <div class="img-box">
-                                    <img class="resturant-icon w--30" src="{{asset('assets/admin/img/icons/order-icon-2.png')}}" alt="">
+                                    <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/icons/order-icon-2.png')}}" alt="">
                                 </div>
                                 <div class="d-flex flex-column align-items-center">
                                     <h2 class="title"> {{ \App\CentralLogics\Helpers::format_currency($total_order_amount[0]->total_order_amount) }} </h2>
@@ -76,7 +76,7 @@
                         <div class="d-flex flex-wrap gap-3">
                             <div class="color-card flex-column align-items-center justify-content-center color-7 flex-grow-1">
                                 <div class="img-box">
-                                    <img class="resturant-icon w--30" src="{{asset('assets/admin/img/icons/order-icon-3.png')}}" alt="transactions">
+                                    <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/icons/order-icon-3.png')}}" alt="transactions">
                                 </div>
                                 <div class="d-flex flex-column align-items-center">
                                     <h2 class="title"> {{$customer->wallet_balance??0}} </h2>
@@ -87,7 +87,7 @@
                             </div>
                             <div class="color-card flex-column align-items-center justify-content-center color-4 flex-grow-1">
                                 <div class="img-box">
-                                    <img class="resturant-icon w--30" src="{{asset('assets/admin/img/icons/order-icon-4.png')}}" alt="transactions">
+                                    <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/icons/order-icon-4.png')}}" alt="transactions">
                                 </div>
                                 <div class="d-flex flex-column align-items-center">
                                     <h2 class="title"> {{$customer->loyalty_point??0}} </h2>
@@ -141,13 +141,13 @@
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.customer.order-export', ['type'=>'excel','id'=>$customer->id,request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('assets/admin') }}/svg/components/excel.svg"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('admin.customer.order-export', ['type'=>'csv','id'=>$customer->id,request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -288,7 +288,7 @@
                     </div>
                     @if(count($orders) === 0)
                     <div class="empty--data">
-                        <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <img src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
                             {{translate('no_data_found')}}
                         </h5>
@@ -318,7 +318,7 @@
                         <div class="card-body">
                             <div class="media gap-3 flex-wrap">
                                 <div class="avatar avatar-circle avatar-70">
-                                    <img class="avatar-img onerror-image" width="70" height="70" data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}" src="{{ $customer->image_full_url }}"
+                                    <img class="avatar-img onerror-image" width="70" height="70" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" src="{{ $customer->image_full_url }}"
                                     alt="Image Description">
                                 </div>
                                 <div class="media-body">

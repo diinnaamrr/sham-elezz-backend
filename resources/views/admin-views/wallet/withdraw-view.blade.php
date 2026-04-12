@@ -3,7 +3,7 @@
 @push('css_or_js')
     <!-- Custom styles for this page -->
     <link href="{{asset('assets')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link href="{{asset('assets/css/croppie.css')}}" rel="stylesheet">
+    <link href="{{asset('public/assets/css/croppie.css')}}" rel="stylesheet">
 
 @endpush
 
@@ -13,7 +13,7 @@
     <div class="page-header">
         <h1 class="page-header-title mr-3 mb-md-0">
             <span class="page-header-icon">
-                <img src="{{asset('assets/admin/img/withdraw.png')}}" class="w--26" alt="">
+                <img src="{{asset('public/assets/admin/img/withdraw.png')}}" class="w--26" alt="">
             </span>
             <span>
                 {{translate('messages.store_withdraw_information')}}

@@ -10,7 +10,7 @@
     <div class="page-header">
         <h1 class="page-header-title">
             <span class="page-header-icon">
-                <img src="{{asset('assets/admin/img/role.png')}}" class="w--26" alt="">
+                <img src="{{asset('public/assets/admin/img/role.png')}}" class="w--26" alt="">
             </span>
             <span>
                 {{translate('messages.add_new_employee')}}
@@ -102,7 +102,7 @@
                             </div>
                             <div class="text-center py-3 my-auto">
                                 <img class="img--100" id="viewer"
-                                src="{{ asset('assets/admin/img/400x400/img2.jpg') }}" alt="Employee thumbnail"/>
+                                src="{{ asset('public/assets/admin/img/400x400/img2.jpg') }}" alt="Employee thumbnail"/>
                             </div>
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileUpload" class="custom-file-input"
@@ -137,7 +137,7 @@
                     <div class="col-md-4">
                         <div class="js-form-message form-group mb-0">
                             <label class="input-label" for="signupSrPassword">{{translate('messages.password')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="top"
-        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span> <span class="form-label-secondary text-danger"
+        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span> <span class="form-label-secondary text-danger"
                             data-toggle="tooltip" data-placement="top"
                             data-original-title="{{ translate('messages.Required.')}}"> *
                             </span> </label>
@@ -198,7 +198,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('assets/admin')}}/js/view-pages/employee.js"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/employee.js"></script>
 <script>
     "use strict";
     $(document).on('ready', function () {
@@ -222,7 +222,7 @@
         });
     });
         $('#reset_btn').click(function(){
-            $('#viewer').attr('src', "{{ asset('assets/admin/img/400x400/img2.jpg') }}");
+            $('#viewer').attr('src', "{{ asset('public/assets/admin/img/400x400/img2.jpg') }}");
             $('#customFileUpload').val(null);
             $('#zone_id').val(null).trigger('change');
             $('#role_id').val(null).trigger('change');

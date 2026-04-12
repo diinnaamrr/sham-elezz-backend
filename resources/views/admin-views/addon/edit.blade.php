@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('assets/admin/img/edit.png')}}" class="w--20" alt="">
+                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{translate('messages.addon_update')}}
@@ -122,7 +122,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('assets/admin')}}/js/view-pages/addon-index.js"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/addon-index.js"></script>
     <script>
         "use strict";
 

@@ -42,7 +42,7 @@
                             <td class="media align-items-center cursor-pointer quick-View-Cart-Item"
                                 data-product-id="{{$cartItem['id']}}" data-item-key="{{$key}}">
                                 <img class="avatar avatar-sm mr-1 onerror-image"
-                                     data-onerror-image="{{ asset('assets/admin/img/100x100/2.png') }}"
+                                     data-onerror-image="{{ asset('public/assets/admin/img/100x100/2.png') }}"
                                      src="{{ $cartItem['image_full_url'] }}"
 
                                     alt="{{ $cartItem['name'] }} image">
@@ -406,4 +406,4 @@ if (isset($cart['paid'])) {
     </div>
 </div>
 
-<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>

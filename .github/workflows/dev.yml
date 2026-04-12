@@ -412,7 +412,9 @@ jobs:
             
             # Update APP_URL and ASSET_URL for dev environment
             echo "=== Updating APP_URL and ASSET_URL ==="
-            DEV_URL="http://dev-sham-elezz.duckdns.org/"
+            # Must use https when the site is served over HTTPS (Cloudflare, etc.); otherwise
+            # ASSET_URL/APP_URL produce http:// asset() links and the browser blocks them (mixed content).
+            DEV_URL="https://dev-sham-elezz.duckdns.org/"
             
             # Backup .env first
             cp .env .env.backup || true
@@ -542,10 +544,10 @@ jobs:
             echo "=== Verifying asset URLs ==="
             ASSET_URL=$(docker-compose -f docker-compose.dev.yml exec -T app php artisan tinker --execute="echo asset('public/landing-page/assets/css/bootstrap.min.css');" 2>/dev/null | tr -d '\r\n' || echo "")
             echo "Generated asset URL: $ASSET_URL"
-            if [[ "$ASSET_URL" == http://dev-sham-elezz.duckdns.org/* ]]; then
-              echo "✅ Asset URL is correct (starts with http://dev-sham-elezz.duckdns.org/)"
+            if [[ "$ASSET_URL" == https://dev-sham-elezz.duckdns.org/* ]]; then
+              echo "✅ Asset URL is correct (starts with https://dev-sham-elezz.duckdns.org/)"
             else
-              echo "❌ Asset URL is incorrect! Should start with http://dev-sham-elezz.duckdns.org/"
+              echo "❌ Asset URL is incorrect! Should start with https://dev-sham-elezz.duckdns.org/"
               echo "   Current: $ASSET_URL"
             fi
             

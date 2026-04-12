@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('assets/admin/img/edit.png')}}" class="w--20" alt="">
+                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{translate('messages.Brand_Update')}}
@@ -84,7 +84,7 @@
                                 <label class="text-center my-auto position-relative d-inline-block">
                                     <img class="img--176 border" id="viewer"
                                          src="{{ $brand['image_full_url'] }}"
-                                         data-onerror-image="{{asset('assets/admin/img/upload-img.png')}}"
+                                         data-onerror-image="{{asset('public/assets/admin/img/upload-img.png')}}"
                                          alt=""/>
                                     <div class="icon-file-group">
                                         <div class="icon-file">
@@ -110,7 +110,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('assets/admin')}}/js/view-pages/brand-index.js"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/brand-index.js"></script>
     <script>
         "use strict";
         $('#reset_btn').click(function(){

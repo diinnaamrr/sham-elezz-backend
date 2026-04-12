@@ -12,7 +12,7 @@
         <div class="page-header d-flex flex-wrap align-items-center justify-content-between">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('assets/admin/img/module.png')}}" alt="">
+                    <img src="{{asset('public/assets/admin/img/module.png')}}" alt="">
                 </span>
                 <span>
                     {{translate('messages.business_Module_list')}}
@@ -67,13 +67,13 @@
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.business-settings.module.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('assets/admin') }}/svg/components/excel.svg"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('admin.business-settings.module.export', ['type'=>'csv',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -127,8 +127,8 @@
                                     <input type="checkbox" class="toggle-switch-input dynamic-checkbox"
                                            data-id="status-{{$module->id}}"
                                            data-type="status"
-                                           data-image-on='{{asset('assets/admin/img/modal')}}/module-on.png'
-                                           data-image-off="{{asset('assets/admin/img/modal')}}/module-off.png"
+                                           data-image-on='{{asset('public/assets/admin/img/modal')}}/module-on.png'
+                                           data-image-off="{{asset('public/assets/admin/img/modal')}}/module-off.png"
                                            data-title-on="{{translate('Want_to_activate_this')}} <strong>{{translate('Business_Module?')}}</strong>"
                                            data-title-off="'{{translate('Want_to_deactivate_this')}} <strong>{{translate('Business_Module?')}}</strong>"
                                            data-text-on="<p>{{translate('If_you_activate_this_business_module,_all_its_features_and_functionalities_will_be_available_and_accessible_to_all_users.')}}</p>"
@@ -164,7 +164,7 @@
                 <!-- End Pagination -->
                 @if(count($modules) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -191,7 +191,7 @@
                         <div class="modal-body">
                             <div class="how-it-works">
                                 <div class="item">
-                                    <img src="{{asset('assets/admin/img/how/how1.png')}}" class="h-60px object-contain object-left" alt="">
+                                    <img src="{{asset('public/assets/admin/img/how/how1.png')}}" class="h-60px object-contain object-left" alt="">
                                     <h2 class="serial">{{ translate('1') }}</h2>
                                     <h5>{{ translate('Create_Business_Module') }}</h5>
                                     <p>
@@ -199,7 +199,7 @@
                                     </p>
                                 </div>
                                 <div class="item">
-                                    <img src="{{asset('assets/admin/img/how/how2.png')}}" class="h-60px object-contain object-left" alt="">
+                                    <img src="{{asset('public/assets/admin/img/how/how2.png')}}" class="h-60px object-contain object-left" alt="">
                                     <h2 class="serial">{{ translate('2') }}</h2>
                                     <h5>{{ translate('Add_Module_to_Zone') }}</h5>
                                     <p>
@@ -207,7 +207,7 @@
                                     </p>
                                 </div>
                                 <div class="item mw-100">
-                                    <img src="{{asset('assets/admin/img/how/how3.png')}}" class="h-60px object-contain object-left" alt="">
+                                    <img src="{{asset('public/assets/admin/img/how/how3.png')}}" class="h-60px object-contain object-left" alt="">
                                     <h2 class="serial">{{ translate('3') }}</h2>
                                     <h5>{{ translate('Create_Stores') }}</h5>
                                     <p>
@@ -225,7 +225,7 @@
                                     {{translate("Otherwise this zone won't function properly & will work show anything against this zone")}}
                                 </p>
                             </div>
-                            <img src="{{asset('assets/admin/img/zone-settings-popup-arrow.gif')}}" alt="admin/img" class="w-100 h-unset">
+                            <img src="{{asset('public/assets/admin/img/zone-settings-popup-arrow.gif')}}" alt="admin/img" class="w-100 h-unset">
                         </div>
                     </div>
                     <div class="item px-xl-4">
@@ -237,7 +237,7 @@
                                 </p>
                             </div>
                             <div class="col-sm-8">
-                                <img src="{{asset('assets/admin/img/module2.png')}}" alt="admin/img" class="w-100 h-unset">
+                                <img src="{{asset('public/assets/admin/img/module2.png')}}" alt="admin/img" class="w-100 h-unset">
                             </div>
                         </div>
                     </div>

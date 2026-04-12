@@ -76,7 +76,7 @@
                             <td>
                                 <a class="media align-items-center" href="{{route('vendor.item.requested_item_view',['id'=> $item['id']])}}">
                                     <img class="avatar avatar-lg mr-3 onerror-image" src="{{ $item['image_full_url'] }}"
-                                         data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}" alt="{{ $item->getRawOriginal('name') ?? $item->name }} image">
+                                         data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{ $item->getRawOriginal('name') ?? $item->name }} image">
                                     <div class="media-body">
                                         <h5 class="text-hover-primary mb-0">{{ Str::limit($item->getRawOriginal('name') ?? $item['name'], 20, '...') }}</h5>
                                     </div>
@@ -132,7 +132,7 @@
                 </div>
                 @if(count($items) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -164,7 +164,7 @@
           },
           language: {
             zeroRecords: '<div class="text-center p-4">' +
-                '<img class="w-7rem mb-3" src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
+                '<img class="w-7rem mb-3" src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
 
                 '</div>'
           }
