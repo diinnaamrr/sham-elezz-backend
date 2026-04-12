@@ -18,7 +18,8 @@ services:
     environment:
       - APP_ENV=${APP_ENV:-local}
       - APP_DEBUG=${APP_DEBUG:-true}
-      - APP_URL=http://dev-sham-elezz.duckdns.org/
+      # لازم يطابق عنوان المتصفح (مع https لو Cloudflare / بروكسي SSL). غيّر في .env: APP_URL=...
+      - APP_URL=${APP_URL:-http://dev-sham-elezz.duckdns.org}
       - DB_HOST=db
       - DB_PORT=3306
       - REDIS_HOST=redis
