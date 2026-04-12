@@ -39,11 +39,11 @@ if [[ -z "$DB_DATABASE" || -z "$ROOT_PW" ]]; then
 fi
 
 compose() {
-  if docker compose version >/dev/null 2>&1; then
-    docker compose -f "$COMPOSE_FILE" "$@"
-  else
-    docker-compose -f "$COMPOSE_FILE" "$@"
+  if ! docker compose version >/dev/null 2>&1; then
+    echo "❌ ركّب Docker Compose V2: sudo apt-get install -y docker-compose-plugin" >&2
+    exit 1
   fi
+  docker compose -f "$COMPOSE_FILE" "$@"
 }
 
 echo "==> إعادة إنشاء قاعدة البيانات: $DB_DATABASE"
