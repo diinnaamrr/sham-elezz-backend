@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# الافتراضي تاج main (فرع main على GHCR). لو محتاج تاج تاني: PROD_IMAGE_TAG=latest أو dev
+# الصورة الموحّدة: ghcr.io/diinnaamrr/sham-el-ezz-backend — الافتراضي تاج latest
+# تاج آخر: PROD_IMAGE_TAG=main أو dev
 #
 #   sudo bash scripts/prod-deploy.sh
 #   PROD_ROOT=/var/www/sham-elezz-prod bash scripts/prod-deploy.sh
@@ -8,7 +9,7 @@ set -euo pipefail
 
 ROOT="${PROD_ROOT:-/var/www/sham-elezz-prod}"
 COMPOSE="${COMPOSE_FILE:-docker-compose.prod.yml}"
-TAG="${PROD_IMAGE_TAG:-main}"
+TAG="${PROD_IMAGE_TAG:-latest}"
 IMAGE="${PROD_IMAGE:-ghcr.io/diinnaamrr/sham-el-ezz-backend:${TAG}}"
 CONTAINER="${APP_CONTAINER:-sham_el_ezz_app_prod}"
 

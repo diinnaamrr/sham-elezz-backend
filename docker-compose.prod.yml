@@ -1,7 +1,7 @@
 services:
   app:
-    # تاج main من فرع main (.github/workflows/prod.yml). لو manifest unknown شغّل Prod Deploy مرة على main.
-    image: ghcr.io/diinnaamrr/sham-el-ezz-backend:${IMAGE_TAG:-main}
+    # نفس الحزمة على GHCR: sham-el-ezz-backend — latest و main (غيّر IMAGE_TAG في .env لو حابب main)
+    image: ghcr.io/diinnaamrr/sham-el-ezz-backend:${IMAGE_TAG:-latest}
     container_name: sham_el_ezz_app_prod
     restart: unless-stopped
     working_dir: /var/www/html
