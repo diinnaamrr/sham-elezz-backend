@@ -1,0 +1,552 @@
+name: Dev Deploy
+
+on:
+  push:
+    branches: [dev]
+
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: diinnaamrr
+          password: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/diinnaamrr/sham-el-ezz-backend
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=dev-
+            type=raw,value=dev,enable={{is_default_branch}}
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code (for SCP)
+        uses: actions/checkout@v4
+
+      - name: Debug - Check secrets (masked)
+        run: |
+          if [ -n "${{ secrets.SSH_HOST }}" ]; then echo "SSH_HOST is set: YES"; else echo "SSH_HOST is set: NO"; fi
+          if [ -n "${{ secrets.SSH_USER }}" ]; then echo "SSH_USER is set: YES"; else echo "SSH_USER is set: NO"; fi
+          if [ -n "${{ secrets.SSH_PASSWORD }}" ]; then echo "SSH_PASSWORD is set: YES"; else echo "SSH_PASSWORD is set: NO"; fi
+          if [ -n "${{ secrets.SSH_KEY }}" ]; then echo "SSH_KEY is set: YES"; else echo "SSH_KEY is set: NO"; fi
+
+      - name: Prepare server directories
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            mkdir -p /var/www/sham-elezz-dev/docker/ngnix
+            mkdir -p /var/www/sham-elezz-dev/docker/php
+            mkdir -p /var/www/sham-elezz-dev/storage
+            mkdir -p /var/www/sham-elezz-dev/bootstrap/cache
+            mkdir -p /var/www/sham-elezz-dev/backups
+
+      - name: Copy docker-compose.dev.yml to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "./docker-compose.dev.yml"
+          target: "/var/www/sham-elezz-dev/"
+
+      - name: Copy default-dev nginx config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "./docker/ngnix/default-dev.conf"
+          target: "/var/www/sham-elezz-dev/docker/ngnix/"
+
+      - name: Copy docker/php/local.ini
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "./docker/php/local.ini"
+          target: "/var/www/sham-elezz-dev/docker/php/"
+      
+      - name: Copy Dockerfile to server (optional)
+        continue-on-error: true
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "./Dockerfile"
+          target: "/var/www/sham-elezz-dev/"
+          strip_components: 0
+
+      - name: SSH to server & deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            cd /var/www/sham-elezz-dev
+            # Ensure required directories exist
+            mkdir -p docker/ngnix docker/php storage bootstrap/cache backups
+            
+            # Copy Dockerfile if it doesn't exist (fallback if scp failed)
+            if [ ! -f Dockerfile ]; then
+              echo "⚠️  Dockerfile not found. Will try to pull from GHCR or build from image."
+            fi
+            
+            # Remove old nginx config if it exists (may have SSL config from production)
+            rm -f docker/ngnix/default.conf
+            
+            # Create fresh nginx config (HTTP only, no SSL for dev)
+            # Includes proper location blocks for /storage/, /public/, and static files
+            cat > docker/ngnix/default.conf << 'EOF'
+            server {
+                listen 80;
+                server_name _;
+                root /var/www/html/public;
+                index index.php;
+                
+                client_max_body_size 100M;
+                
+                # Handle /storage/app/public/... (if Laravel generates this path)
+                location ^~ /storage/app/public/ {
+                    alias /var/www/html/storage/app/public/;
+                    try_files $uri =404;
+                    access_log off;
+                    log_not_found off;
+                    expires 30d;
+                }
+                
+                # Handle /storage/... (standard Laravel path with symlink)
+                location ^~ /storage/ {
+                    alias /var/www/html/storage/app/public/;
+                    try_files $uri =404;
+                    access_log off;
+                    log_not_found off;
+                    expires 30d;
+                }
+                
+                # Serve files referenced with asset('public/...') correctly
+                location ^~ /public/ {
+                    alias /var/www/html/public/;
+                    try_files $uri $uri/ =404;
+                    access_log off;
+                    log_not_found off;
+                    expires 30d;
+                }
+                
+                # Static files (CSS, JS, Images, Fonts)
+                location ~* \.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff2?|eot|ttf|otf|mp4|webp|json|xml)$ {
+                    root /var/www/html/public;
+                    try_files $uri =404;
+                    access_log off;
+                    log_not_found off;
+                    expires 30d;
+                    add_header Cache-Control "public, immutable";
+                }
+                
+                location / {
+                    try_files $uri $uri/ /index.php?$query_string;
+                }
+                
+                location ~ \.php$ {
+                    fastcgi_pass app:9000;
+                    fastcgi_index index.php;
+                    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                    include fastcgi_params;
+                }
+                
+                location ~ /\.(?!well-known).* {
+                    deny all;
+                }
+            }
+            EOF
+            chmod 644 docker/ngnix/default.conf
+            
+            # Verify nginx config file exists and is a file (not directory)
+            if [ ! -f docker/ngnix/default.conf ]; then
+              echo "ERROR: nginx config file does not exist or is not a file"
+              ls -la docker/ngnix/ || true
+              exit 1
+            fi
+            
+            # Try to pull image from GHCR, or build locally if it doesn't exist
+            echo "Attempting to pull image from GHCR: ghcr.io/diinnaamrr/sham-el-ezz-backend:dev"
+            
+            # Check if Dockerfile exists first (for fallback)
+            if [ ! -f Dockerfile ]; then
+              echo "⚠️  Dockerfile not found. Will try to pull from GHCR only."
+            fi
+            
+            # Try to pull from GHCR (public image, no login needed)
+            echo "Pulling from GHCR: ghcr.io/diinnaamrr/sham-el-ezz-backend:dev"
+            
+            # Pull and capture both stdout and stderr
+            PULL_OUTPUT=$(docker pull ghcr.io/diinnaamrr/sham-el-ezz-backend:dev 2>&1)
+            PULL_EXIT_CODE=$?
+            
+            # Check if Docker is trying to use Docker Hub (wrong registry!)
+            if echo "$PULL_OUTPUT" | grep -qi "docker hub\|hub.docker.com\|login prior to pull"; then
+              echo "❌ ERROR: Docker is trying to pull from Docker Hub instead of GHCR!"
+              echo "This means the image name is being misinterpreted or Docker is misconfigured."
+              echo ""
+              echo "Full error:"
+              echo "$PULL_OUTPUT"
+              echo ""
+              echo "💡 Building locally from Dockerfile instead..."
+              PULL_EXIT_CODE=1
+            elif [ $PULL_EXIT_CODE -eq 0 ]; then
+              echo "✅ Successfully pulled image from GHCR"
+            else
+              echo "⚠️  Failed to pull from GHCR (exit code: $PULL_EXIT_CODE)"
+              echo "Error output:"
+              echo "$PULL_OUTPUT"
+            fi
+            
+            # If pull failed, try to build locally
+            if [ $PULL_EXIT_CODE -ne 0 ]; then
+              echo ""
+              echo "Building image locally from Dockerfile..."
+              
+              if [ -f Dockerfile ]; then
+                echo "✅ Dockerfile found. Building image locally..."
+                docker build -t ghcr.io/diinnaamrr/sham-el-ezz-backend:dev . || {
+                  echo "❌ Failed to build image locally"
+                  echo ""
+                  echo "💡 The image may not exist in GHCR yet."
+                  echo "   Wait for GitHub Actions to build and push it first, or check:"
+                  echo "   https://github.com/diinnaamrr/sham-elezz-backend/pkgs/container/sham-el-ezz-backend"
+                  exit 1
+                }
+                echo "✅ Image built successfully from Dockerfile"
+              else
+                echo "❌ Dockerfile not found. Cannot build locally."
+                echo ""
+                echo "💡 Solutions:"
+                echo "   1. Wait for GitHub Actions to build and push the image to GHCR first"
+                echo "   2. Or ensure the image exists and is public:"
+                echo "      https://github.com/diinnaamrr/sham-elezz-backend/pkgs/container/sham-el-ezz-backend"
+                echo ""
+                echo "Skipping deployment - image not available."
+                exit 1
+              fi
+            fi
+            
+            # Copy application files from image to host directory
+            # This is needed because nginx mounts the host directory, but files are in the image
+            echo "Copying application files from image to host..."
+            
+            # Always copy files from image (vendor directory is in the image)
+            docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:dev sh -c "
+              # Copy all files except storage and bootstrap/cache (preserve existing data)
+              cd /var/www/html
+              find . -mindepth 1 -maxdepth 1 ! -name 'storage' ! -name '.env' -exec cp -a {} /target/ \;
+              # Copy bootstrap/cache structure but not contents
+              mkdir -p /target/bootstrap/cache
+              # Copy vendor directory (important!)
+              if [ -d vendor ]; then
+                cp -a vendor /target/ 2>&1 | head -20
+              fi
+              # Copy public directory
+              if [ -d public ]; then
+                cp -a public /target/ 2>&1 | head -20
+              fi
+              echo 'Files copied successfully'
+            " || {
+              echo "⚠️  Copy method 1 failed, trying alternative..."
+              docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:dev sh -c "
+                cd /var/www/html
+                tar --exclude='storage' --exclude='bootstrap/cache' --exclude='.env' -cf - . | tar -xf - -C /target/ 2>&1 | head -50
+              " || {
+                echo "⚠️  Copy method 2 failed, trying simple copy..."
+                docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:dev sh -c "cp -a /var/www/html/. /target/ 2>&1 | head -100"
+              }
+            }
+            
+            # Set permissions
+            chmod -R 755 storage bootstrap/cache 2>/dev/null || true
+            chmod -R 755 vendor public 2>/dev/null || true
+            
+            # Verify vendor directory exists
+            if [ -d vendor ]; then
+              echo "✅ vendor directory exists"
+              ls -la vendor/autoload.php 2>/dev/null && echo "✅ vendor/autoload.php found" || echo "⚠️  vendor/autoload.php not found"
+            else
+              echo "❌ vendor directory missing - this will cause errors!"
+            fi
+            
+            # Stop and remove old containers
+            # Use docker-compose (with hyphen) since standalone is installed
+            docker-compose -f docker-compose.dev.yml down || true
+            
+            # Remove old nginx config directory if it exists (to avoid SSL issues)
+            rm -rf docker/ngnix/default.conf
+            
+            # Recreate nginx config (ensure it's HTTP only)
+            # Includes proper location blocks for /storage/, /public/, and static files
+            mkdir -p docker/ngnix
+            cat > docker/ngnix/default.conf << 'EOF'
+            server {
+                listen 80;
+                server_name _;
+                root /var/www/html/public;
+                index index.php;
+                
+                client_max_body_size 100M;
+                
+                # Handle /storage/app/public/... (if Laravel generates this path)
+                location ^~ /storage/app/public/ {
+                    alias /var/www/html/storage/app/public/;
+                    try_files $uri =404;
+                    access_log off;
+                    log_not_found off;
+                    expires 30d;
+                }
+                
+                # Handle /storage/... (standard Laravel path with symlink)
+                location ^~ /storage/ {
+                    alias /var/www/html/storage/app/public/;
+                    try_files $uri =404;
+                    access_log off;
+                    log_not_found off;
+                    expires 30d;
+                }
+                
+                # Serve files referenced with asset('public/...') correctly
+                location ^~ /public/ {
+                    alias /var/www/html/public/;
+                    try_files $uri $uri/ =404;
+                    access_log off;
+                    log_not_found off;
+                    expires 30d;
+                }
+                
+                # Static files (CSS, JS, Images, Fonts)
+                location ~* \.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff2?|eot|ttf|otf|mp4|webp|json|xml)$ {
+                    root /var/www/html/public;
+                    try_files $uri =404;
+                    access_log off;
+                    log_not_found off;
+                    expires 30d;
+                    add_header Cache-Control "public, immutable";
+                }
+                
+                location / {
+                    try_files $uri $uri/ /index.php?$query_string;
+                }
+                
+                location ~ \.php$ {
+                    fastcgi_pass app:9000;
+                    fastcgi_index index.php;
+                    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                    include fastcgi_params;
+                }
+                
+                location ~ /\.(?!well-known).* {
+                    deny all;
+                }
+            }
+            EOF
+            chmod 644 docker/ngnix/default.conf
+            
+            # Start containers with new image
+            docker-compose -f docker-compose.dev.yml up -d
+            
+            # Wait for containers to be ready before running artisan commands
+            sleep 5
+            
+            # Restart nginx to ensure new config is loaded
+            echo "Restarting nginx to load new config..."
+            docker-compose -f docker-compose.dev.yml restart nginx || docker restart sham_el_ezz_nginx_dev || true
+            
+            # Wait for containers to be ready
+            sleep 5
+            
+            # Create storage symlink (important for /storage/ URLs to work)
+            echo "Creating storage symlink..."
+            docker-compose -f docker-compose.dev.yml exec -T app php artisan storage:link || echo "⚠️  Storage link failed (may already exist)"
+            
+            # Wait a bit more for everything to settle
+            sleep 5
+            
+            # Update APP_URL and ASSET_URL for dev environment
+            echo "=== Updating APP_URL and ASSET_URL ==="
+            DEV_URL="http://dev-sham-elezz.duckdns.org/"
+            
+            # Backup .env first
+            cp .env .env.backup || true
+            
+            # Update APP_URL
+            if grep -q "^APP_URL=" .env; then
+              sed -i "s|^APP_URL=.*|APP_URL=${DEV_URL}|" .env
+              echo "✅ Updated APP_URL"
+            else
+              echo "APP_URL=${DEV_URL}" >> .env
+              echo "✅ Added APP_URL"
+            fi
+            
+            # Update ASSET_URL (must match APP_URL for assets to load correctly)
+            if grep -q "^ASSET_URL=" .env; then
+              sed -i "s|^ASSET_URL=.*|ASSET_URL=${DEV_URL}|" .env
+              echo "✅ Updated ASSET_URL"
+            else
+              echo "ASSET_URL=${DEV_URL}" >> .env
+              echo "✅ Added ASSET_URL"
+            fi
+            
+            # Verify
+            echo ""
+            echo "=== Environment variables after update ==="
+            grep -E "^APP_URL|^ASSET_URL" .env || echo "❌ Variables not found"
+            
+            # Show current values
+            echo ""
+            echo "Current values:"
+            echo "APP_URL=$(grep '^APP_URL=' .env | cut -d'=' -f2-)"
+            echo "ASSET_URL=$(grep '^ASSET_URL=' .env | cut -d'=' -f2-)"
+            
+            # Check database container status
+            echo "=== Checking database container ==="
+            docker logs sham_el_ezz_db_dev --tail 30 || echo "Cannot get db logs"
+            
+            # Wait a bit more if database is still starting
+            DB_STATUS=$(docker inspect -f '{{.State.Status}}' sham_el_ezz_db_dev 2>/dev/null || echo "unknown")
+            if [ "$DB_STATUS" != "running" ]; then
+              echo "⚠️  Database container is not running. Status: $DB_STATUS"
+              echo "Waiting 10 more seconds..."
+              sleep 10
+            fi
+            
+            # Verify containers are running
+            echo "=== Checking container status ==="
+            docker ps | grep sham_el_ezz || echo "No sham_el_ezz containers found"
+            
+            # Check if port 8112 is listening
+            echo "=== Checking port 8112 ==="
+            netstat -tulpn | grep 8015 || ss -tulpn | grep 8015 || echo "Port 8015 not found in netstat/ss"
+            
+            # Check firewall (if ufw is installed)
+            echo "=== Checking firewall (ufw) ==="
+            if command -v ufw &> /dev/null; then
+              ufw status | grep 8015 || echo "Port 8015 not in ufw rules"
+            else
+              echo "ufw not installed"
+            fi
+            
+            # Check iptables
+            echo "=== Checking iptables ==="
+            iptables -L -n | grep 8015 || echo "Port 8015 not in iptables rules"
+            
+            # Check nginx logs
+            echo "=== Nginx container logs ==="
+            docker logs sham_el_ezz_nginx_dev --tail 20 || echo "Cannot get nginx logs"
+            
+            # Check app container logs
+            echo "=== App container logs ==="
+            docker logs sham_el_ezz_app_dev --tail 20 || echo "Cannot get app logs"
+            
+            # Test from inside server
+            echo "=== Testing from server ==="
+            curl -I http://localhost:8015 || curl -I http://127.0.0.1:8015 || echo "Cannot connect to localhost:8015"
+            
+            # Run artisan commands (vendor should be in image now)
+            echo ""
+            echo "=== Clearing all caches ==="
+            
+            # Clear config cache file first (important for .env changes)
+            echo "1. Deleting config cache file..."
+            docker-compose -f docker-compose.dev.yml exec -T app rm -f /var/www/html/bootstrap/cache/config.php || true
+            docker-compose -f docker-compose.dev.yml exec -T app ls -la /var/www/html/bootstrap/cache/config.php 2>/dev/null && echo "⚠️  Config cache still exists!" || echo "✅ Config cache deleted"
+            
+            # Clear all Laravel caches
+            echo "2. Clearing Laravel caches..."
+            docker-compose -f docker-compose.dev.yml exec -T app php artisan config:clear || echo "⚠️  Config clear failed"
+            docker-compose -f docker-compose.dev.yml exec -T app php artisan cache:clear || echo "⚠️  Cache clear failed"
+            docker-compose -f docker-compose.dev.yml exec -T app php artisan view:clear || echo "⚠️  View clear failed"
+            docker-compose -f docker-compose.dev.yml exec -T app php artisan route:clear || echo "⚠️  Route clear failed"
+            docker-compose -f docker-compose.dev.yml exec -T app php artisan optimize:clear || echo "⚠️  Optimize clear failed"
+            
+            # Delete compiled views (important for asset URLs)
+            echo "3. Deleting compiled views..."
+            docker-compose -f docker-compose.dev.yml exec -T app find /var/www/html/storage/framework/views -name "*.php" -delete 2>/dev/null || true
+            COMPILED_COUNT=$(docker-compose -f docker-compose.dev.yml exec -T app find /var/www/html/storage/framework/views -name "*.php" 2>/dev/null | wc -l || echo "0")
+            echo "   Remaining compiled views: $COMPILED_COUNT"
+            
+            # Copy .env to container again (after restart it might be needed)
+            echo "4. Copying .env to container..."
+            docker cp .env sham_el_ezz_app_dev:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env"
+            
+            # Restart app container to reload .env
+            echo "5. Restarting app container..."
+            docker-compose -f docker-compose.dev.yml restart app || true
+            
+            # Wait a bit for container to restart
+            sleep 8
+            
+            # Copy .env one more time after restart
+            docker cp .env sham_el_ezz_app_dev:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env after restart"
+            
+            # Verify .env is loaded correctly
+            echo ""
+            echo "=== Verifying .env values in container ==="
+            docker-compose -f docker-compose.dev.yml exec -T app grep -E "^APP_URL|^ASSET_URL" /var/www/html/.env || echo "⚠️  .env not found in container"
+            
+            # Verify config values
+            echo ""
+            echo "=== Verifying config values ==="
+            docker-compose -f docker-compose.dev.yml exec -T app php artisan tinker --execute="echo 'APP_URL: ' . config('app.url') . PHP_EOL; echo 'ASSET_URL: ' . config('app.asset_url', 'not set') . PHP_EOL;" || echo "⚠️  Tinker failed"
+            
+            # Verify asset URLs are correct
+            echo ""
+            echo "=== Verifying asset URLs ==="
+            ASSET_URL=$(docker-compose -f docker-compose.dev.yml exec -T app php artisan tinker --execute="echo asset('public/landing-page/assets/css/bootstrap.min.css');" 2>/dev/null | tr -d '\r\n' || echo "")
+            echo "Generated asset URL: $ASSET_URL"
+            if [[ "$ASSET_URL" == http://dev-sham-elezz.duckdns.org/* ]]; then
+              echo "✅ Asset URL is correct (starts with http://dev-sham-elezz.duckdns.org/)"
+            else
+              echo "❌ Asset URL is incorrect! Should start with http://dev-sham-elezz.duckdns.org/"
+              echo "   Current: $ASSET_URL"
+            fi
+            
+            docker system prune -f
