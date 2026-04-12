@@ -8,7 +8,7 @@
         <div class="page-header d-flex flex-wrap align-items-center justify-content-between">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/add.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/add.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.wallet_bonus_setup')}}
@@ -305,7 +305,7 @@
                         </div>
                         @if(count($bonuses) === 0)
                         <div class="empty--data">
-                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                            <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
                                 {{translate('no_data_found')}}
                             </h5>
@@ -330,7 +330,7 @@
                         <div class="item">
                             <div class="mb-20">
                                 <div class="text-center">
-                                    <img src="{{asset('/public/assets/admin/img/image_127.png')}}" alt="" class="mb-20">
+                                    <img src="{{asset('assets/admin/img/image_127.png')}}" alt="" class="mb-20">
                                     <h5 class="modal-title">{{translate('Wallet_bonus_is_only_applicable_when_a_customer_add_fund_to_wallet_via_outside_payment_gateway_!')}}</h5>
                                 </div>
                                 <ul>
@@ -352,7 +352,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/wallet-bonus-index.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/wallet-bonus-index.js"></script>
 <script>
     "use strict";
     $(document).on('ready', function () {
@@ -369,7 +369,7 @@
             },
             language: {
                 zeroRecords: '<div class="text-center p-4">' +
-                '<img class="w-7rem mb-3" src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
+                '<img class="w-7rem mb-3" src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
 
                 '</div>'
             }

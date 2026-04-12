@@ -2,7 +2,7 @@
 @section('title', translate('messages.social_media'))
 @push('css_or_js')
     <!-- Custom styles for this page -->
-    <link href="{{ asset('public/assets/admin/css/croppie.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/admin/css/croppie.css') }}" rel="stylesheet">
 @endpush
 @section('content')
     <div class="content container-fluid">
@@ -10,7 +10,7 @@
         <div class="page-header">
             <h1 class="page-header-title mr-3">
                 <span class="page-header-icon">
-                    <img src="{{asset('/public/assets/admin/img/social.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/social.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                      {{translate('social_media')}}

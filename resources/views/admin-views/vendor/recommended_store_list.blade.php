@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/condition.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/condition.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.Recommended_stores')}}
@@ -65,8 +65,8 @@
                                     <input class="form-check-input dynamic-checkbox"
                                            data-id="store_shffle"
                                            data-type="status"
-                                           data-image-on='{{asset('/public/assets/admin/img/modal')}}/counter-on.png'
-                                           data-image-off="{{asset('/public/assets/admin/img/modal')}}/counter-off.png"
+                                           data-image-on='{{asset('assets/admin/img/modal')}}/counter-on.png'
+                                           data-image-off="{{asset('assets/admin/img/modal')}}/counter-off.png"
                                            data-title-on="{{translate('Want_to_shuffle_the_store_list?')}}"
                                            data-title-off="{{translate('Want_to_disable_shuffle_store_list?')}}"
                                            data-text-on="<p>{{translate('If_enabled,_store_recommended_section_will_be_shuffled.’')}}</p>"
@@ -75,8 +75,8 @@
                                     <label
                                        data-id="store_shffle"
                                        data-type="status"
-                                       data-image-on='{{asset('/public/assets/admin/img/modal')}}/counter-on.png'
-                                       data-image-off="{{asset('/public/assets/admin/img/modal')}}/counter-off.png"
+                                       data-image-on='{{asset('assets/admin/img/modal')}}/counter-on.png'
+                                       data-image-off="{{asset('assets/admin/img/modal')}}/counter-off.png"
                                        data-title-on="{{translate('Want_to_shuffle_the_store_list?')}}"
                                        data-title-off="{{translate('Want_to_disable_shuffle_store_list?')}}"
                                        data-text-on="<p>{{translate('If_enabled,_store_recommended_section_will_be_shuffled.’')}}</p>"
@@ -132,8 +132,8 @@
                                     <td >
                                         <div>
                                             <a href="{{route('admin.store.view', $store->id)}}" class="table-rest-info" alt="view store">
-                                                <img class="img--60 circle onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                src="{{ $store['logo_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"  >
+                                                <img class="img--60 circle onerror-image" data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
+                                                src="{{ $store['logo_full_url'] ?? asset('assets/admin/img/160x160/img1.jpg') }}"  >
                                                 <div class="info"><div class="text--title">
                                                     {{Str::limit($store->name,20,'...')}}
                                                     </div>
@@ -192,7 +192,7 @@
                     </div>
                     @if(count($stores) === 0)
                     <div class="empty--data">
-                        <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
                             {{translate('no_data_found')}}
                         </h5>

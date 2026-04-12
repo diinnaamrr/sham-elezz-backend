@@ -9,7 +9,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/deliveryman.png')}}" class="w--30" alt="">
+                    <img src="{{asset('assets/admin/img/deliveryman.png')}}" class="w--30" alt="">
                 </span>
                 <span>
                     {{$dm['f_name'].' '.$dm['l_name']}}

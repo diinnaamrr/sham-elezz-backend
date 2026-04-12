@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/condition.png')}}" class="w--20" alt="">
+                    <img src="{{asset('assets/admin/img/condition.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{translate('messages.Common_Condition_Setup')}}
@@ -150,7 +150,7 @@
             </div>
             @if(count($conditions) === 0)
             <div class="empty--data">
-                <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
                     {{translate('no_data_found')}}
                 </h5>
@@ -161,5 +161,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/common-condition-index.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/common-condition-index.js"></script>
 @endpush

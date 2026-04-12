@@ -1,9 +1,9 @@
 @extends('layouts.landing.app')
 @section('title', translate('messages.store_registration'))
 @push('css_or_js')
-    <link rel="stylesheet" href="{{ asset('public/assets/admin/css/toastr.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/assets/admin/css/view-pages/vendor-registration.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/assets/landing/css/select2.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/view-pages/vendor-registration.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/select2.min.css') }}"/>
 @endpush
 @section('content')
     <section class="m-0 py-5">
@@ -137,7 +137,7 @@
                             <label class="input-label" for="choice_zones">{{ translate('messages.zone') }} <span
                                     class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                     data-original-title="{{ translate('messages.select_zone_for_map') }}"><img
-                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                         alt="{{ translate('messages.select_zone_for_map') }}"></span></label>
                             <select name="zone_id" id="choice_zones" required
                                 class="form-control __form-control js-select2-custom js-example-basic-single"
@@ -165,7 +165,7 @@
                             <label class="input-label" for="latitude">{{ translate('messages.latitude') }} <span
                                     class="input-label-secondary"
                                     title="{{ translate('messages.store_lat_lng_warning') }}"><img
-                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                         alt="{{ translate('messages.store_lat_lng_warning') }}"></span></label>
                             <input type="text" id="latitude" name="latitude" class="form-control __form-control"
                                 placeholder="{{ translate('messages.Ex:') }} -94.22213" value="{{ old('latitude') }}"
@@ -175,7 +175,7 @@
                             <label class="input-label" for="longitude">{{ translate('messages.longitude') }} <span
                                     class="input-label-secondary"
                                     title="{{ translate('messages.store_lat_lng_warning') }}"><img
-                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                         alt="{{ translate('messages.store_lat_lng_warning') }}"></span></label>
                             <input type="text" name="longitude" class="form-control __form-control"
                                 placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
@@ -224,13 +224,13 @@
                                 </label>
                                 <label class="image--border position-relative">
                                     <img class="__register-img" id="coverImageViewer"
-                                        src="{{ asset('public/assets/admin/img/upload-img.png') }}" alt="Product thumbnail" />
+                                        src="{{ asset('assets/admin/img/upload-img.png') }}" alt="Product thumbnail" />
                                     <div class="icon-file-group">
                                         <div class="icon-file">
                                             <input type="file" name="cover_photo" id="coverImageUpload"
                                             class="form-control __form-control"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                            <img src="{{ asset('public/assets/admin/img/pen.png') }}" alt="">
+                                            <img src="{{ asset('assets/admin/img/pen.png') }}" alt="">
                                         </div>
                                     </div>
                                 </label>
@@ -243,13 +243,13 @@
                                         )</small></label>
                                 <label class="image--border position-relative img--100px">
                                     <img class="__register-img" id="logoImageViewer"
-                                        src="{{ asset('public/assets/admin/img/upload-img.png') }}" alt="Product thumbnail" />
+                                        src="{{ asset('assets/admin/img/upload-img.png') }}" alt="Product thumbnail" />
 
                                     <div class="icon-file-group">
                                         <div class="icon-file">
                                             <input type="file" name="logo" id="customFileEg1" class="form-control __form-control"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
-                                            <img src="{{ asset('public/assets/admin/img/pen.png') }}" alt="">
+                                            <img src="{{ asset('assets/admin/img/pen.png') }}" alt="">
                                         </div>
                                     </div>
                                 </label>
@@ -446,7 +446,7 @@
     @endsection
     @push('script_2')
 
-        <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+        <script src="{{ asset('assets/admin/js/spartan-multi-image-picker.js') }}"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
         <script
             src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=drawing,places&v=3.45.8">
@@ -545,7 +545,7 @@
             });
 
         </script>
-        <script src="{{ asset('public/assets/admin/js/view-pages/vendor-registration.js') }}"></script>
+        <script src="{{ asset('assets/admin/js/view-pages/vendor-registration.js') }}"></script>
             @if(isset($recaptcha) && $recaptcha['status'] == 1)
 
                 <script type="text/javascript">
@@ -572,5 +572,5 @@
 
 
 
-    <script src="{{ asset('public/assets/landing/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/landing/js/select2.min.js') }}"></script>
     @endpush

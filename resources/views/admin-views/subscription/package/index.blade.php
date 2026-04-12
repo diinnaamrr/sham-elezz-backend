@@ -21,7 +21,7 @@ active
                 <div class="row align-items-center py-2">
                     <div class="col-sm mb-2 mb-sm-0">
                         <div class="d-flex align-items-center">
-                            <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
+                            <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                             <div class="w-0 flex-grow pl-2">
                                 <h1 class="page-header-title mb-0">{{translate('Subscription Package List')}} <span class="badge badge-soft-dark ml-2">{{ $packages->total() > 0 ? $packages->total() : ''  }}</span></h1>
                             </div>
@@ -79,13 +79,13 @@ active
                                 <div class="created-package-slide-item">
                                     @if ($key%2 == 0)
                                     <a class="__card-1 h-100 __bg-1" href="#">
-                                        <img src="{{asset('public/assets/admin/img/plan/basic.png')}}" class="icon" alt="report/new">
+                                        <img src="{{asset('assets/admin/img/plan/basic.png')}}" class="icon" alt="report/new">
                                     @elseif ($key%3 == 1)
                                     <a class="__card-1 h-100 __bg-4" href="#">
-                                        <img src="{{asset('public/assets/admin/img/plan/standard.png')}}" class="icon" alt="report/new">
+                                        <img src="{{asset('assets/admin/img/plan/standard.png')}}" class="icon" alt="report/new">
                                     @else
                                     <a class="__card-1 h-100 __bg-8" href="#">
-                                        <img src="{{asset('public/assets/admin/img/plan/pro.png')}}" class="icon" alt="report/new">
+                                        <img src="{{asset('assets/admin/img/plan/pro.png')}}" class="icon" alt="report/new">
                                     @endif
                                         <h6 class="subtitle">{{ $item->package_name }} </h6>
                                         <h3 class="title">{{  \App\CentralLogics\Helpers::format_currency($item->transactions_sum_paid_amount)  }}</h3>
@@ -129,14 +129,14 @@ active
                                     <a id="export-excel" class="dropdown-item"
                                         href="{{ route('admin.business-settings.subscriptionackage.packageExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
+                                            src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                             alt="Image Description">
                                         {{ translate('messages.excel') }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item"
                                         href="{{ route('admin.business-settings.subscriptionackage.packageExport', ['export_type' => 'csv', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
+                                            src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                             alt="Image Description">
                                         .{{ translate('messages.csv') }}
                                     </a>
@@ -208,7 +208,7 @@ active
                         </div>
                         @if(count($packages) === 0)
                         <div class="empty--data">
-                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                            <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
                                 {{translate('no_data_found')}}
                             </h5>
@@ -222,7 +222,7 @@ active
                 <div class="card">
                     <div class="card-body text-center py-5">
                         <div class="max-w-542 mx-auto py-sm-5 py-4">
-                            <img class="mb-4" src="{{asset('/public/assets/admin/img/empty-subscription.svg')}}" alt="img">
+                            <img class="mb-4" src="{{asset('assets/admin/img/empty-subscription.svg')}}" alt="img">
                             <h4 class="mb-3">{{translate('Create Subscription Plan')}}</h4>
                             <p class="mb-4">
                                 {{translate('Add new subscription packages to the list. So that Stores get more options to join the business for the growth and success.')}}<br>
@@ -249,7 +249,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
+                            <img src="{{asset('assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
@@ -281,7 +281,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/tick.png')}}" class="mb-20">
+                            <img src="{{asset('assets/admin/img/subscription-plan/tick.png')}}" class="mb-20">
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
@@ -316,7 +316,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
+                            <img src="{{asset('assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">

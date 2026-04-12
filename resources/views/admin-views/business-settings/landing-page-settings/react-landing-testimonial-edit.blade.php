@@ -8,7 +8,7 @@
         <div class="d-flex flex-wrap justify-content-between">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/landing.png')}}" class="w--20" alt="">
+                    <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{ translate('messages.react_landing_page') }}
@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <label for="review" class="form-label">{{translate('messages.review')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_140_characters') }}">
-                                            <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                            <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                         </span></label>
                                         <textarea id="review" name="review"  maxlength="140" placeholder="{{translate('Very Good Company')}}" class="form-control h-92px">{{ $review->review }}</textarea>
                                     </div>
@@ -65,7 +65,7 @@
                                         <label class="upload-img-3 m-0 d-block">
                                             <div class="position-relative">
                                             <div class="img">
-                                                <img  src="{{ $review->reviewer_image_full_url ?? asset('/public/assets/admin/img/aspect-1.png') }}" data-onerror-image="{{asset("/public/assets/admin/img/aspect-1.png")}}" class="img__aspect-1 min-w-187px max-w-187px onerror-image" alt="">
+                                                <img  src="{{ $review->reviewer_image_full_url ?? asset('assets/admin/img/aspect-1.png') }}" data-onerror-image="{{asset("assets/admin/img/aspect-1.png")}}" class="img__aspect-1 min-w-187px max-w-187px onerror-image" alt="">
                                             </div>
                                             <input type="file"  name="reviewer_image" hidden="">
                                             @if (isset($review->reviewer_image))

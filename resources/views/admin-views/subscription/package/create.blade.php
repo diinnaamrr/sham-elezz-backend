@@ -13,7 +13,7 @@ active
             <div class="row align-items-center py-2">
                 <div class="col-sm mb-2 mb-sm-0">
                     <div class="d-flex align-items-start">
-                        <img src="{{asset('/public/assets/admin/img/create-package-icon.png')}}" width="24" alt="img">
+                        <img src="{{asset('assets/admin/img/create-package-icon.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title">{{translate('Subscription Package')}}</h1>
                             <div class="page-header-text">{{ translate('Create_Subscriptions_Packages_for_Subscription_Business_Model') }}</div>
@@ -25,7 +25,7 @@ active
         <div class="card mb-20">
             <div class="card-header">
                 <div class="w-100 d-flex flex-wrap align-items-start gap-2">
-                    <img src="{{asset('/public/assets/admin/img/material-symbols_featured-play-list.png')}}" width="18" alt="img" class="mt-1">
+                    <img src="{{asset('assets/admin/img/material-symbols_featured-play-list.png')}}" width="18" alt="img" class="mt-1">
                     <div class="w-0 flex-grow">
                         <h5 class="text--title card-title">{{ translate('Package_Information') }}</h5>
                         <div class="fz-12px">{{ translate('Give_Subscriptions_Package_Information') }}</div>
@@ -130,7 +130,7 @@ active
             <div class="card mb-20">
                 <div class="card-header">
                     <div class="w-100 d-flex flex-wrap align-items-start gap-2">
-                        <img src="{{asset('/public/assets/admin/img/material-symbols_featured-play-list-2.png')}}" alt="img" class="mt-1">
+                        <img src="{{asset('assets/admin/img/material-symbols_featured-play-list-2.png')}}" alt="img" class="mt-1">
                         <div class="w-0 flex-grow">
                             <h5 class="text--title card-title d-flex gap-3 flex-wrap mb-1">
                                 <div>
@@ -184,7 +184,7 @@ active
             <div class="card">
                 <div class="card-header">
                     <div class="w-100 d-flex flex-wrap align-items-start gap-2">
-                        <img src="{{asset('/public/assets/admin/img/bx_category.png')}}" alt="img" class="mt-1">
+                        <img src="{{asset('assets/admin/img/bx_category.png')}}" alt="img" class="mt-1">
                         <div class="w-0 flex-grow">
                             <h5 class="text--title card-title d-flex gap-3 flex-wrap mb-1">
                                 <div>

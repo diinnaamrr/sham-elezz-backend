@@ -20,7 +20,7 @@ active
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--20" alt="">
+                    <img src="{{asset('assets/admin/img/edit.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{$category->position?translate('messages.sub').' ':''}}{{translate('messages.category_update')}}
@@ -97,7 +97,7 @@ active
                                 <label class="text-center my-auto position-relative d-inline-block">
                                     <img class="img--176 border" id="viewer"
                                     src="{{ $category['image_full_url'] }}"
-                                        data-onerror-image="{{asset('public/assets/admin/img/upload-img.png')}}"
+                                        data-onerror-image="{{asset('assets/admin/img/upload-img.png')}}"
                                         alt=""/>
                                     <div class="icon-file-group">
                                         <div class="icon-file">
@@ -124,7 +124,7 @@ active
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/category-index.js"></script>
     <script>
         "use strict";
         $('#reset_btn').click(function(){

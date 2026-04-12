@@ -16,7 +16,7 @@ active
 <div class="content container-fluid">
     <!-- Title -->
     <h1 class="page-header-title mb-3 d-flex align-items-center gap-2">
-        <img src="{{asset('public/assets/admin/img/advertisement.png')}}" alt="">
+        <img src="{{asset('assets/admin/img/advertisement.png')}}" alt="">
         {{ translate('messages.Advertisement_Requests') }}
         <span class="badge badge-soft-dark ml-2">{{ $count }}</span>
     </h1>
@@ -81,7 +81,7 @@ active
                             <td>{{ Str::limit($add->title, 20) }}</td>
                             <td>
                                 <a class="media align-items-center text-body" href="{{route('admin.store.view', $add?->store_id)}}">
-                                    <img class="avatar avatar-lg mr-3" src="{{ $add->store['logo_full_url'] ?? asset('public/assets/admin/img/100x100/food-default-image.png') }}" alt="">
+                                    <img class="avatar avatar-lg mr-3" src="{{ $add->store['logo_full_url'] ?? asset('assets/admin/img/100x100/food-default-image.png') }}" alt="">
                                     <div class="media-body">
                                         <h5 class="mb-0">{{ $add?->store?->name }}</h5>
                                         <small class="text-body">{{ $add?->store?->email }}</small>
@@ -134,7 +134,7 @@ active
                                             {{ translate('Approve') }}
                                         </a>
 
-                                        <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model" id="data-add-{{ $add->id }}" data-id="data-add-{{ $add->id }}" data-title="{{translate('Are you sure you want to deny the request?')}}" data-text="<p>{{translate('You will lost the Store ads request.')}}</p>" data-image="{{asset('public/assets/admin/img/modal/deny.png')}}" data-type="deny" data-btn_class="btn-primary" data-2nd_btn_text="{{ translate('messages.Cancel') }}" href="#">
+                                        <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model" id="data-add-{{ $add->id }}" data-id="data-add-{{ $add->id }}" data-title="{{translate('Are you sure you want to deny the request?')}}" data-text="<p>{{translate('You will lost the Store ads request.')}}</p>" data-image="{{asset('assets/admin/img/modal/deny.png')}}" data-type="deny" data-btn_class="btn-primary" data-2nd_btn_text="{{ translate('messages.Cancel') }}" href="#">
                                             <i class="tio-clear-circle-outlined"></i>
                                             {{ translate('Cancel_Ads') }}
                                         </a>
@@ -170,7 +170,7 @@ active
                 </table>
                 @if(count($adds) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -202,7 +202,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{  asset('public/assets/admin/img/modal/timeout.png') }}" class="mb-20">
+                            <img src="{{  asset('assets/admin/img/modal/timeout.png') }}" class="mb-20">
                             <h5 class="modal-title"></h5>
                         </div>
                         <div class="text-center" >
@@ -239,7 +239,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img width="80" src="{{  asset('public/assets/admin/img/modal/tick.png') }}" class="mb-20">
+                            <img width="80" src="{{  asset('assets/admin/img/modal/tick.png') }}" class="mb-20">
                             <h5 class="modal-title"></h5>
                         </div>
                         <div class="text-center" >

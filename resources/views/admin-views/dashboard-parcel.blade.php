@@ -15,7 +15,7 @@
             <div class="row align-items-center py-2">
                 <div class="col-sm mb-2 mb-sm-0">
                     <div class="d-flex align-items-center">
-                        <img class="onerror-image" data-onerror-image="{{asset('/public/assets/admin/img/parcel.svg')}}" src="{{$mod->icon_full_url }}"
+                        <img class="onerror-image" data-onerror-image="{{asset('assets/admin/img/parcel.svg')}}" src="{{$mod->icon_full_url }}"
                         width="38" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title mb-0">{{translate($mod->module_name)}} {{translate('messages.Dashboard')}}.</h1>
@@ -61,7 +61,7 @@
                 <div class="row g-4" id="order_stats">
                         <div class="col-lg-3">
                             <a class="__card-1 bg-E6F6EE h-100" href="{{route('admin.parcel.orders',['all'])}}">
-                                <img src="{{asset('/public/assets/admin/img/report/new/total.png')}}" class="icon" alt="report/new">
+                                <img src="{{asset('assets/admin/img/report/new/total.png')}}" class="icon" alt="report/new">
                                 <h3 class="title text-success">{{$data['total_orders']}}</h3>
                                 <h6 class="subtitle font-regular">{{ translate('total_orders') }}</h6>
                             </a>
@@ -76,7 +76,7 @@
                                     </span>
                                     <h4 class="title">{{$data['searching_for_dm']}}</h4>
                                     <span class="subtitle font-regular">{{translate('unassigned_orders')}}</span>
-                                    <img src="{{asset('/public/assets/admin/img/dashboard/1.png')}}" alt="img" class="resturant-icon top-50px">
+                                    <img src="{{asset('assets/admin/img/dashboard/1.png')}}" alt="img" class="resturant-icon top-50px">
                                     </a>
                                     <!-- End Card -->
                                 </div>
@@ -88,7 +88,7 @@
                                     </span>
                                     <h4 class="title">{{$data['picked_up']}}</h4>
                                     <span class="subtitle font-regular">{{translate('out_for_delivery')}}</span>
-                                    <img src="{{asset('/public/assets/admin/img/dashboard/4.png')}}" alt="img" class="resturant-icon top-50px">
+                                    <img src="{{asset('assets/admin/img/dashboard/4.png')}}" alt="img" class="resturant-icon top-50px">
                                     </a>
                                     <!-- End Card -->
                                 </div>
@@ -100,7 +100,7 @@
                                     </span>
                                     <h4 class="title text-success">{{$data['delivered']}}</h4>
                                     <span class="subtitle font-regular">{{translate('delivered')}}</span>
-                                    <img src="{{asset('/public/assets/admin/img/dashboard/2.png')}}" alt="img" class="resturant-icon top-50px">
+                                    <img src="{{asset('assets/admin/img/dashboard/2.png')}}" alt="img" class="resturant-icon top-50px">
                                     </a>
                                     <!-- End Card -->
                                 </div>
@@ -112,7 +112,7 @@
                                     </span>
                                     <h4 class="title">{{$data['refund_requested']}}</h4>
                                     <span class="subtitle font-regular">{{translate('Failed Orders')}}</span>
-                                    <img src="{{asset('/public/assets/admin/img/dashboard/5.png')}}" alt="img" class="resturant-icon top-50px">
+                                    <img src="{{asset('assets/admin/img/dashboard/5.png')}}" alt="img" class="resturant-icon top-50px">
                                     </a>
                                     <!-- End Card -->
                                 </div>
@@ -260,12 +260,12 @@
 @endsection
 
 @push('script')
-    <script src="{{asset('public/assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
-    <script src="{{asset('public/assets/admin')}}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
-    <script src="{{asset('public/assets/admin')}}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
 
     <!-- Apex Charts -->
-    <script src="{{asset('/public/assets/admin/js/apex-charts/apexcharts.js')}}"></script>
+    <script src="{{asset('assets/admin/js/apex-charts/apexcharts.js')}}"></script>
     <!-- Apex Charts -->
 
 @endpush

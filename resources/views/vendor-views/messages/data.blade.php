@@ -9,7 +9,7 @@
         id="customer-{{$user->id}}">
         <div class="chat-user-info-img d-none d-md-block">
             <img class="avatar-img onerror-image"
-                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                 data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                  src="{{ $user['image_full_url'] }}"
                     alt="Image Description">
         </div>
@@ -29,7 +29,7 @@
         class="chat-user-info d-flex border-bottom p-3 align-items-center customer-list">
         <div class="chat-user-info-img d-none d-md-block">
             <img class="avatar-img"
-                    src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'
+                    src='{{asset('assets/admin/img/160x160/img1.jpg')}}'
                     alt="Image Description">
         </div>
         <div class="chat-user-info-content">
@@ -40,4 +40,4 @@
     </div>
 @endif
 @endforeach
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

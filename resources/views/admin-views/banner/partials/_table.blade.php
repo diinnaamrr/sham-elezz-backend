@@ -4,7 +4,7 @@
         <td>
             <span class="media align-items-center">
                 <img class="img--ratio-3 w-auto h--50px rounded mr-2 onerror-image" src="{{ $banner['image_full_url'] }}"
-                        data-onerror-image="{{asset('/public/assets/admin/img/900x400/img1.jpg')}}" alt="{{$banner->name}} image">
+                        data-onerror-image="{{asset('assets/admin/img/900x400/img1.jpg')}}" alt="{{$banner->name}} image">
                 <div class="media-body">
                     <h5 class="text-hover-primary mb-0">{{Str::limit($banner['title'], 25, '...')}}</h5>
                 </div>
@@ -49,4 +49,4 @@
         </td>
     </tr>
 @endforeach
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

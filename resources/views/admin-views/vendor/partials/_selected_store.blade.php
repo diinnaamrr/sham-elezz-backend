@@ -2,9 +2,9 @@
 <div class="col-sm-6 col-lg-4 col-xxl-3">
     <div class="media gap-3 cursor-pointer flex-grow-1">
         <img class="avatar avatar-lg border onerror-image" width="75"
-        data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+        data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
 
-        src="{{ $store['logo_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
+        src="{{ $store['logo_full_url'] ?? asset('assets/admin/img/160x160/img1.jpg') }}"
             alt="">
         <div class="media-body d-flex flex-column gap-1 ">
                 <div class="d-flex gap-2 justify-content-between" >
@@ -20,4 +20,4 @@
     </div>
 </div>
 @endforeach
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

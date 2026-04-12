@@ -11,7 +11,7 @@
         <div class="page-header">
             <h1 class="page-header-title mr-3">
                 <span class="page-header-icon">
-                    <img src="{{ asset('public/assets/admin/img/business.png') }}" class="w--26" alt="">
+                    <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
                     {{ translate('business_setup') }}
@@ -36,14 +36,14 @@
                     <div class="card">
                         <div class="card-header card-header-shadow">
                             <h5 class="card-title d-flex align-items-center">
-                                <img src="{{ asset('/public/assets/admin/img/ic_round-campaign.png') }}" alt=""
+                                <img src="{{ asset('assets/admin/img/ic_round-campaign.png') }}" alt=""
                                     class="card-header-icon align-self-center mr-1">
                                 <span>
                                     {{ translate('Customer_Setup') }}
                                 </span>
                                 <span class="input-label-secondary" data-toggle="tooltip" data-placement="right"
                                     data-original-title="{{ translate('messages.Here,_customers_can_store_their_refunded_order_amount,_referral_earnings,_and_loyalty_points.') }}"><img
-                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                         alt="{{ translate('messages.show_hide_food_menu') }}"></span>
                             </h5>
                         </div>
@@ -58,14 +58,14 @@
 {{--                                                    <span class="input-label-secondary" data-toggle="tooltip"--}}
 {{--                                                        data-placement="right"--}}
 {{--                                                        data-original-title="{{ translate('messages.If_you_activate_this_feature,_customers_need_to_verify_their_account_information_via_OTP_during_the_signup_process.') }}">--}}
-{{--                                                        <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"--}}
+{{--                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"--}}
 {{--                                                            alt="{{ translate('messages.show_hide_food_menu') }}">--}}
 {{--                                                    </span>--}}
 {{--                                                </span>--}}
 {{--                                                <input type="checkbox" data-id="customer_verification_status"--}}
 {{--                                                    data-type="toggle"--}}
-{{--                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/customer-verification-on.png') }}"--}}
-{{--                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/customer-verification-off.png') }}"--}}
+{{--                                                    data-image-on="{{ asset('assets/admin/img/modal/customer-verification-on.png') }}"--}}
+{{--                                                    data-image-off="{{ asset('assets/admin/img/modal/customer-verification-off.png') }}"--}}
 {{--                                                    data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Customer_Verification?') }}</strong>"--}}
 {{--                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Customer_Verification?') }}</strong>"--}}
 {{--                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_have_to_verify_their_account_via_OTP.') }}</p>"--}}
@@ -91,13 +91,13 @@
                                                     <span class="input-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('messages.With_this_feature,_customers_can_have_virtual_wallets_in_their_account_via_Customer_App_&_Website._They_can_also_earn_(via_referral,_refund,_loyalty_points,_or_cashback)_and_buy_with_the_wallet’s_amount.') }}">
-                                                        <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('messages.show_hide_food_menu') }}">
                                                     </span>
                                                 </span>
                                                 <input type="checkbox" data-id="wallet_status" data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/wallet-on.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/wallet-off.png') }}"
+                                                    data-image-on="{{ asset('assets/admin/img/modal/wallet-on.png') }}"
+                                                    data-image-off="{{ asset('assets/admin/img/modal/wallet-off.png') }}"
                                                     data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('the_Wallet_feature?') }}</strong>"
                                                     data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('the_Wallet_feature?') }}</strong>"
                                                     data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_see_&_use_the_Wallet_option_from_their_profile_in_the_Customer_App_&_Website.') }}</p>"
@@ -120,8 +120,8 @@
                                                     class="pr-2">{{ translate('Customer Can Earn & Buy From Referral') }}</span>
                                                 <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
                                                  type="checkbox" data-id="ref_earning_status" data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/referral-on.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/referral-off.png') }}"
+                                                    data-image-on="{{ asset('assets/admin/img/modal/referral-on.png') }}"
+                                                    data-image-off="{{ asset('assets/admin/img/modal/referral-off.png') }}"
                                                     data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Referral_Earning?') }}</strong>"
                                                     data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Referral_Earning?') }}</strong>"
                                                     data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_earn_points_by_referring_others_to_sign_up_&_purchase_from_your_business.') }}</p>"
@@ -145,13 +145,13 @@
                                                         class="input-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('messages.If_it’s_enabled,_Customers_will_automatically_receive_the_refunded_amount_in_their_wallets._But_if_it’s_disabled,_the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.') }}"><img
-                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('messages.show_hide_food_menu') }}"></span></span>
                                                 <input type="checkbox"
                                                 {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
                                                 data-id="refund_to_wallet" data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/refund-on.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/refund-off.png') }}"
+                                                    data-image-on="{{ asset('assets/admin/img/modal/refund-on.png') }}"
+                                                    data-image-off="{{ asset('assets/admin/img/modal/refund-off.png') }}"
                                                     data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Refund_to_Wallet_feature?') }}</strong>"
                                                     data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Refund_to_Wallet_feature?') }}</strong>"
                                                     data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_will_automatically_receive_the_refunded_amount_in_their_wallets.') }}</p>"
@@ -176,14 +176,14 @@
                                                     <span class="input-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('messages.With_this_feature,_customers_can_add_fund_to_wallet_if_the_payment_module_is_available.') }}">
-                                                        <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('messages.add_fund_status') }}">
                                                     </span>
                                                 </span>
                                                 <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
                                                 type="checkbox" data-id="add_fund_status" data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/wallet-on.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/wallet-off.png') }}"
+                                                    data-image-on="{{ asset('assets/admin/img/modal/wallet-on.png') }}"
+                                                    data-image-off="{{ asset('assets/admin/img/modal/wallet-off.png') }}"
                                                     data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('add_fund_to_Wallet_feature?') }}</strong>"
                                                     data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('add_fund_to_Wallet_feature?') }}</strong>"
                                                     data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_add_fund_to_wallet_using_payment_module') }}</p>"
@@ -207,8 +207,8 @@
                                                     class="pr-2">{{ translate('Customer Can Earn Loyalty Point') }}</span>
                                                 <input type="checkbox" data-id="customer_loyalty_point"
                                                     data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/loyalty-on.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/loyalty-off.png') }}"
+                                                    data-image-on="{{ asset('assets/admin/img/modal/loyalty-on.png') }}"
+                                                    data-image-off="{{ asset('assets/admin/img/modal/loyalty-off.png') }}"
                                                     data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('Loyalty Point') }}</strong>"
                                                     data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('Loyalty Point') }}</strong>"
                                                     data-text-on="<p>{{ translate('Customer will see loyalty point option in his profile settings & can earn & convert this point to wallet money') }}</p>"
@@ -231,7 +231,7 @@
                     <div class="card mt-2">
                         <div class="card-header card-header-shadow">
                             <h5 class="card-title">
-                                <img src="{{ asset('/public/assets/admin/img/loyalty.png') }}" alt=""
+                                <img src="{{ asset('assets/admin/img/loyalty.png') }}" alt=""
                                     class="card-header-icon align-self-center mr-1">
                                 <span>
                                     {{ translate('Customer_Loyalty_Point_Settings') }}
@@ -259,7 +259,7 @@
                                                 <small class="text-danger"><span class="input-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('messages.On_every_purchase_this_percent_of_amount_will_be_added_as_loyalty_point_on_his_account') }}"><img
-                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('messages.On_every_purchase_this_percent_of_amount_will_be_added_as_loyalty_point_on_his_account') }}"></span>
                                                     *</small>
                                             </label>
@@ -287,14 +287,14 @@
                     <div class="card mt-2">
                         <div class="card-header card-header-shadow">
                             <h5 class="card-title">
-                                <img src="{{ asset('/public/assets/admin/img/loyalty.png') }}" alt=""
+                                <img src="{{ asset('assets/admin/img/loyalty.png') }}" alt=""
                                     class="card-header-icon align-self-center mr-1">
                                 <span>
                                     {{ translate('Customer_Referral_Earning_Settings') }}
                                 </span>
                                 <span class="input-label-secondary" data-toggle="tooltip" data-placement="right"
                                     data-original-title="{{ translate('messages.Existing_Customers_can_share_a_referral_code_with_others_to_earn_a_referral_bonus._For_this,_the_new_user_MUST_sign_up_using_the_referral_code_and_make_their_first_purchase.') }}">
-                                    <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                         alt="{{ translate('messages.show_hide_food_menu') }}">
                                 </span>
                             </h5>
@@ -306,7 +306,7 @@
                                     <div class="align-self-center  col-4">
                                         <div class="text-left">
                                             <h4 class="align-items-center">
-                                                <img src="{{ asset('/public/assets/admin/img/referral.png') }}"
+                                                <img src="{{ asset('assets/admin/img/referral.png') }}"
                                                     alt="" class="card-header-icon align-self-center mr-1">
                                                 <span>
                                                     {{ translate('Who_Share_the_code') }}
@@ -340,7 +340,7 @@
                                         <div class="text-left">
 
                                             <h4 class="align-items-center">
-                                                <img src="{{ asset('/public/assets/admin/img/Who_Use_the_code.png') }}"
+                                                <img src="{{ asset('assets/admin/img/Who_Use_the_code.png') }}"
                                                     alt="" class="card-header-icon align-self-center mr-1">
                                                 <span>
                                                     {{ translate('Who_Use_the_code') }}
@@ -363,15 +363,15 @@
                                                                 <span class="input-label-secondary" data-toggle="tooltip"
                                                                     data-placement="right"
                                                                     data-original-title="{{ translate('messages.Configure_discounts_for_newly_registered_users_who_sign_up_with_a_referral_code._Customize_the_discount_type_and_amount_to_incentivize_referrals_and_encourage_user_engagement.') }}">
-                                                                    <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                         alt="{{ translate('messages.show_hide_food_menu') }}">
                                                                 </span>
                                                             </span>
                                                             <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
                                                             type="checkbox" data-id="new_customer_discount_status"
                                                                 data-type="toggle"
-                                                                data-image-on="{{ asset('/public/assets/admin/img/modal/basic_campaign_on.png') }}"
-                                                                data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
+                                                                data-image-on="{{ asset('assets/admin/img/modal/basic_campaign_on.png') }}"
+                                                                data-image-off="{{ asset('assets/admin/img/modal/basic_campaign_off.png') }}"
                                                                 data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.new_customer_discount?') }}</strong>"
                                                                 data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.new_customer_discount?') }}</strong>"
                                                                 data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_will_get_discount_on_first_order.') }}</p>"
@@ -402,7 +402,7 @@
                                                                     class="input-label-secondary" data-toggle="tooltip"
                                                                     data-placement="right"
                                                                     data-original-title="{{ translate('Enter_the_discount_value_for_referral-based_new_user_registrations.') }}">
-                                                                    <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                         alt="{{ translate('messages.show_hide_food_menu') }}">
                                                                 </span>
                                                             </label>
@@ -433,7 +433,7 @@
                                                                 <span class="input-label-secondary" data-toggle="tooltip"
                                                                     data-placement="right"
                                                                     data-original-title="{{ translate('Set_how_long_the_discount_remains_active_after_registration.') }}">
-                                                                    <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                         alt="{{ translate('messages.show_hide_food_menu') }}">
                                                                 </span>
                                                             </label>

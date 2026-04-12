@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/category.png')}}" class="w--20" alt="">
+                    <img src="{{asset('assets/admin/img/category.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{translate('messages.Brand_Setup')}}
@@ -73,7 +73,7 @@
                                          @if(isset($category))
                                              src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
                                          @else
-                                             src="{{asset('public/assets/admin/img/upload-img.png')}}"
+                                             src="{{asset('assets/admin/img/upload-img.png')}}"
                                          @endif
                                          alt="image"/>
                                     <div class="icon-file-group">
@@ -179,7 +179,7 @@
             </div>
             @if(count($brands) === 0)
             <div class="empty--data">
-                <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
                     {{translate('no_data_found')}}
                 </h5>
@@ -190,11 +190,11 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/brand-index.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/brand-index.js"></script>
     <script>
         "use strict";
         $('#reset_btn').click(function(){
-            $('#viewer').attr('src', "{{asset('public/assets/admin/img/upload-img.png')}}");
+            $('#viewer').attr('src', "{{asset('assets/admin/img/upload-img.png')}}");
         })
     </script>
 @endpush

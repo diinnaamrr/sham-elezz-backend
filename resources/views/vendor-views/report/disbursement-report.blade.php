@@ -10,7 +10,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
             <span class="page-header-icon">
-                <img src="{{asset('/public/assets/admin/img/report/new/disburstment.png')}}" class="w--22" alt="">
+                <img src="{{asset('assets/admin/img/report/new/disburstment.png')}}" class="w--22" alt="">
             </span>
                 <span>{{ translate('Disbursement_Report') }}</span>
             </h1>
@@ -18,32 +18,32 @@
         <!-- Reports -->
         <div class="disbursement-report mb-20">
             <div class="__card-3 rebursement-item">
-                <img src="{{asset('public/assets/admin/img/report/new/trx1.png')}}" class="icon" alt="report/new">
+                <img src="{{asset('assets/admin/img/report/new/trx1.png')}}" class="icon" alt="report/new">
                 <h3 class="title text-008958">{{\App\CentralLogics\Helpers::format_currency($pending)}}
                 </h3>
                 <h6 class="subtitle">{{ translate('Pending_Disbursements') }}</h6>
                 <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('When_the_disbursement_is_pending_full_order_amount_goes_to_this_section.') }}">
-                    <img src="{{asset('public/assets/admin/img/report/new/info1.png')}}" alt="report/new">
+                    <img src="{{asset('assets/admin/img/report/new/info1.png')}}" alt="report/new">
                 </div>
             </div>
 
             <div class="__card-3 rebursement-item">
-                <img src="{{asset('public/assets/admin/img/report/new/trx5.png')}}" class="icon" alt="report/new">
+                <img src="{{asset('assets/admin/img/report/new/trx5.png')}}" class="icon" alt="report/new">
                 <h3 class="title text-FF7E0D">{{\App\CentralLogics\Helpers::format_currency($completed)}}
                 </h3>
                 <h6 class="subtitle">{{ translate('Completed_Disbursements') }}</h6>
                 <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('When_the_disbursement_is_completed_full_order_amount_goes_to_this_section.') }}">
-                    <img src="{{asset('public/assets/admin/img/report/new/info5.png')}}" alt="report/new">
+                    <img src="{{asset('assets/admin/img/report/new/info5.png')}}" alt="report/new">
                 </div>
             </div>
 
             <div class="__card-3 rebursement-item">
-                <img src="{{asset('public/assets/admin/img/report/new/trx3.png')}}" class="icon" alt="report/new">
+                <img src="{{asset('assets/admin/img/report/new/trx3.png')}}" class="icon" alt="report/new">
                 <h3 class="title text-FF5A54">{{\App\CentralLogics\Helpers::format_currency($canceled)}}
                 </h3>
                 <h6 class="subtitle">{{ translate('Canceled_Transactions') }}</h6>
                 <div class="info-icon" data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('When_the_disbursement_is_canceled_full_order_amount_goes_to_this_section.') }}">
-                    <img src="{{asset('public/assets/admin/img/report/new/info3.png')}}" alt="report/new">
+                    <img src="{{asset('assets/admin/img/report/new/info3.png')}}" alt="report/new">
                 </div>
             </div>
         </div>
@@ -139,11 +139,11 @@
                          class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                         <span class="dropdown-header">{{translate('messages.download_options')}}</span>
                         <a id="export-excel" class="dropdown-item" href="{{route('vendor.report.disbursement-report-export', ['type'=>'excel',request()->getQueryString()])}}">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('public/assets/admin')}}/svg/components/excel.svg" alt="Image Description">
+                            <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('assets/admin')}}/svg/components/excel.svg" alt="Image Description">
                             {{translate('messages.excel')}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('vendor.report.disbursement-report-export', ['type'=>'excel',request()->getQueryString()])}}">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg" alt="Image Description">
+                            <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg" alt="Image Description">
                             {{translate('messages.csv')}}
                         </a>
                     </div>
@@ -200,7 +200,7 @@
                 @if (count($disbursements) === 0)
 
                     <div class="empty--data">
-                         <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
+                         <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                         <h5>
                             {{translate('no_data_found')}}
                         </h5>
@@ -223,6 +223,6 @@
 @endpush
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/report.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/vendor/report.js"></script>
 @endpush
 

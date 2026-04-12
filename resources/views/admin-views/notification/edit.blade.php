@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/notification.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/notification.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.notification_update')}}
@@ -72,7 +72,7 @@
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--vertical onerror-image" id="viewer"
                                     src="{{ $notification['image_full_url'] }}"
-                                    data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" alt="image"/>
+                                    data-onerror-image="{{asset('assets/admin/img/900x400/img1.jpg')}}" alt="image"/>
                                 </div>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
@@ -95,7 +95,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/notification.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/notification.js"></script>
     <script>
         "use strict";
             $('#reset_btn').click(function(){

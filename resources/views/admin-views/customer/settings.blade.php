@@ -11,7 +11,7 @@
         <div class="page-header">
             <h1 class="page-header-title mr-3">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/user-edit.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/user-edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('customer_settings')}}
@@ -105,7 +105,7 @@
                                             <span class="pr-2">{{ translate('messages.refund_to_wallet') }}<span
                                                     class="input-label-secondary"
                                                     data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.refund_to_wallet_hint') }}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.show_hide_food_menu') }}"></span> :</span>
                                             <input type="checkbox" class="toggle-switch-input" name="refund_to_wallet"
                                                 id="refund_to_wallet" value="1"
@@ -148,7 +148,7 @@
                                             for="intem_purchase_point">{{ translate('messages.item_purchase_point') }}
                                             <small class="text-danger"><span class="input-label-secondary"
                                                     data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.item_purchase_point_hint') }}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.item_purchase_point_hint') }}"></span> *</small>
                                         </label>
                                         <input type="number" class="form-control" name="item_purchase_point" step=".01"
@@ -205,7 +205,7 @@
     </div>
 @endsection
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/customer-wallet-settings.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/customer-wallet-settings.js"></script>
     <script>
         "use strict";
         $(document).on('ready', function() {

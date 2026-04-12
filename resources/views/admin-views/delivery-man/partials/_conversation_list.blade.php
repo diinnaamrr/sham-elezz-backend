@@ -12,7 +12,7 @@
         <div class="chat-user-info-img d-none d-md-block">
             <img class="avatar-img onerror-image"
             src="{{ $user['image_full_url'] }}"
-                    data-onerror-image="{{asset('public/assets/admin')}}/img/160x160/img1.jpg"
+                    data-onerror-image="{{asset('assets/admin')}}/img/160x160/img1.jpg"
                     alt="Image Description">
         </div>
         <div class="chat-user-info-content">
@@ -33,7 +33,7 @@
         class="chat-user-info d-flex border-bottom p-3 align-items-center customer-list">
         <div class="chat-user-info-img d-none d-md-block">
             <img class="avatar-img"
-                    src='{{asset('public/assets/admin')}}/img/160x160/img1.jpg'
+                    src='{{asset('assets/admin')}}/img/160x160/img1.jpg'
                     alt="Image Description">
         </div>
         <div class="chat-user-info-content">
@@ -46,7 +46,7 @@
 @empty
 
 <div class="empty-conversation-content d-flex flex-column align-items-center gap-3">
-    <img width="128" height="128" src="{{asset('/public/assets/admin/img/icons/empty-conversation.png')}}" alt="public">
+    <img width="128" height="128" src="{{asset('assets/admin/img/icons/empty-conversation.png')}}" alt="public">
     <h5 class="text-muted">
         {{translate('no_conversation_found')}}
     </h5>

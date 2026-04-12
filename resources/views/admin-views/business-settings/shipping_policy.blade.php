@@ -12,7 +12,7 @@
         <div class="page-header d-flex flex-wrap justify-content-between">
             <h1 class="d-flex flex-wrap justify-content-between page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/privacy-policy.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/privacy-policy.png')}}" class="w--26" alt="">
                     {{translate('messages.Shipping Policy')}}
                 </span>
             </h1>
@@ -93,7 +93,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('assets/admin/ckeditor/ckeditor.js')}}"></script>
     <script type="text/javascript">
         "use strict";
     $(document).ready(function () {

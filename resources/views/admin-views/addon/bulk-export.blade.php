@@ -11,7 +11,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/addon.png')}}" class="w--20" alt="">
+                    <img src="{{asset('assets/admin/img/addon.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{translate('messages.addons_bulk_export')}}
@@ -31,7 +31,7 @@
                                             {{translate('Select Data Type')}}
                                         </div>
                                     </div>
-                                    <img src="{{asset('/public/assets/admin/img/bulk-export-1.png')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/bulk-export-1.png')}}" alt="">
                                 </div>
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
@@ -52,7 +52,7 @@
                                             {{translate('Select Data Range by Date or ID and Export')}}
                                         </div>
                                     </div>
-                                    <img src="{{asset('/public/assets/admin/img/bulk-export-2.png')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/bulk-export-2.png')}}" alt="">
                                 </div>
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
@@ -119,5 +119,5 @@
 @endsection
 
 @push('script_2')
-<script src="{{asset('public/assets/admin')}}/js/view-pages/addon-import-export.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/addon-import-export.js"></script>
 @endpush

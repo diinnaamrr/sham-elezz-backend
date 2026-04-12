@@ -4,7 +4,7 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="{{ asset('public/assets/admin/css/tags-input.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/admin/css/tags-input.min.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/items.png')}}" class="w--22" alt="">
+                    <img src="{{asset('assets/admin/img/items.png')}}" class="w--22" alt="">
                 </span>
                 <span>
                     {{translate('messages.items_bulk_import')}}
@@ -33,7 +33,7 @@
                                             {{translate('Download_Excel_File')}}
                                         </div>
                                     </div>
-                                    <img src="{{asset('/public/assets/admin/img/bulk-import-1.png')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/bulk-import-1.png')}}" alt="">
                                 </div>
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
@@ -58,7 +58,7 @@
                                             {{translate('Match_Spread_sheet_data_according_to_instruction')}}
                                         </div>
                                     </div>
-                                    <img src="{{asset('/public/assets/admin/img/bulk-import-2.png')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/bulk-import-2.png')}}" alt="">
                                 </div>
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
@@ -89,7 +89,7 @@
                                             {{translate('Validate data and complete import')}}
                                         </div>
                                     </div>
-                                    <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/bulk-import-3.png')}}" alt="">
                                 </div>
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
@@ -116,11 +116,11 @@
                     <h3 class="mb-3 export--template-title font-regular">{{translate('download_spreadsheet_template')}}</h3>
                     <div class="btn--container justify-content-center export--template-btns">
                         @if($module_type== 'food')
-                        <a href="{{asset('public/assets/foods_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{translate('With Current Data')}}</a>
+                        <a href="{{asset('assets/foods_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{translate('With Current Data')}}</a>
                         @else
-                        <a href="{{asset('public/assets/items_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{translate('With Current Data')}}</a>
+                        <a href="{{asset('assets/items_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{translate('With Current Data')}}</a>
                             @endif
-                        <a href="{{asset('public/assets/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn--primary">{{translate('Without Any Data')}}</a>
+                        <a href="{{asset('assets/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn--primary">{{translate('Without Any Data')}}</a>
                     </div>
                 </div>
             </div>
@@ -156,7 +156,7 @@
                                 <div class="form-group inputDnD input_image input_image_edit position-relative">
                                     <div class="upload-text">
                                         <div>
-                                            <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
+                                            <img src="{{asset('assets/admin/img/bulk-import-3.png')}}" alt="">
                                         </div>
                                         <div class="filename">{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}</div>
                                     </div>
@@ -212,7 +212,7 @@
                     <div class="card-header border-0 p-0">
                         <div class="alert w-100 alert-soft-primary alert-dismissible fade show d-flex m-0" role="alert">
                             <div>
-                                <img src="{{asset('/public/assets/admin/img/icons/intel.png')}}" width="22" alt="">
+                                <img src="{{asset('assets/admin/img/icons/intel.png')}}" width="22" alt="">
                             </div>
                             <div class="w-0 flex-grow-1 pl-3">
                                 <strong>{{ translate('Attention!') }}</strong>
@@ -246,15 +246,15 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_varient') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.This_field_is_for_geenrated_variation._copy_them_&_paste_into_excel_sheet') }} "><img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ translate('messages.Generated_varient') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.This_field_is_for_geenrated_variation._copy_them_&_paste_into_excel_sheet') }} "><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="variation_output" class="form-control" rows="5" readonly></textarea>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_choice_option') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Choice_option_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ translate('messages.Generated_choice_option') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Choice_option_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="choice_output" class="form-control" rows="5" readonly></textarea>
                             </div>
                             <div class="col-md-4">
-                                <label for="">{{ translate('messages.Generated_attributes_field') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Attributes_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <label for="">{{ translate('messages.Generated_attributes_field') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Attributes_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
                                 <textarea name="" id="attributes" class="form-control" rows="5" readonly></textarea>
                             </div>
                         </div>
@@ -272,8 +272,8 @@
 @endsection
 
 @push('script_2')
-    <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/product-import.js"></script>
+    <script src="{{ asset('assets/admin') }}/js/tags-input.min.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/product-import.js"></script>
 <script>
     "use strict";
     $('.update_or_import').on("click", function () {

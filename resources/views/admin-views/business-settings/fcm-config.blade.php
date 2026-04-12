@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/firebase.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/firebase.png')}}" class="w--26" alt="">
                 </span>
                 <span>{{translate('messages.firebase_push_notification_setup')}}
                 </span>
@@ -31,13 +31,13 @@
                     <ul class="nav nav-tabs nav--tabs border-0 gap-2">
                         <li class="nav-item mr-2 mr-md-4">
                             <a href="{{ route('admin.business-settings.fcm-index') }}" class="nav-link pb-2 px-0 pb-sm-3" data-slide="1">
-                                <img src="{{asset('/public/assets/admin/img/notify.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/notify.png')}}" alt="">
                                 <span>{{translate('Push Notification')}}</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.business-settings.fcm-config') }}" class="nav-link pb-2 px-0 pb-sm-3 active" data-slide="2">
-                                <img src="{{asset('/public/assets/admin/img/firebase2.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/firebase2.png')}}" alt="">
                                 <span>{{translate('Firebase Configuration')}}</span>
                             </a>
                         </li>
@@ -166,7 +166,7 @@
                             <div class="item">
                                 <div class="mb-20">
                                     <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/firebase/slide-1.png')}}" alt="" class="mb-20">
+                                        <img src="{{asset('assets/admin/img/firebase/slide-1.png')}}" alt="" class="mb-20">
                                         <h5 class="modal-title">{{translate('Go to Firebase Console')}}</h5>
                                     </div>
                                     <ul>
@@ -185,7 +185,7 @@
                             <div class="item">
                                 <div class="mb-20">
                                     <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/firebase/slide-2.png')}}" alt="" class="mb-20">
+                                        <img src="{{asset('assets/admin/img/firebase/slide-2.png')}}" alt="" class="mb-20">
                                         <h5 class="modal-title">{{translate('Navigate to Project Settings')}}</h5>
                                     </div>
                                     <ul>
@@ -201,7 +201,7 @@
                             <div class="item">
                                 <div class="mb-20">
                                     <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/firebase/slide-3.png')}}" alt="" class="mb-20">
+                                        <img src="{{asset('assets/admin/img/firebase/slide-3.png')}}" alt="" class="mb-20">
                                         <h5 class="modal-title">{{translate('Obtain All The Information Asked!')}}</h5>
                                     </div>
                                     <ul>

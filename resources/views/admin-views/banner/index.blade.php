@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/banner.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/banner.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.add_new_banner')}}
@@ -128,7 +128,7 @@
                                         <label class="mt-auto mb-0 d-block text-center">{{translate('messages.banner_image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 3:1 )</small></label>
                                         <div class="text-center py-3 my-auto">
                                             <img class="img--vertical" id="viewer"
-                                                src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" alt="banner image"/>
+                                                src="{{asset('assets/admin/img/900x400/img1.jpg')}}" alt="banner image"/>
                                         </div>
                                         <div class="custom-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input"
@@ -191,7 +191,7 @@
                                     <th class="border-0">{{translate('messages.title')}}</th>
                                     <th class="border-0">{{translate('messages.type')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.featured')}} <span class="input-label-secondary"
-                                        data-toggle="tooltip" data-placement="right" data-original-title="{{translate('if_you_turn/off_on_this_featured,_it_will_effect_on_website_&_user_app')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}"
+                                        data-toggle="tooltip" data-placement="right" data-original-title="{{translate('if_you_turn/off_on_this_featured,_it_will_effect_on_website_&_user_app')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}"
                                             alt="public/img"></span></th>
                                     <th class="border-0 text-center">{{translate('messages.status')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.action')}}</th>
@@ -205,7 +205,7 @@
                                     <td>
                                         <span class="media align-items-center">
                                             <img class="img--ratio-3 w-auto h--50px rounded mr-2 onerror-image" src="{{ $banner['image_full_url'] }}"
-                                                data-onerror-image="{{asset('/public/assets/admin/img/900x400/img1.jpg')}}" alt="{{$banner->name}} image">
+                                                data-onerror-image="{{asset('assets/admin/img/900x400/img1.jpg')}}" alt="{{$banner->name}} image">
                                             <div class="media-body">
                                                 <h5 title="{{ $banner['title'] }}" class="text-hover-primary mb-0">{{Str::limit($banner['title'], 25, '...')}}</h5>
                                             </div>
@@ -222,8 +222,8 @@
                                             <input type="checkbox"
                                             data-id="featuredCheckbox{{$banner->id}}"
                                             data-type="status"
-                                            data-image-on="{{ asset('/public/assets/admin/img/modal/basic_campaign_on.png') }}"
-                                            data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
+                                            data-image-on="{{ asset('assets/admin/img/modal/basic_campaign_on.png') }}"
+                                            data-image-off="{{ asset('assets/admin/img/modal/basic_campaign_off.png') }}"
                                             data-title-on="{{ translate('By_Turning_ON_As_Featured!') }}"
                                             data-title-off="{{ translate('By_Turning_OFF_As_Featured!') }}"
                                             data-text-on="<p>{{ translate('If_you_turn_on_this_featured,_then_promotional_banner_will_show_on_website_and_user_app_with_store_or_item.') }}</p>"
@@ -245,8 +245,8 @@
                                             <input type="checkbox"
                                             data-id="statusCheckbox{{$banner->id}}"
                                             data-type="status"
-                                            data-image-on="{{ asset('/public/assets/admin/img/modal/basic_campaign_on.png') }}"
-                                            data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
+                                            data-image-on="{{ asset('assets/admin/img/modal/basic_campaign_on.png') }}"
+                                            data-image-off="{{ asset('assets/admin/img/modal/basic_campaign_off.png') }}"
                                             data-title-on="{{ translate('By_Turning_ON_Banner!') }}"
                                             data-title-off="{{ translate('By_Turning_OFF_Banner!') }}"
                                             data-text-on="<p>{{ translate('If_you_turn_on_this_status,_it_will_show_on_user_website_and_app.') }}</p>"
@@ -288,7 +288,7 @@
                     </div>
                     @if(count($banners) === 0)
                     <div class="empty--data">
-                        <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
                             {{translate('no_data_found')}}
                         </h5>
@@ -303,7 +303,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/banner-index.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/banner-index.js"></script>
     <script>
         "use strict";
         var module_id = {{Config::get('module.current_module_id')}};
@@ -402,7 +402,7 @@
         $('#zone').val(null).trigger('change');
         $('#store_id').val(null).trigger('change');
         $('#choice_item').val(null).trigger('change');
-        $('#viewer').attr('src','{{asset('public/assets/admin/img/900x400/img1.jpg')}}');
+        $('#viewer').attr('src','{{asset('assets/admin/img/900x400/img1.jpg')}}');
     })
     </script>
 @endpush

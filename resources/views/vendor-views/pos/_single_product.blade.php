@@ -3,7 +3,7 @@
     <div class="card-header inline_product clickable p-0 initial--31">
         <div class="d-flex align-items-center justify-content-center d-block h-100 w-100 ">
             <img src="{{ $product['image_full_url'] }}"
-                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                 data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                 class="w-100 h-100 object-cover onerror-image" alt="image">
         </div>
     </div>
@@ -22,4 +22,4 @@
         </div>
     </div>
 </div>
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

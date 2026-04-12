@@ -12,7 +12,7 @@
             <div class="d-flex flex-wrap justify-content-between">
                 <h1 class="page-header-title text-break">
                     <span class="page-header-icon">
-                        <img src="{{ asset('public/assets/admin/img/items.png') }}" class="w--22" alt="">
+                        <img src="{{ asset('assets/admin/img/items.png') }}" class="w--22" alt="">
                     </span>
                     <span>{{ $product['name'] }}</span>
                 </h1>
@@ -40,9 +40,9 @@
                             <div class="col-lg-5 col-md-6 mb-3 mb-md-0">
                                 <div class="d-flex flex-wrap align-items-center food--media">
                                     <img class="avatar avatar-xxl avatar-4by3 mr-4 onerror-image"
-                                    src="{{ $product['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                    src="{{ $product['image_full_url'] ?? asset('assets/admin/img/160x160/img2.jpg') }}"
 
-                                    data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                    data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                                         alt="Image Description">
                                     <div class="d-block">
                                         <div class="rating--review">
@@ -241,9 +241,9 @@
                             <a class="resturant--information-single"
                                 href="{{ route('admin.store.view', $product->store_id) }}">
                                 <img class="img--120 rounded mx-auto mb-3 onerror-image"
-                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                data-onerror-image="{{ asset('assets/admin/img/160x160/img1.jpg') }}"
 
-                                    src="{{ $product->store->logo_full_url ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                    src="{{ $product->store->logo_full_url ?? asset('assets/admin/img/160x160/img1.jpg') }}"
 
                                     alt="Image Description">
                                 <div class="text-center">
@@ -469,13 +469,13 @@
                     <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                     <a id="export-excel" class="dropdown-item" href="{{ route('admin.item.item_wise_reviews_export', ['type' => 'excel', 'store'=> $product->store?->name,'id' => $product['id'],request()->getQueryString()]) }}">
                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                            src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                            src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                             alt="Image Description">
                         {{ translate('messages.excel') }}
                     </a>
                     <a id="export-csv" class="dropdown-item" href="{{ route('admin.item.item_wise_reviews_export', ['type' => 'csv', 'store'=> $product->store?->name, 'id' => $product['id'], request()->getQueryString()]) }}">
                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                            src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                            src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                             alt="Image Description">
                         .{{ translate('messages.csv') }}
                     </a>
@@ -527,9 +527,9 @@
                                    href="{{route('admin.customer.view',[$review['user_id']])}}">
                                     <div class="avatar avatar-circle">
                                         <img class="avatar-img onerror-image"
-                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"  width="75" height="75"
+                                             data-onerror-image="{{ asset('assets/admin/img/160x160/img1.jpg') }}"  width="75" height="75"
 
-                                             src="{{ $review->customer->image_full_url ??  asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                             src="{{ $review->customer->image_full_url ??  asset('assets/admin/img/160x160/img1.jpg') }}"
                                              alt="Image Description">
                                     </div>
                                     <div class="ml-3">
@@ -583,7 +583,7 @@
         </div>
         @if(count($reviews) === 0)
             <div class="empty--data">
-                <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                 <h5>
                     {{translate('no_data_found')}}
                 </h5>

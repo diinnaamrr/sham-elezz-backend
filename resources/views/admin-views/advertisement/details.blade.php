@@ -13,7 +13,7 @@ active
 active
 @endsection
 @push('css_or_js')
-    <link rel="stylesheet" type="text/css" href="{{asset('public/assets/admin/css/daterangepicker.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/admin/css/daterangepicker.css')}}"/>
 @endpush
 
 @section('content')
@@ -21,7 +21,7 @@ active
 
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
         <h1 class="page-header-title m-0 d-flex align-items-center gap-2">
-            <img src="{{asset('public/assets/admin/img/advertisement.png')}}" alt="">
+            <img src="{{asset('assets/admin/img/advertisement.png')}}" alt="">
             {{ translate('Ads Details') }}
         </h1>
         <div class="d-flex gap-1">
@@ -80,7 +80,7 @@ active
                                     data-id="data-add-{{ $advertisement->id }}"
                                     data-title="{{translate('Are you sure you want to deny the request?')}}"
                                     data-text="<p>{{translate('You will lost the Store ads request.')}}</p>"
-                                    data-image="{{asset('public/assets/admin/img/modal/deny.png')}}"
+                                    data-image="{{asset('assets/admin/img/modal/deny.png')}}"
                                     data-type="deny"
                                     data-btn_class = "btn-primary"
                                     data-2nd_btn_text = "{{ translate('messages.Cancel') }}"
@@ -289,7 +289,7 @@ active
                         <div class="form-group">
                             <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border rounded px-3 px-xl-4 form-control">
                                 <span class="line--limit-1">{{ translate('Paid Status') }}</span>
-                                <input type="checkbox" id="is_paid" value="1" name="is_paid" data-id="is_paid" data-type="toggle" data-image-on="{{asset('public/assets/admin/img/modal/dm-tips-on.png')}}" data-image-off="{{asset('public/assets/admin/img/modal/dm-tips-off.png')}}" data-title-on="{{ translate('messages.Are_you_sure?') }}" data-title-off="{{ translate('messages.Are_you_sure?') }}" data-text-on="<p>{{ translate('You_want_to_marked_this_advertisment_as_Paid.') }}</p>" data-text-off="<p>{{ translate('You_want_to_marked_this_advertisment_as_Unpaid.') }}</p>" class="status toggle-switch-input dynamic-checkbox" {{ $advertisement?->is_paid == 1 ? 'checked'  : '' }} >
+                                <input type="checkbox" id="is_paid" value="1" name="is_paid" data-id="is_paid" data-type="toggle" data-image-on="{{asset('assets/admin/img/modal/dm-tips-on.png')}}" data-image-off="{{asset('assets/admin/img/modal/dm-tips-off.png')}}" data-title-on="{{ translate('messages.Are_you_sure?') }}" data-title-off="{{ translate('messages.Are_you_sure?') }}" data-text-on="<p>{{ translate('You_want_to_marked_this_advertisment_as_Paid.') }}</p>" data-text-off="<p>{{ translate('You_want_to_marked_this_advertisment_as_Unpaid.') }}</p>" class="status toggle-switch-input dynamic-checkbox" {{ $advertisement?->is_paid == 1 ? 'checked'  : '' }} >
                                 <span class="toggle-switch-label text">
                                     <span class="toggle-switch-indicator"></span>
                                 </span>
@@ -319,7 +319,7 @@ active
 
                                 data-title="{{translate('Are you sure you want to Resume the request?')}}"
                                 data-text="<p>{{translate('This ad will be run again and will show in the user app & websites.')}}</p>"
-                                data-image="{{asset('public/assets/admin/img/modal/resume.png')}}"
+                                data-image="{{asset('assets/admin/img/modal/resume.png')}}"
                                 data-type="resume"
                                 data-btn_class = "btn-primary"
 
@@ -342,7 +342,7 @@ active
                             data-id="data-add-{{ $advertisement->id }}"
                             data-title="{{translate('Are you sure you want to Pause the request?')}}"
                             data-text="<p>{{translate('This ad will be pause and not show in the user app & websites.')}}</p>"
-                            data-image="{{asset('public/assets/admin/img/modal/pause.png')}}"
+                            data-image="{{asset('assets/admin/img/modal/pause.png')}}"
                             data-type="pause"
 
                             href="#">
@@ -383,7 +383,7 @@ active
                         </h5>
                         <a href="{{route('admin.store.view', $advertisement->store_id)}}" class="media align-items-start deco-none resturant--information-single">
                             <div class="avatar avatar-circle">
-                                <img class="avatar-img w-75px" src="{{ $advertisement->store['logo_full_url'] ?? asset('public/assets/admin/img/100x100/food-default-image.png') }}" alt="image">
+                                <img class="avatar-img w-75px" src="{{ $advertisement->store['logo_full_url'] ?? asset('assets/admin/img/100x100/food-default-image.png') }}" alt="image">
 
                             </div>
                             <div class="media-body pl-3">
@@ -499,7 +499,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{  asset('public/assets/admin/img/modal/timeout.png') }}" class="mb-20">
+                            <img src="{{  asset('assets/admin/img/modal/timeout.png') }}" class="mb-20">
                             <h5 class="modal-title"></h5>
                         </div>
                         <div class="text-center" >
@@ -531,7 +531,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img width="80" src="{{  asset('public/assets/admin/img/modal/tick.png') }}" class="mb-20">
+                            <img width="80" src="{{  asset('assets/admin/img/modal/tick.png') }}" class="mb-20">
                             <h5 class="modal-title"></h5>
                         </div>
                         <div class="text-center" >
@@ -559,8 +559,8 @@ active
 
 @push('script_2')
 
-    <script type="text/javascript" src="{{asset('public/assets/admin/js/moment.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('public/assets/admin/js/daterangepicker.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/admin/js/moment.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/admin/js/daterangepicker.min.js')}}"></script>
 
     <script>
         $(function() {

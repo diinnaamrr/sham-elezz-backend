@@ -13,7 +13,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <h1 class="page-header-title">
                     <span class="page-header-icon">
-                        <img src="{{asset('public/assets/admin/img/product.png')}}" class="w--26" alt="">
+                        <img src="{{asset('assets/admin/img/product.png')}}" class="w--26" alt="">
                     </span>
                     <span>
                         {{$campaign['title']}}
@@ -32,7 +32,7 @@
                 <div class="row align-items-md-center">
                     <div class="col-md-6 col-lg-4 mb-3 mb-md-0">
                             <img class="rounded img--ratio-3 onerror-image" src="{{ $campaign['image_full_url']}}"
-                            data-onerror-image="{{asset('/public/assets/admin/img/900x400/img1.jpg')}}" alt="Image Description">
+                            data-onerror-image="{{asset('assets/admin/img/900x400/img1.jpg')}}" alt="Image Description">
                     </div>
                     <div class="col-md-6">
                         <span class="d-block mb-1">
@@ -68,8 +68,8 @@
                                 <a href="{{route('admin.store.view', $campaign->store_id)}}" title="{{$campaign->store['name']}}">
                                     <img
                                         class="img--100 rounded-circle onerror-image"
-                                        data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                        src="{{$campaign?->store?->logo_full_url ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                        data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
+                                        src="{{$campaign?->store?->logo_full_url ?? asset('assets/admin/img/160x160/img1.jpg') }}"
                                         alt="Image Description">
                                     <h5 class="input-label mt-2">{{$campaign->store['name']}}</h5>
                                 </a>

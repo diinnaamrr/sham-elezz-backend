@@ -2,7 +2,7 @@
 @section('title',translate('messages.Bank Info View'))
 @push('css_or_js')
     <!-- Custom styles for this page -->
-    <link href="{{asset('public/assets/back-end')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="{{asset('assets/back-end')}}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -10,7 +10,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('/public/assets/admin/img/bank.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/bank.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.my_bank_info')}}
@@ -38,7 +38,7 @@
                                 <div class="title">{{translate('messages.holder_name')}} : {{$data->holder_name ? $data->holder_name : translate('messages.No Data found')}}</div>
                             </div>
                             <div class="bank--card__body">
-                                <img class="bank__icon" src="{{asset('public/assets/admin/img/bank-icon.png')}}" alt="public">
+                                <img class="bank__icon" src="{{asset('assets/admin/img/bank-icon.png')}}" alt="public">
                                 <ul>
                                     <li>
                                         <h5>

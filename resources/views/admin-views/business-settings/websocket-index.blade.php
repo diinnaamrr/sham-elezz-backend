@@ -8,7 +8,7 @@
         <div class="page-header">
             <h1 class="page-header-title mr-3">
                 <span class="page-header-icon">
-                    <img src="{{ asset('public/assets/admin/img/business.png') }}" class="w--26" alt="">
+                    <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('business_setup')}}
@@ -39,15 +39,15 @@
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('messages.If_WebSocket_is_enabled,_configure_the_server_accordingly_for_optimal_functionality.')}}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.websocket_toggle') }}"> *
                                                 </span>
                                             </span>
                                             <input type="checkbox"
                                                    data-id="websocket"
                                                    data-type="toggle"
-                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
-                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
+                                                   data-image-on="{{ asset('assets/admin/img/modal/schedule-on.png') }}"
+                                                   data-image-off="{{ asset('assets/admin/img/modal/schedule-off.png') }}"
                                                    data-title-on="{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.websocket_?')}}</strong>"
                                                    data-title-off="{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.websocket_?')}}</strong>'"
                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,Deliveyman_last_location_will_be_recorded_by_websocket.') }}</p>"

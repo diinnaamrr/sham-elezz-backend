@@ -19,8 +19,8 @@
                 <a href="{{ route('admin.store.view', $item->id) }}">
                     <div class="position-relative overflow-hidden">
                         <img class="onerror-image"
-                            data-onerror-image="{{ asset('public/assets/admin/img/100x100/1.png') }}"
-                            src="{{ $item['logo_full_url'] ?? asset('public/assets/admin/img/100x100/1.png') }}"
+                            data-onerror-image="{{ asset('assets/admin/img/100x100/1.png') }}"
+                            src="{{ $item['logo_full_url'] ?? asset('assets/admin/img/100x100/1.png') }}"
                             title="{{ $item?->name }}">
                         <h5 class="info m-0">
                             {{ translate('order : ') }} {{ $item['order_count'] }}
@@ -31,7 +31,7 @@
         </div>
     @else
         <div class="empty--data">
-            <img src="{{ asset('/public/assets/admin/svg/illustrations/empty-state.svg') }}" alt="public">
+            <img src="{{ asset('assets/admin/svg/illustrations/empty-state.svg') }}" alt="public">
             <h5>
                 {{ translate('no_data_found') }}
             </h5>
@@ -41,4 +41,4 @@
 
 </div>
 
-<script src="{{ asset('public/assets/admin') }}/js/view-pages/common.js"></script>
+<script src="{{ asset('assets/admin') }}/js/view-pages/common.js"></script>

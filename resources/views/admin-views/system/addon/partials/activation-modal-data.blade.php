@@ -14,7 +14,7 @@
             src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','upload_image')}}"
 
             alt="image"
-            class="dark-support onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/img1.jpg') }}" />
+            class="dark-support onerror-image"  data-onerror-image="{{ asset('assets/admin/img/img1.jpg') }}" />
     </div>
     <h2 class="text-center mb-4">{{$addon_name}}</h2>
 

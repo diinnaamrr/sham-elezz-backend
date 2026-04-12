@@ -1,8 +1,8 @@
 @forelse ($stores as $key => $store)
     <div  class="select-product-item media gap-3 cursor-pointer">
         <img class="avatar avatar-xl border onerror-image" width="75"
-        data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-        src="{{ $store['logo_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
+        data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
+        src="{{ $store['logo_full_url'] ?? asset('assets/admin/img/160x160/img1.jpg') }}"
 
             alt="">
         <div class="media-body d-flex flex-column gap-1 ">
@@ -29,4 +29,4 @@
     @empty
     <p class="text-center">{{ translate('messages.No Data found') }}</p>
 @endforelse
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

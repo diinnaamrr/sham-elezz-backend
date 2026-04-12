@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/api.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/api.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.third_party_apis')}}
@@ -34,7 +34,7 @@
                 <div class="blinkings active lg-top">
                     <i class="tio-info-outined"></i>
                     <div class="business-notes">
-                        <h6><img src="{{asset('/public/assets/admin/img/notes.png')}}" alt=""> {{translate('Note')}}</h6>
+                        <h6><img src="{{asset('assets/admin/img/notes.png')}}" alt=""> {{translate('Note')}}</h6>
                         <div>
                             {{translate('Without configuring this section map functionality will not work properly. Thus the whole
                                  system will not work as it planned')}}

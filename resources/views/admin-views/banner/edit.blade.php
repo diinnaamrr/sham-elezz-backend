@@ -8,7 +8,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.update_banner')}}
@@ -130,7 +130,7 @@
                                             <small class="text-danger">* ( {{translate('messages.ratio')}} 900x300 )</small>
                                         </label>
                                         <div class="text-center py-3 my-auto">
-                                            <img class="img--vertical onerror-image" id="viewer" data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" src="{{ $banner['image_full_url'] }}"
+                                            <img class="img--vertical onerror-image" id="viewer" data-onerror-image="{{asset('assets/admin/img/900x400/img1.jpg')}}" src="{{ $banner['image_full_url'] }}"
                                             alt="banner image"/>
                                         </div>
                                         <div class="custom-file">
@@ -158,7 +158,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/banner-edit.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/banner-edit.js"></script>
     <script>
         "use strict";
 

@@ -1,6 +1,6 @@
 <div class="col-lg-3">
     <a class="__card-1 bg-E6F6EE h-100" href="{{route('admin.parcel.orders',['all'])}}">
-        <img src="{{asset('/public/assets/admin/img/report/new/total.png')}}" class="icon" alt="report/new">
+        <img src="{{asset('assets/admin/img/report/new/total.png')}}" class="icon" alt="report/new">
         <h3 class="title text-success">{{$data['total_orders']}}</h3>
         <h6 class="subtitle font-regular">{{ translate('total_orders') }}</h6>
     </a>
@@ -15,7 +15,7 @@
             </span>
             <h4 class="title">{{$data['searching_for_dm']}}</h4>
             <span class="subtitle font-regular">{{translate('unassigned_orders')}}</span>
-            <img src="{{asset('/public/assets/admin/img/dashboard/1.png')}}" alt="img" class="resturant-icon top-50px">
+            <img src="{{asset('assets/admin/img/dashboard/1.png')}}" alt="img" class="resturant-icon top-50px">
             </a>
             <!-- End Card -->
         </div>
@@ -27,7 +27,7 @@
             </span>
             <h4 class="title">{{$data['picked_up']}}</h4>
             <span class="subtitle font-regular">{{translate('out_for_delivery')}}</span>
-            <img src="{{asset('/public/assets/admin/img/dashboard/4.png')}}" alt="img" class="resturant-icon top-50px">
+            <img src="{{asset('assets/admin/img/dashboard/4.png')}}" alt="img" class="resturant-icon top-50px">
             </a>
             <!-- End Card -->
         </div>
@@ -39,7 +39,7 @@
             </span>
             <h4 class="title text-success">{{$data['delivered']}}</h4>
             <span class="subtitle font-regular">{{translate('delivered')}}</span>
-            <img src="{{asset('/public/assets/admin/img/dashboard/2.png')}}" alt="img" class="resturant-icon top-50px">
+            <img src="{{asset('assets/admin/img/dashboard/2.png')}}" alt="img" class="resturant-icon top-50px">
             </a>
             <!-- End Card -->
         </div>
@@ -51,7 +51,7 @@
             </span>
             <h4 class="title">{{$data['refund_requested']}}</h4>
             <span class="subtitle font-regular">{{translate('Failed Orders')}}</span>
-            <img src="{{asset('/public/assets/admin/img/dashboard/5.png')}}" alt="img" class="resturant-icon top-50px">
+            <img src="{{asset('assets/admin/img/dashboard/5.png')}}" alt="img" class="resturant-icon top-50px">
             </a>
             <!-- End Card -->
         </div>

@@ -31,7 +31,7 @@
                         <div class="d-flex align-items-center">
                             <img class="avatar avatar-xxl avatar-4by3 mr-4 onerror-image"
                             src="{{ $banner->image_full_url }}"
-                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"
+                                 data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}"
                                  alt="Image Description">
                             <div class="d-block">
 
@@ -122,7 +122,7 @@
                                     <td>
                                         <div class="inline--1">
                                             <img class="img--60 img--circle onerror-image"
-                                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                                 data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                                                  src="{{ $dm['logo_full_url'] }}"
 >
                                         </div>

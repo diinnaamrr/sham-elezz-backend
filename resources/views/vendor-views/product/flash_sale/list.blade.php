@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/condition.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/condition.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.flash_sale_product_setup')}}
@@ -82,7 +82,7 @@
                                     <td class="text-center">
                                         <a class="media align-items-center" href="{{route('vendor.item.view',[$item['item_id']])}}">
                                             <img class="avatar avatar-lg mr-3 onerror-image" src="{{ $item->item['image_full_url'] }}"
-                                                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$item->item->name}} image">
+                                                    data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}" alt="{{$item->item->name}} image">
                                             <div class="media-body">
                                                 <h5 class="text-hover-primary mb-0">{{Str::limit($item->item['name'],20,'...')}}</h5>
                                             </div>
@@ -132,7 +132,7 @@
                     </div>
                     @if(count($items) === 0)
                     <div class="empty--data">
-                        <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
                             {{translate('no_data_found')}}
                         </h5>

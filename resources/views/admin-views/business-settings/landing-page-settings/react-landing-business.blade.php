@@ -8,7 +8,7 @@
         <div class="d-flex flex-wrap justify-content-between">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/landing.png')}}" class="w--20" alt="">
+                    <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{ translate('messages.react_landing_page') }}
@@ -68,14 +68,14 @@
                                         <div class="col-12">
                                             <label for="business_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
                                     <input type="text" id="business_title" maxlength="30" name="business_title[]" value="{{ $business_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                         </div>
                                         <div class="col-12">
                                             <label for="business_sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_35_characters') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
                                     <input type="text" id="business_sub_title" maxlength="35" name="business_sub_title[]" value="{{ $business_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                         </div>
@@ -109,13 +109,13 @@
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <label for="business_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
                                     <input type="text" id="business_title{{$lang}}"  maxlength="30" name="business_title[]" value="{{ $business_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                             </div>
                                             <div class="col-12">
                                                 <label for="business_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_35_characters') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
                                     <input type="text" id="business_sub_title{{$lang}}"  maxlength="35" name="business_sub_title[]" value="{{ $business_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                             </div>
@@ -147,7 +147,7 @@
                                     <div class="position-relative">
                                     <div class="img">
                                         <img
-                                        src="{{\App\CentralLogics\Helpers::get_full_url('business_image', $business_image?->value?? '', $business_image?->storage[0]?->value ?? 'public','aspect_1')}}" data-onerror-image="{{asset('/public/assets/admin/img/aspect-1.png')}}" alt="" class="img__aspect-1 min-w-187px max-w-187px onerror-image">
+                                        src="{{\App\CentralLogics\Helpers::get_full_url('business_image', $business_image?->value?? '', $business_image?->storage[0]?->value ?? 'public','aspect_1')}}" data-onerror-image="{{asset('assets/admin/img/aspect-1.png')}}" alt="" class="img__aspect-1 min-w-187px max-w-187px onerror-image">
                                     </div>
                                       <input type="file"  name="image" hidden>
                                          @if (isset($business_image['value']))
@@ -164,13 +164,13 @@
                         <div class="row g-3 mt-3">
                             <div class="col-12">
                                 <h5 class="card-title mb-5">
-                                    <img src="{{asset('public/assets/admin/img/seller.png')}}" class="mr-2" alt="">
+                                    <img src="{{asset('assets/admin/img/seller.png')}}" class="mr-2" alt="">
                                     {{translate('Download the Seller App')}}
                                 </h5>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h5 class="card-title mb-2">
-                                            <img src="{{asset('public/assets/admin/img/playstore.png')}}" class="mr-2" alt="">
+                                            <img src="{{asset('assets/admin/img/playstore.png')}}" class="mr-2" alt="">
                                             {{translate('Playstore Button')}}
                                         </h5>
                                         <div class="__bg-F8F9FC-card">
@@ -186,8 +186,8 @@
                                                                id="play-store-seller-status"
                                                                data-id="play-store-seller-status"
                                                                data-type="toggle"
-                                                               data-image-on="{{ asset('/public/assets/admin/img/modal/play-store-on.png') }}"
-                                                               data-image-off="{{ asset('/public/assets/admin/img/modal/play-store-off.png') }}"
+                                                               data-image-on="{{ asset('assets/admin/img/modal/play-store-on.png') }}"
+                                                               data-image-off="{{ asset('assets/admin/img/modal/play-store-off.png') }}"
                                                                data-title-on="{{ translate('playstore_button_enabled_for_seller') }}"
                                                                data-title-off="{{ translate('playstore_button_disabled_for_seller') }}"
                                                                data-text-on="<p>{{ translate('Playstore_button_is_enabled_now_everyone_can_use_or_see_the_button') }}</p>"
@@ -206,7 +206,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <h5 class="card-title mb-2">
-                                            <img src="{{asset('public/assets/admin/img/ios.png')}}" class="mr-2" alt="">
+                                            <img src="{{asset('assets/admin/img/ios.png')}}" class="mr-2" alt="">
                                             {{translate('App Store Button')}}
                                         </h5>
                                         <div class="__bg-F8F9FC-card">
@@ -222,8 +222,8 @@
                                                                id="apple-seller-status"
                                                                data-id="apple-seller-status"
                                                                data-type="toggle"
-                                                               data-image-on="{{ asset('/public/assets/admin/img/modal/apple-on.png') }}"
-                                                               data-image-off="{{ asset('/public/assets/admin/img/modal/apple-off.png') }}"
+                                                               data-image-on="{{ asset('assets/admin/img/modal/apple-on.png') }}"
+                                                               data-image-off="{{ asset('assets/admin/img/modal/apple-off.png') }}"
                                                                data-title-on="{{ translate('app_store_button_enabled_for_seller') }}"
                                                                data-title-off="{{ translate('app_store_button_disabled_for_seller') }}"
                                                                data-text-on="<p>{{translate('App Store button is enabled now everyone can use or see the button')}}</p>"
@@ -246,13 +246,13 @@
                         <div class="row g-3 mt-3">
                             <div class="col-12">
                                 <h5 class="card-title mb-5">
-                                    <img src="{{asset('public/assets/admin/img/dm.png')}}" class="mr-2" alt="">
+                                    <img src="{{asset('assets/admin/img/dm.png')}}" class="mr-2" alt="">
                                     {{translate('Download the Deliveryman App')}}
                                 </h5>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <h5 class="card-title mb-2">
-                                            <img src="{{asset('public/assets/admin/img/playstore.png')}}" class="mr-2" alt="">
+                                            <img src="{{asset('assets/admin/img/playstore.png')}}" class="mr-2" alt="">
                                             {{translate('Playstore Button')}}
                                         </h5>
                                         <div class="__bg-F8F9FC-card">
@@ -268,8 +268,8 @@
                                                                id="play-store-dm-status"
                                                                data-id="play-store-dm-status"
                                                                data-type="toggle"
-                                                               data-image-on="{{ asset('/public/assets/admin/img/modal/play-store-on.png') }}"
-                                                               data-image-off="{{ asset('/public/assets/admin/img/modal/play-store-off.png') }}"
+                                                               data-image-on="{{ asset('assets/admin/img/modal/play-store-on.png') }}"
+                                                               data-image-off="{{ asset('assets/admin/img/modal/play-store-off.png') }}"
                                                                data-title-on="{{ translate('playstore_button_enabled_for_delivery_man') }}"
                                                                data-title-off="{{ translate('playstore_button_disabled_for_delivery_man') }}"
                                                                data-text-on="{{ translate('Playstore_button_is_enabled_now_everyone_can_use_or_see_the_button') }}"
@@ -288,7 +288,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <h5 class="card-title mb-2">
-                                            <img src="{{asset('public/assets/admin/img/ios.png')}}" class="mr-2" alt="">
+                                            <img src="{{asset('assets/admin/img/ios.png')}}" class="mr-2" alt="">
                                             {{translate('App Store Button')}}
                                         </h5>
                                         <div class="__bg-F8F9FC-card">
@@ -304,8 +304,8 @@
                                                                id="apple-dm-status"
                                                                data-id="apple-dm-status"
                                                                data-type="toggle"
-                                                               data-image-on="{{ asset('/public/assets/admin/img/modal/apple-on.png') }}"
-                                                               data-image-off="{{ asset('/public/assets/admin/img/modal/apple-off.png') }}"
+                                                               data-image-on="{{ asset('assets/admin/img/modal/apple-on.png') }}"
+                                                               data-image-off="{{ asset('assets/admin/img/modal/apple-off.png') }}"
                                                                data-title-on="{{ translate('app_store_button_enabled_for_delivery_man') }}"
                                                                data-title-off="{{ translate('app_store_button_disabled_for_delivery_man') }}"
                                                                data-text-on="<p>{{ translate('App_Store_button_is_enabled_now_everyone_can_use_or_see_the_button') }}</p>"

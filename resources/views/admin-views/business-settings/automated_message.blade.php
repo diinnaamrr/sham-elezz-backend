@@ -3,7 +3,7 @@
 @section('title', translate('Automated_Message'))
 
 @push('css_or_js')
-<link rel="stylesheet" href="{{asset('public/assets/admin/css/owl.min.css')}}">
+<link rel="stylesheet" href="{{asset('assets/admin/css/owl.min.css')}}">
 @endpush
 
 @section('content')
@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title mr-3">
                 <span class="page-header-icon">
-                    <img src="{{ asset('public/assets/admin/img/business.png') }}" class="w--26" alt="">
+                    <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
                     {{ translate('messages.business_setup') }}
@@ -277,7 +277,7 @@
                     </table>
                     @if (count($messages) === 0)
                         <div class="empty--data">
-                            <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
+                            <img src="{{ asset('assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
                             <h5>
                                 {{ translate('no_data_found') }}
                             </h5>
@@ -303,8 +303,8 @@
 
 @endsection
 @push('script_2')
-    <script src="{{ asset('public/assets/admin/js/view-pages/business-settings-refund-reasons-page.js') }}"></script>
-    <script src="{{ asset('public/assets/admin/js/owl.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/view-pages/business-settings-refund-reasons-page.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/owl.min.js') }}"></script>
     <script>
         $('.nav-slider').owlCarousel({
             margin: 30,

@@ -12,7 +12,7 @@
         <div class="page-header d-flex flex-wrap align-items-center justify-content-between">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/admin/img/setting.png')}}" class="w--26" alt="">
+                    <img src="{{asset('admin/img/setting.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.app_settings')}}
@@ -131,7 +131,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <h5 class="card-title mb-3">
-                                <img src="{{asset('public/admin/img/andriod.png')}}" class="mr-2" alt="">
+                                <img src="{{asset('admin/img/andriod.png')}}" class="mr-2" alt="">
                                 {{ translate('For android') }}
                             </h5>
                             <div class="__bg-F8F9FC-card">
@@ -168,7 +168,7 @@
                         </div>
                         <div class="col-md-6">
                             <h5 class="card-title mb-3">
-                                <img src="{{asset('public/admin/img/ios.png')}}" class="mr-2" alt="">
+                                <img src="{{asset('admin/img/ios.png')}}" class="mr-2" alt="">
                                 {{ translate('For iOS') }}
                             </h5>
                             <div class="__bg-F8F9FC-card">
@@ -250,7 +250,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <h5 class="card-title mb-3">
-                                <img src="{{asset('public/admin/img/andriod.png')}}" class="mr-2" alt="">
+                                <img src="{{asset('admin/img/andriod.png')}}" class="mr-2" alt="">
                                 {{ translate('For android') }}
                             </h5>
                             <div class="__bg-F8F9FC-card">
@@ -286,7 +286,7 @@
                         </div>
                         <div class="col-md-6">
                             <h5 class="card-title mb-3">
-                                <img src="{{asset('public/admin/img/ios.png')}}" class="mr-2" alt="">
+                                <img src="{{asset('admin/img/ios.png')}}" class="mr-2" alt="">
                                 {{ translate('For iOS') }}
                             </h5>
                             <div class="__bg-F8F9FC-card">
@@ -369,7 +369,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <h5 class="card-title mb-3">
-                                <img src="{{asset('public/admin/img/andriod.png')}}" class="mr-2" alt="">
+                                <img src="{{asset('admin/img/andriod.png')}}" class="mr-2" alt="">
                                 {{ translate('For android') }}
                             </h5>
                             <div class="__bg-F8F9FC-card">
@@ -405,7 +405,7 @@
                         </div>
                         <div class="col-md-6">
                             <h5 class="card-title mb-3">
-                                <img src="{{asset('public/admin/img/ios.png')}}" class="mr-2" alt="">
+                                <img src="{{asset('admin/img/ios.png')}}" class="mr-2" alt="">
                                 {{ translate('For iOS') }}
                             </h5>
                             <div class="__bg-F8F9FC-card">

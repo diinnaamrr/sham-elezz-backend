@@ -14,7 +14,7 @@ active
         <div class="page-header d-flex flex-wrap align-items-center justify-content-between">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/api.png')}}" class="w--26" alt="image">
+                    <img src="{{asset('assets/admin/img/api.png')}}" class="w--26" alt="image">
                 </span>
                 <span>
                     {{translate('messages.Notification Channels Setup')}}
@@ -32,7 +32,7 @@ active
 
             <!-- Title -->
             <div class="mb-3 d-flex align-items-start gap-2">
-                <img src="{{asset('public/assets/admin/img/bell-2.png')}}" alt="">
+                <img src="{{asset('assets/admin/img/bell-2.png')}}" alt="">
                 <div class="w-0 flex-grow mb-2">
                     {{ translate('From here you setup who can see what types of notification from') }} {{ $business_name }}
 
@@ -96,7 +96,7 @@ active
                                                     <input type="checkbox"
                                                     id="push_notification_{{$item->key}}"
                                                     data-id="push_notification_{{$item->key}}"
-                                                    data-type="toggle" data-image-on="{{asset('public/assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('public/assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to enable the Push Notification For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the Push Notification For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('Push Notification Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('Push Notification Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox"  {{ $item->push_notification_status  == 'active' ? 'checked' : '' }}>
+                                                    data-type="toggle" data-image-on="{{asset('assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to enable the Push Notification For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the Push Notification For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('Push Notification Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('Push Notification Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox"  {{ $item->push_notification_status  == 'active' ? 'checked' : '' }}>
                                                     <span class="toggle-switch-label text">
                                                         <span class="toggle-switch-indicator"></span>
                                                     </span>
@@ -124,7 +124,7 @@ active
                                                 <input type="checkbox" data-type="toggle"
                                                 id="mail_{{ $item->key }}"
                                                 data-id="mail_{{ $item->key }}"
-                                                data-image-on="{{asset('public/assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('public/assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to enable the Mail For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the Mail For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('Mail Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('Mail Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox" {{ $item->mail_status  == 'active' ? 'checked' : '' }}>
+                                                data-image-on="{{asset('assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to enable the Mail For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the Mail For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('Mail Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('Mail Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox" {{ $item->mail_status  == 'active' ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
@@ -159,7 +159,7 @@ active
                                            <input type="checkbox"
                                              id="SMS_{{ $item->key }}"
                                            data-id="SMS_{{ $item->key }}"
-                                           data-type="toggle" data-image-on="{{asset('public/assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('public/assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to disable the SMS For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the SMS For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('SMS Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('SMS Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox" {{ $item->sms_status  == 'active' ? 'checked' : '' }}>
+                                           data-type="toggle" data-image-on="{{asset('assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to disable the SMS For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the SMS For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('SMS Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('SMS Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox" {{ $item->sms_status  == 'active' ? 'checked' : '' }}>
                                            <span class="toggle-switch-label text">
                                                <span class="toggle-switch-indicator"></span>
                                            </span>
@@ -194,7 +194,7 @@ active
                             <div class="max-349 mx-auto mb-20">
                                 <div>
                                     <div class="text-center">
-                                        <img width="80" src="{{  asset('public/assets/admin/img/modal/bell.png') }}" class="mb-20">
+                                        <img width="80" src="{{  asset('assets/admin/img/modal/bell.png') }}" class="mb-20">
                                         <h5 class="modal-title"></h5>
                                     </div>
                                     <div class="text-center" >

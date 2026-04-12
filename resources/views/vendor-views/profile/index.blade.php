@@ -85,9 +85,9 @@
                             class="avatar avatar-xxl avatar-circle avatar-border-lg avatar-uploader profile-cover-avatar"
                             for="avatarUploader">
                             <img id="viewer"
-                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                 data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                                  class="avatar-img onerror-image"
-                                 src="{{ \App\CentralLogics\Helpers::get_loggedin_user()?->image_full_url ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                 src="{{ \App\CentralLogics\Helpers::get_loggedin_user()?->image_full_url ?? asset('assets/admin/img/160x160/img1.jpg') }}"
                                  alt="Image">
 
                             <input type="file" name="image" class="js-file-attach avatar-uploader-input"
@@ -186,7 +186,7 @@
                         <!-- Form Group -->
                             <div class="row form-group">
                                 <label for="newPassword" class="col-sm-3 col-form-label input-label">{{translate('messages.new_password')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
+        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
 
                                 <div class="col-sm-9">
                                     <input type="password" class="js-pwstrength form-control" name="password"
@@ -245,5 +245,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/profile-index.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/vendor/profile-index.js"></script>
 @endpush

@@ -18,7 +18,7 @@ active
             <div class="d-flex flex-wrap justify-content-between align-items-center py-2">
                 <div class="flex-grow-1">
                     <div class="d-flex align-items-start">
-                        <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
+                        <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
                                 @if($store?->store_sub_update_application?->status == 0)
@@ -97,14 +97,14 @@ active
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('vendor.subscriptionackage.subscriberTransactionExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
+                                    src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('vendor.subscriptionackage.subscriberTransactionExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
+                                    src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -168,7 +168,7 @@ active
                 </div>
                 @if(count($transactions) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>

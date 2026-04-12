@@ -22,7 +22,7 @@
             </div>
                 <!-- Plan Seperator Arrow -->
                 <div class="plan-seperator-arrow mx-auto">
-                    <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
+                    <img src="{{asset('assets/admin/img/exchange.svg')}}" alt="" class="w-100">
                 </div>
             <!-- Plan Seperator Arrow -->
 
@@ -40,7 +40,7 @@
                     @if ( $store_subscription?->package_id !=  $package->id )
                     <!-- Plan Seperator Arrow -->
                     <div class="plan-seperator-arrow mx-auto">
-                    <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
+                    <img src="{{asset('assets/admin/img/exchange.svg')}}" alt="" class="w-100">
                     </div>
 
                     <!-- Plan Seperator Arrow -->
@@ -134,8 +134,8 @@
                     <input type="radio" {{ $balance >= $package?->price ? '' :'disabled'  }} value="wallet"  class="d-none" name="payment_gateway">
                     <div  data-toggle="tooltip" data-placement="bottom" title="{{$balance >= $package?->price ? translate('pay_the_amount_via_wallet') : translate('You have not sufficient balance on you wallet! please add money to your wallet to purchase the packages') }}"  class="payment-item-inner">
                         <div class="check">
-                            <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                            <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                            <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                            <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                         </div>
                         <span>{{ translate('wallet') }}</span>
                         <span class="ml-auto" >{{ \App\CentralLogics\Helpers::format_currency($balance) }} </span>
@@ -149,8 +149,8 @@
                     <input type="radio" value="manual_payment_by_admin"  class="d-none" name="payment_gateway">
                     <div class="payment-item-inner">
                         <div class="check">
-                            <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                            <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                            <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                            <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                         </div>
                         <span>{{ translate('manually_pay') }}</span>
                         {{-- <span class="ml-auto" >{{ \App\CentralLogics\Helpers::format_currency($balance) }} </span> --}}

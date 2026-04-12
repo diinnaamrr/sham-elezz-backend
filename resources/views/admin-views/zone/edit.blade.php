@@ -13,7 +13,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/edit.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                    {{ translate('edit_zone')}}
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div class="instructions-image mt-4">
-                            <img src="{{asset('public/assets/admin/img/instructions.gif')}}" alt="instructions">
+                            <img src="{{asset('assets/admin/img/instructions.gif')}}" alt="instructions">
                         </div>
                     </div>
                 </div>

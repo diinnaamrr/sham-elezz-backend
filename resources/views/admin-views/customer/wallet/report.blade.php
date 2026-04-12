@@ -13,7 +13,7 @@
         <div class="page-header">
             <h1 class="page-header-title mr-3">
                 <span class="page-header-icon">
-                    <img src="{{asset('/public/assets/admin/img/icons/wallet.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/icons/wallet.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                      {{translate('messages.customer_wallet_report')}}
@@ -146,7 +146,7 @@
                                     class="color-card flex-column align-items-center justify-content-center color-6 h-100">
                                     <div class="img-box">
                                         <img class="resturant-icon w--30"
-                                             src="{{asset('public/assets/admin/img/customer-loyality/1.png')}}"
+                                             src="{{asset('assets/admin/img/customer-loyality/1.png')}}"
                                              alt="dashboard">
                                     </div>
                                     <div class="d-flex flex-column align-items-center">
@@ -163,7 +163,7 @@
                                     class="color-card flex-column align-items-center justify-content-center color-4 h-100">
                                     <div class="img-box">
                                         <img class="resturant-icon w--30"
-                                             src="{{asset('public/assets/admin/img/customer-loyality/2.png')}}"
+                                             src="{{asset('assets/admin/img/customer-loyality/2.png')}}"
                                              alt="dashboard">
                                     </div>
                                     <div class="d-flex flex-column align-items-center">
@@ -180,7 +180,7 @@
 {{--                                    class="color-card flex-column align-items-center justify-content-center color-2 h-100">--}}
 {{--                                    <div class="img-box">--}}
 {{--                                        <img class="resturant-icon w--30"--}}
-{{--                                             src="{{asset('public/assets/admin/img/customer-loyality/3.png')}}"--}}
+{{--                                             src="{{asset('assets/admin/img/customer-loyality/3.png')}}"--}}
 {{--                                             alt="dashboard">--}}
 {{--                                    </div>--}}
 {{--                                    <div class="d-flex flex-column align-items-center">--}}
@@ -285,14 +285,14 @@
                         <a id="export-excel" class="dropdown-item"
                            href="{{route('admin.users.customer.wallet.export', ['type'=>'excel',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                 src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                                 src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                  alt="Image Description">
                             {{ translate('messages.excel') }}
                         </a>
                         <a id="export-csv" class="dropdown-item"
                            href="{{route('admin.users.customer.wallet.export', ['type'=>'csv',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                 src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                 src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                  alt="Image Description">
                             .{{ translate('messages.csv') }}
                         </a>
@@ -367,7 +367,7 @@
             </div>
             @if(count($transactions) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -380,7 +380,7 @@
 
 @push('script')
     <!-- Apex Charts -->
-    <script src="{{asset('/public/assets/admin/js/apex-charts/apexcharts.js')}}"></script>
+    <script src="{{asset('assets/admin/js/apex-charts/apexcharts.js')}}"></script>
     <!-- Apex Charts -->
 @endpush
 
@@ -430,10 +430,10 @@
 @endpush
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
     <script
-        src="{{asset('public/assets/admin')}}/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js"></script>
-    <script src="{{asset('public/assets/admin')}}/js/hs.chartjs-matrix.js"></script>
+        src="{{asset('assets/admin')}}/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js"></script>
+    <script src="{{asset('assets/admin')}}/js/hs.chartjs-matrix.js"></script>
 
     <script>
         $(document).on('ready', function () {

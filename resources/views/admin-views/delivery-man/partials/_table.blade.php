@@ -3,7 +3,7 @@
     <td>{{$key+1}}</td>
         <td>
             <a class="table-rest-info" href="{{route('admin.users.delivery-man.preview',[$dm['id']])}}">
-                <img class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                <img class="onerror-image" data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                 src="{{ $dm['image_full_url'] }}"
                 alt="{{$dm['f_name']}} {{$dm['l_name']}}">
                 <div class="info">
@@ -61,4 +61,4 @@
     </td>
 </tr>
 @endforeach
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

@@ -4,7 +4,7 @@
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="{{asset('public/assets/admin/css/tags-input.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/admin/css/tags-input.min.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -14,7 +14,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--22" alt="">
+                    <img src="{{asset('assets/admin/img/edit.png')}}" class="w--22" alt="">
                 </span>
                 <span>
                     {{ request()->product_gellary == 1 ? translate('Add_item') : translate('item_update') }}
@@ -161,7 +161,7 @@
                                     @php($photo = is_array($photo)?$photo:['img'=>$photo,'storage'=>'public'])
                                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6 spartan_item_wrapper" id="product_images_{{ $key }}">
                                             <img class="img--square onerror-image" src="{{\App\CentralLogics\Helpers::get_full_url('product',$photo['img'],$photo['storage'] ?? 'public') }}"
-                                            data-onerror-image ="{{asset('/public/assets/admin/img/400x400/img2.jpg')}}" alt="Product image">
+                                            data-onerror-image ="{{asset('assets/admin/img/400x400/img2.jpg')}}" alt="Product image">
                                             <a href="#"  data-key={{ $key }} data-photo="{{ $photo['img'] }}"
                                              class="spartan_remove_row function_remove_img" ><i class="tio-add-to-trash"></i></a>
                                         </div>
@@ -174,7 +174,7 @@
                                 <div class="text-center d-block" id="image-viewer-section" class="pt-2">
                                     <img class="img--100 onerror-image" id="viewer"
                                     src="{{ $product['image_full_url'] }}"
-                                            data-onerror-image ="{{asset('/public/assets/admin/img/400x400/img2.jpg')}}"
+                                            data-onerror-image ="{{asset('assets/admin/img/400x400/img2.jpg')}}"
                                             alt="product image"/>
                                 </div>
                                 <div class="custom-file mt-3">
@@ -470,7 +470,7 @@
                                 @if (!isset($product->food_variations) || count(json_decode($product->food_variations,true))<1)
                                 <div id="empty-variation">
                                     <div class="text-center">
-                                        <img src="{{ asset('/public/assets/admin/img/variation.png') }}" alt="">
+                                        <img src="{{ asset('assets/admin/img/variation.png') }}" alt="">
                                         <div>{{ translate('No variation added') }}</div>
                                     </div>
                                 </div>
@@ -618,9 +618,9 @@
 @endpush
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/tags-input.min.js"></script>
-    <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/product-index.js"></script>
+    <script src="{{asset('assets/admin')}}/js/tags-input.min.js"></script>
+    <script src="{{asset('assets/admin/js/spartan-multi-image-picker.js')}}"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/vendor/product-index.js"></script>
     <script>
         "use strict";
 
@@ -863,7 +863,7 @@
                 groupClassName: 'col-lg-2 col-md-4 col-sm-4 col-6',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: "{{asset('public/assets/admin/img/400x400/img2.jpg')}}",
+                    image: "{{asset('assets/admin/img/400x400/img2.jpg')}}",
                     width: '100%'
                 },
                 dropFileLabel: "Drop Here",

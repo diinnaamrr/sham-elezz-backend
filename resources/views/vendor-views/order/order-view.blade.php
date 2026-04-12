@@ -19,7 +19,7 @@
                 <div class="col-sm mb-2 mb-sm-0">
                     <h1 class="page-header-title">
                         <span class="page-header-icon">
-                            <img src="{{ asset('/public/assets/admin/img/shopping-basket.png') }}" class="w--20"
+                            <img src="{{ asset('assets/admin/img/shopping-basket.png') }}" class="w--20"
                                 alt="">
                         </span>
                         <span>
@@ -310,8 +310,8 @@
                                                         <a class="avatar avatar-xl mr-3"
                                                             href="{{ route('vendor.item.view', $detail->item['id']) }}">
                                                             <img class="img-fluid rounded onerror-image"
-                                                            src="{{ $product->image_full_url  ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                            src="{{ $product->image_full_url  ?? asset('assets/admin/img/160x160/img2.jpg') }}"
+                                                                 data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                                                                 alt="Image Description">
                                                         </a>
                                                         <div class="media-body">
@@ -421,9 +421,9 @@
                                                     <div class="media media--sm">
                                                         <div class="avatar avatar-xl mr-3">
                                                             <img class="img-fluid onerror-image"
-                                                            src="{{$campaign?->image_full_url ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                            src="{{$campaign?->image_full_url ?? asset('assets/admin/img/160x160/img2.jpg') }}"
 
-                                                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                                 data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                                                                 alt="Image Description">
                                                         </div>
                                                         <div class="media-body">
@@ -770,7 +770,7 @@
                                 <div class="media align-items-center customer--information-single" href="javascript:">
                                     <div class="avatar avatar-circle">
                                         <img class="avatar-img onerror-image"
-                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                             data-onerror-image="{{ asset('assets/admin/img/160x160/img1.jpg') }}"
                                              src="{{ $order->delivery_man->image_full_url }}"
                                             alt="Image Description">
                                     </div>
@@ -849,7 +849,7 @@
                                     <div class="col-3">
                                         <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
                                             data-target="#imagemodal{{ $key }}"
-                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                             data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                                              src="{{\App\CentralLogics\Helpers::get_full_url('order',$img['img'],$img['storage']) }}"
                                              alt="image">
                                     </div>
@@ -907,7 +907,7 @@
                             <div class="media align-items-center customer--information-single" href="javascript:">
                                 <div class="avatar avatar-circle">
                                     <img class="avatar-img onerror-image "
-                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                         data-onerror-image="{{ asset('assets/admin/img/160x160/img1.jpg') }}"
                                          src="{{ $order->customer->image_full_url }}"
                                         alt="Image Description">
                                 </div>
@@ -1172,7 +1172,7 @@
 
 @endsection
 @push('script_2')
-    <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script type="text/javascript">
         "use strict";
 
@@ -1294,7 +1294,7 @@
                 groupClassName: 'spartan_item_wrapper min-w-176px max-w-176px',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: "{{ asset('public/assets/admin/img/upload-img.png') }}",
+                    image: "{{ asset('assets/admin/img/upload-img.png') }}",
                     width: '176px'
                 },
                 dropFileLabel: "Drop Here",

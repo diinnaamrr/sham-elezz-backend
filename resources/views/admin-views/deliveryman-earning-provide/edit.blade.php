@@ -85,7 +85,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/deliveryman-earning-provide.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/deliveryman-earning-provide.js"></script>
 <script>
     "use strict";
     $('#restaurant').select2({

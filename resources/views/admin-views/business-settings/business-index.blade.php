@@ -9,7 +9,7 @@
         <div class="page-header">
             <h1 class="page-header-title mr-3">
                 <span class="page-header-icon">
-                    <img src="{{ asset('public/assets/admin/img/business.png') }}" class="w--26" alt="">
+                    <img src="{{ asset('assets/admin/img/business.png') }}" class="w--26" alt="">
                 </span>
                 <span>
                     {{ translate('messages.business_settings') }}
@@ -358,7 +358,7 @@
                                                     for="latitude">{{ translate('messages.latitude') }}<span
                                                         class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('messages.click_on_the_map_select_your_defaul_location') }}"><img
-                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('messages.click_on_the_map_select_your_defaul_location') }}"></span></label>
                                                 <input type="text" id="latitude" name="latitude" class="form-control"
                                                     placeholder="{{ translate('messages.Ex:') }} -94.22213"
@@ -372,7 +372,7 @@
                                                     for="longitude">{{ translate('messages.longitude') }}<span
                                                         class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('messages.click_on_the_map_select_your_defaul_location') }}"><img
-                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('messages.click_on_the_map_select_your_defaul_location') }}"></span></label>
                                                 <input type="text" name="longitude" class="form-control"
                                                     placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude"
@@ -389,7 +389,7 @@
                                             </label>
                                             <label class="text-center position-relative">
                                                 <img class="img--vertical onerror-image image--border" id="viewer"
-                                                    data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
+                                                    data-onerror-image="{{ asset('assets/admin/img/upload-img.png') }}"
                                                     src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','upload_image')}}"
                                                     alt="logo image" />
                                                 <div class="icon-file-group">
@@ -410,7 +410,7 @@
                                             </label>
                                             <label class="text-center position-relative">
                                                 <img class="img--133 onerror-image image--border" id="iconViewer"
-                                                    data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
+                                                    data-onerror-image="{{ asset('assets/admin/img/upload-img.png') }}"
                                                     src="{{\App\CentralLogics\Helpers::get_full_url('business', $icon?->value?? '', $icon?->storage[0]?->value ?? 'public','upload_image')}}"
                                                     alt="Fav icon" />
                                                 <div class="icon-file-group">
@@ -754,7 +754,7 @@
                                         <label class="form-label text-capitalize"
                                             for="digit_after_decimal_point">{{ translate('messages.Digit after decimal point') }}
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('how_many_fractional_digit_to_show_after_decimal_value') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
                                         <input type="number" name="digit_after_decimal_point" class="form-control"
@@ -769,7 +769,7 @@
                                         <label class="form-label"
                                             for="footer_text">{{ translate('Copyright Text') }}
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.make_visitors_aware_of_your_business‘s_rights_&_legal_information.') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
                                         <textarea type="text" id="footer_text" name="footer_text" class="form-control h--45"
@@ -782,7 +782,7 @@
                                         <label class="form-label"
                                             for="cookies_text">{{ translate('Cookies Text') }}
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.make_visitors_aware_of_your_business‘s_rights_&_legal_information.') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
                                         <textarea type="text"  id="cookies_text" name="cookies_text" class="form-control h--45"
@@ -807,7 +807,7 @@
                                             for="admin_commission">
                                             {{ translate('messages.Default_Commission_Rate_On_Order') }} (%)
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Set_up_‘Default_Commission_Rate’_on_every_Order._Admin_can_also_set_store-wise_different_commission_rates_from_respective_store_settings.') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
                                         <input type="number" name="admin_commission" class="form-control"
@@ -823,7 +823,7 @@
                                         for="admin_comission_in_delivery_charge">
                                         {{translate('messages.Commission_Rate_On_Delivery_Charge')}} (%)
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Set_a_default_‘Commission_Rate’_for_freelance_deliverymen_(under_admin)_on_every_deliveryman. ') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
                                             <input type="number" name="admin_comission_in_delivery_charge" class="form-control" id="admin_comission_in_delivery_charge"  placeholder="{{ translate('messages.Ex:_10') }}"
@@ -838,7 +838,7 @@
                                         <label class="input-label text-capitalize d-flex alig-items-center"><span
                                                 class="line--limit-1">{{ translate('messages.Who_Will_Confirm_Order?') }}
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.After_a_customer_order_placement,_Admin_can_define_who_will_confirm_the_order_first-_Deliveryman_or_Store?_For_example,_if_you_choose_‘Delivery_man’,_the_deliveryman_nearby_will_confirm_the_order_and_forward_it_to_the_related_store_to_process_the_order._It_works_vice-versa_if_you_choose_‘Store’.') }}">
-                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                             </span>
                                         </label>
@@ -869,15 +869,15 @@
                                         <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border rounded px-3 form-control">
                                         <span class="pr-1 d-flex align-items-center"><span class="line--limit-1">{{ translate('Include_TAX_Amount') }}</span>
                                         <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.If_enabled,_the_customer_will_see_the_total_product_price,_including_VAT/Tax._If_it’s_disabled,_the_VAT/Tax_will_be_added_separately_with_the_total_cost_of_the_product.')}}">
-                                            <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                            <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                         </span>
                                         </span>
                                             <input type="checkbox"
 
                                                    data-id="tax_included"
                                                    data-type="toggle"
-                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/tax-on.png') }}"
-                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/tax-off.png') }}"
+                                                   data-image-on="{{ asset('assets/admin/img/modal/tax-on.png') }}"
+                                                   data-image-off="{{ asset('assets/admin/img/modal/tax-off.png') }}"
                                                    data-title-on="{{ translate('messages.Want_to') }} <strong>{{ translate('messages.‘Include_Tax_Amount?’') }}</strong>"
                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Tax_Amount’?') }}</strong>"
                                                    data-text-on="<p>{{ translate('messages.If_you_enable_it,_customers_will_see_the_product_Price_including_Tax,_during_checkout.') }}</p>"
@@ -905,14 +905,14 @@
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('messages.If_this_feature_is_active,_customers_can_filter_food_according_to_their_preference_from_the_Customer_App_or_Website.') }}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.veg_non_veg') }}"> * </span>
                                             </span>
                                             <input type="checkbox"
                                                    data-id="vnv1"
                                                    data-type="toggle"
-                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/veg-on.png') }}"
-                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/veg-off.png') }}"
+                                                   data-image-on="{{ asset('assets/admin/img/modal/veg-on.png') }}"
+                                                   data-image-off="{{ asset('assets/admin/img/modal/veg-off.png') }}"
                                                    data-title-on="{{ translate('messages.Want_to_enable_the') }} <strong>{{ translate('messages.‘Veg/Non-Veg’_feature?') }}</strong>"
                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.the_Veg/Non-Veg_Feature?') }}</strong>"
                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_filter_food_items_by_choosing_food_from_the_Veg/Non-Veg_feature.') }}</p>"
@@ -940,15 +940,15 @@
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('messages.Admin_will_get_a_pop-up_notification_with_sounds_for_any_order_placed_by_customers.') }}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                 </span>
                                             </span>
                                             <input type="checkbox"
                                                    data-id="aon1"
                                                    data-type="toggle"
-                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/order-notification-on.png') }}"
-                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/order-notification-off.png') }}"
+                                                   data-image-on="{{ asset('assets/admin/img/modal/order-notification-on.png') }}"
+                                                   data-image-off="{{ asset('assets/admin/img/modal/order-notification-off.png') }}"
                                                    data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Order_Notification_for_Admin?') }}</strong>"
                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Order_Notification_for_Admin?') }}</strong>"
                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_the_Admin_will_receive_a_Notification_for_every_order_placed.') }}</p>"
@@ -969,7 +969,7 @@
                                         <label class="input-label text-capitalize d-flex alig-items-center"><span
                                             class="line--limit-1">{{ translate('Order_Notification_Type') }}
                                         <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('For_Firebase,_a_single_real-time_notification_will_be_sent_upon_order_placement,_with_no_repetition._For_the_Manual_option,_notifications_will_appear_at_10-second_intervals_until_the_order_is_viewed.') }}" >
-                                            <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                            <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                         </span>
                                         </span>
                                         </label>
@@ -1000,15 +1000,15 @@
                                                 class="text-danger"><span class="form-label-secondary"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('messages.Set_a_minimum_order_value_for_automated_free_delivery._If_the_minimum_amount_is_exceeded,_the_Delivery_Fee_is_deducted_from_Admin’s_commission_and_added_to_Admin’s_expense.') }}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.free_over_delivery_message') }}"></span>
                                                 *</small></span>
                                             <span class="toggle-switch toggle-switch-sm pr-sm-3">
                                                 <input type="checkbox"
                                                        data-id="free_delivery_over_status"
                                                        data-type="toggle"
-                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/free-delivery-on.png') }}"
-                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/free-delivery-off.png') }}"
+                                                       data-image-on="{{ asset('assets/admin/img/modal/free-delivery-on.png') }}"
+                                                       data-image-off="{{ asset('assets/admin/img/modal/free-delivery-off.png') }}"
                                                        data-title-on="<strong>{{ translate('messages.Want_to_enable_Free_Delivery_on_Minimum_Orders?') }}</strong>"
                                                        data-title-off="<strong>{{ translate('messages.Want_to_disable_Free_Delivery_on_Minimum_Order?') }}</strong>"
                                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_get_FREE_Delivery_by_fulfilling_the_minimum_order_requirement.') }}</p>"
@@ -1043,15 +1043,15 @@
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('messages.If_enabled,_customers_do_not_have_to_login_while_checking_out_orders.')}}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                 </span>
                                             </span>
                                             <input type="checkbox"
                                                    data-id="guest_checkout_status"
                                                    data-type="toggle"
-                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/dm-tips-on.png') }}"
-                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/dm-tips-off.png') }}"
+                                                   data-image-on="{{ asset('assets/admin/img/modal/dm-tips-on.png') }}"
+                                                   data-image-off="{{ asset('assets/admin/img/modal/dm-tips-off.png') }}"
                                                    data-title-on="<strong>{{ translate('messages.Want_to_enable_guest_checkout?') }}</strong>"
                                                    data-title-off="<strong>{{ translate('messages.Want_to_disable_guest_checkout?') }}</strong>"
                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_guest_checkout_will_be_visible_when_customer_is_not_logged_in.') }}</p>"
@@ -1085,15 +1085,15 @@
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('messages.If_you_enable_this_option,_in_all_phone_no_field_will_show_a_country_picker_list.')}}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.customer_varification_toggle') }}">
                                                 </span>
                                             </span>
                                             <input type="checkbox"
                                             data-id="country_picker_status"
                                             data-type="toggle"
-                                            data-image-on="{{ asset('/public/assets/admin/img/modal/mail-success.png') }}"
-                                            data-image-off="{{ asset('/public/assets/admin/img/modal/mail-warning.png') }}"
+                                            data-image-on="{{ asset('assets/admin/img/modal/mail-success.png') }}"
+                                            data-image-off="{{ asset('assets/admin/img/modal/mail-warning.png') }}"
                                             data-title-on="<strong>{{ translate('messages.Want_to_enable_country_picker?') }}</strong>"
                                             data-title-off="<strong>{{ translate('messages.Want_to_disable_country_picker?') }}</strong>"
                                             data-text-on="<p>{{ translate('messages.If_you_enable_this,_user_can_select_country_from_country_picker') }}</p>"
@@ -1132,15 +1132,15 @@
                                                         <span class="form-label-secondary text-danger d-flex"
                                                             data-toggle="tooltip" data-placement="right"
                                                             data-original-title="{{ translate('messages.If_enabled,_customers_need_to_pay_an_extra_charge_while_checking_out_orders.')}}"><img
-                                                                src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                         </span>
                                                     </span>
                                                     <input type="checkbox"
                                                         data-id="additional_charge_status"
                                                         data-type="toggle"
-                                                        data-image-on="{{ asset('/public/assets/admin/img/modal/dm-tips-on.png') }}"
-                                                        data-image-off="{{ asset('/public/assets/admin/img/modal/dm-tips-off.png') }}"
+                                                        data-image-on="{{ asset('assets/admin/img/modal/dm-tips-on.png') }}"
+                                                        data-image-off="{{ asset('assets/admin/img/modal/dm-tips-off.png') }}"
                                                         data-title-on="<strong>{{ translate('messages.Want_to_enable_additional_charge?') }}</strong>"
                                                         data-title-off="<strong>{{ translate('messages.Want_to_disable_additional_charge?') }}</strong>"
                                                         data-text-on="<p>{{ translate('messages.If_you_enable_this,_additional_charge_will_be_added_with_order_amount,_it_will_be_added_in_admin_wallet') }}</p>"
@@ -1165,7 +1165,7 @@
                                                         class="text-danger"><span class="form-label-secondary"
                                                             data-toggle="tooltip" data-placement="right"
                                                             data-original-title="{{ translate('messages.Set_a_name_for_the_additional_charge,_e.g._“Processing_Fee”.') }}"><img
-                                                                src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="{{ translate('messages.free_over_delivery_message') }}"></span>
                                                         *</small></span>
                                                 </label>
@@ -1185,7 +1185,7 @@
                                                         class="text-danger"><span class="form-label-secondary"
                                                             data-toggle="tooltip" data-placement="right"
                                                             data-original-title="{{ translate('messages.Set_the_value_(amount)_customers_need_to_pay_as_additional_charge.') }}"><img
-                                                                src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="{{ translate('messages.free_over_delivery_message') }}"></span>
                                                         *</small></span>
                                                 </label>
@@ -1218,15 +1218,15 @@
                                                         <span class="form-label-secondary text-danger d-flex"
                                                             data-toggle="tooltip" data-placement="right"
                                                             data-original-title="{{ translate('messages.If_enabled,_customers_can_make_partial_payments._For_example,_a_customer_can_pay_$20_initially_out_of_their_$50_payment_&_use_other_payment_methods_for_the_rest._Partial_payments_must_be_made_through_their_wallets.')}}"><img
-                                                                src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                         </span>
                                                     </span>
                                                     <input type="checkbox"
                                                         data-id="partial_payment"
                                                         data-type="toggle"
-                                                        data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
-                                                        data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
+                                                        data-image-on="{{ asset('assets/admin/img/modal/schedule-on.png') }}"
+                                                        data-image-off="{{ asset('assets/admin/img/modal/schedule-off.png') }}"
                                                         data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.partial_payment_?') }}</strong>"
                                                         data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.partial_payment_?') }}</strong>"
                                                         data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_choose_partial_payment_during_checkout.') }}</p>"
@@ -1247,7 +1247,7 @@
                                                 <label class="input-label text-capitalize d-flex alig-items-center"><span
                                                     class="line--limit-1">{{ translate('Can_Pay_the_Rest_Amount_using') }}
                                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Set_the_method(s)_that_customers_can_pay_the_remainder_after_partial_payment.') }}" alt="">
-                                                    <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                    <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                                 </span>
                                                 </span>
                                             </label>
@@ -1327,15 +1327,15 @@
                                                         <span class="form-label-secondary text-danger d-flex"
                                                             data-toggle="tooltip" data-placement="right"
                                                             data-original-title="{{ translate('If_enabled,_the_package_based_subscription_business_model_option_will_be_available_for_stores')}}"><img
-                                                                src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                         </span>
                                                     </span>
                                                     <input type="checkbox"
                                                     data-id="subscription_business_model"
                                                     data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/mail-success.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/mail-warning.png') }}"
+                                                    data-image-on="{{ asset('assets/admin/img/modal/mail-success.png') }}"
+                                                    data-image-off="{{ asset('assets/admin/img/modal/mail-warning.png') }}"
                                                     data-title-on="{{ translate('Want_to_enable_the') }} <strong>{{ translate('Subscription_Base') }}</strong> {{ translate('Business_Model') }} ?"
                                                     data-title-off="{{ translate('Want_to_disable_the') }} <strong>{{ translate('Subscription_Base') }} {{ translate('Business_Model') }}</strong> ?"
                                                     data-text-on="<p>{{ translate('If_enabled,_the_subscription_based_store_business_model_option_will_be_available_in_this_store') }}</p>"
@@ -1364,15 +1364,15 @@
                                                         <span class="form-label-secondary text-danger d-flex"
                                                             data-toggle="tooltip" data-placement="right"
                                                             data-original-title="{{ translate('If_enabled,_the_commission_based_business_model_option_will_be_available_for_stores.')}}"><img
-                                                                src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                         </span>
                                                     </span>
                                                     <input type="checkbox"
                                                     data-id="commission_business_model"
                                                     data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/mail-success.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/mail-warning.png') }}"
+                                                    data-image-on="{{ asset('assets/admin/img/modal/mail-success.png') }}"
+                                                    data-image-off="{{ asset('assets/admin/img/modal/mail-warning.png') }}"
                                                     data-title-on="{{ translate('Want_to_enable_the') }} <strong>{{ translate('Commission_Base') }}</strong> {{ translate('Business_Model') }} ?"
                                                     data-title-off="{{ translate('Want_to_disable_the') }} <strong>{{ translate('Commission_Base') }} {{ translate('Business_Model') }}</strong> ?"
                                                     data-text-on="<p>{{ translate('If_enabled,_the_commission_based_store_business_model_option_will_be_available_for_this_store') }}</p>"
@@ -1418,7 +1418,7 @@
                     <div class="max-349 mx-auto mb-20">
                         <div>
                             <div class="text-center">
-                                <img width="80" src="{{  asset('public/assets/admin/img/modal/currency.png') }}" class="mb-20">
+                                <img width="80" src="{{  asset('assets/admin/img/modal/currency.png') }}" class="mb-20">
                                 <h5 class="modal-title"></h5>
                             </div>
                             <div class="text-center" >

@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap justify-content-between">
                 <h1 class="page-header-title">
                     <span class="page-header-icon">
-                        <img src="{{ asset('public/assets/admin/img/landing.png') }}" class="w--20" alt="">
+                        <img src="{{ asset('assets/admin/img/landing.png') }}" class="w--20" alt="">
                     </span>
                     <span>
                         {{ translate('messages.react_landing_page') }}
@@ -80,7 +80,7 @@
                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                   data-placement="right"
                                                   data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                      alt="">
                                             </span></label>
                                         <input id="earning_title" type="text" maxlength="40" name="earning_title[]"
@@ -94,7 +94,7 @@
                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                   data-placement="right"
                                                   data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                      alt="">
                                             </span></label>
                                         <input id="earning_sub_title" type="text" maxlength="80"
@@ -130,7 +130,7 @@
                                                     class="form-label-secondary" data-toggle="tooltip"
                                                     data-placement="right"
                                                     data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
-                                                    <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                          alt="">
                                                 </span></label>
                                             <input id="earning_title{{ $lang }}" type="text" maxlength="40"
@@ -145,7 +145,7 @@
                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                       data-placement="right"
                                                       data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
-                                                    <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                          alt="">
                                                 </span></label>
                                             <input type="text" id="earning_sub_title{{ $lang }}" maxlength="80"
@@ -201,8 +201,8 @@
 
                             <label class="toggle-switch justify-content-end  rounded">
                                 <input type="checkbox" data-id="join_seller_react_status" data-type="status"
-                                       data-image-on="{{ asset('/public/assets/admin/img/modal/seller-app-on.png') }}"
-                                       data-image-off="{{ asset('/public/assets/admin/img/modal/seller-app-off.png') }}"
+                                       data-image-on="{{ asset('assets/admin/img/modal/seller-app-on.png') }}"
+                                       data-image-off="{{ asset('assets/admin/img/modal/seller-app-off.png') }}"
                                        data-title-on="<strong>{{ translate('messages.Want_to_enable_Seller_Section_Content?') }}</strong>"
                                        data-title-off="<strong>{{ translate('messages.Want_to_disable_Seller_Section_Content?') }}</strong>"
                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_Seller_Section_Content_will_be_visible.') }}</p>"
@@ -229,7 +229,7 @@
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
                                                         <img
-                                                            src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="earning_seller_title" type="text" maxlength="30"
@@ -246,7 +246,7 @@
                                                           data-placement="right"
                                                           data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                         <img
-                                                            src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="earning_seller_button_name" type="text" maxlength="20"
@@ -264,7 +264,7 @@
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_65_characters') }}">
                                                         <img
-                                                            src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <textarea id="earning_seller_sub_title" maxlength="65"
@@ -311,7 +311,7 @@
                                                               data-placement="right"
                                                               data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
                                                             <img
-                                                                src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="">
                                                         </span></label>
                                                     <input id="earning_seller_title{{ $lang }}" type="text"
@@ -329,7 +329,7 @@
                                                               data-placement="right"
                                                               data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                             <img
-                                                                src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="">
                                                         </span></label>
                                                     <input id="earning_seller_button_name{{ $lang }}"
@@ -348,7 +348,7 @@
                                                                                        data-placement="right"
                                                                                        data-original-title="{{ translate('Write_the_title_within_65_characters') }}">
                                                             <img
-                                                                src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="">
                                                         </span></label>
                                                     <textarea id="earning_seller_sub_title{{ $lang }}" maxlength="65"
@@ -425,8 +425,8 @@
 
                             <label class="toggle-switch justify-content-end  rounded">
                                 <input type="checkbox" data-id="join_DM_react_status" data-type="status"
-                                       data-image-on="{{ asset('/public/assets/admin/img/modal/seller-app-on.png') }}"
-                                       data-image-off="{{ asset('/public/assets/admin/img/modal/seller-app-off.png') }}"
+                                       data-image-on="{{ asset('assets/admin/img/modal/seller-app-on.png') }}"
+                                       data-image-off="{{ asset('assets/admin/img/modal/seller-app-off.png') }}"
                                        data-title-on="<strong>{{ translate('messages.Want_to_enable_Deliveryman_Section_Content?') }}</strong>"
                                        data-title-off="<strong>{{ translate('messages.Want_to_disable_Deliveryman_Section_Content?') }}</strong>"
                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_Deliveryman_Section_Content_will_be_visible.') }}</p>"
@@ -454,7 +454,7 @@
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
                                                         <img
-                                                            src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="earning_dm_title" type="text" maxlength="30"
@@ -471,7 +471,7 @@
                                                           data-placement="right"
                                                           data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                         <img
-                                                            src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="earning_dm_button_name" type="text" maxlength="20"
@@ -490,7 +490,7 @@
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_65_characters') }}">
                                                         <img
-                                                            src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <textarea id="earning_dm_sub_title" maxlength="65"
@@ -538,7 +538,7 @@
                                                               data-placement="right"
                                                               data-original-title="{{ translate('Write_the_title_within_30_characters') }}">
                                                             <img
-                                                                src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="">
                                                         </span></label>
                                                     <input id="earning_dm_title{{ $lang }}" type="text"
@@ -555,7 +555,7 @@
                                                               data-placement="right"
                                                               data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                             <img
-                                                                src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="">
                                                         </span></label>
                                                     <input id="earning_dm_button_name{{ $lang }}" type="text"
@@ -574,7 +574,7 @@
                                                                                        data-placement="right"
                                                                                        data-original-title="{{ translate('Write_the_title_within_65_characters') }}">
                                                             <img
-                                                                src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                                src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                                 alt="">
                                                         </span></label>
                                                     <textarea id="earning_dm_sub_title{{ $lang }}" maxlength="65"

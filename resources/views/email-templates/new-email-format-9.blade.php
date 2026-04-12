@@ -217,7 +217,7 @@ width: 24px;
                                 <td class="p-10">
                                     <span class="d-block text-center">
                                         <img class="mb-2 mail-img-2"
-                                        src="{{ $data['image_full_url'] ?? asset('/public/assets/admin/img/blank2.png') }}"
+                                        src="{{ $data['image_full_url'] ?? asset('assets/admin/img/blank2.png') }}"
                                         alt="">
                                         <h3 class="mb-3 mt-0">{{ translate('Order_Info') }}</h3>
                                     </span>
@@ -471,7 +471,7 @@ width: 24px;
                         @if (isset($social_media))
                             @foreach ($social_media as $social)
                                 <a href="{{ $social->link }}" target=”_blank” id="{{ $social->name  }}-check" style="margin: 0 5px;text-decoration:none;{{ (isset($data[$social->name]) && $data[$social->name] == 1)?'':'display:none;' }}">
-                                    <img src="{{asset('/public/assets/admin/img/img/')}}/{{ $social->name }}.png" alt="">
+                                    <img src="{{asset('assets/admin/img/img/')}}/{{ $social->name }}.png" alt="">
                                 </a>
                             @endforeach
                         @endif

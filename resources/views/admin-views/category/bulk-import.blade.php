@@ -7,7 +7,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/category.png')}}" class="w--20" alt="">
+                    <img src="{{asset('assets/admin/img/category.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{translate('messages.category_bulk_import')}}
@@ -27,7 +27,7 @@
                                             {{translate('Download_Excel_File')}}
                                         </div>
                                     </div>
-                                    <img src="{{asset('/public/assets/admin/img/bulk-import-1.png')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/bulk-import-1.png')}}" alt="">
                                 </div>
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
@@ -53,7 +53,7 @@
                                             {{translate('Match_Spread_sheet_data_according_to_instruction')}}
                                         </div>
                                     </div>
-                                    <img src="{{asset('/public/assets/admin/img/bulk-import-2.png')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/bulk-import-2.png')}}" alt="">
                                 </div>
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
@@ -84,7 +84,7 @@
                                             {{translate('Validate_data_and_complete_import')}}
                                         </div>
                                     </div>
-                                    <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/bulk-import-3.png')}}" alt="">
                                 </div>
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
@@ -110,8 +110,8 @@
                     <h3 class="mb-3 export--template-title font-regular">{{translate('download_spreadsheet_template')}}</h3>
                     <div class="btn--container justify-content-center export--template-btns">
 
-                        <a href="{{asset('public/assets/categories_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{ translate('Template with Existing Data') }}</a>
-                        <a href="{{asset('public/assets/categories_bulk_without_data_format.xlsx')}}" download="" class="btn btn--primary">{{ translate('Template without Data') }}</a>
+                        <a href="{{asset('assets/categories_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{ translate('Template with Existing Data') }}</a>
+                        <a href="{{asset('assets/categories_bulk_without_data_format.xlsx')}}" download="" class="btn btn--primary">{{ translate('Template without Data') }}</a>
 
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                                     <div class="form-group inputDnD input_image input_image_edit position-relative">
                                         <div class="upload-text">
                                             <div>
-                                                <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
+                                                <img src="{{asset('assets/admin/img/bulk-import-3.png')}}" alt="">
                                             </div>
                                             <div class="filename">{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}</div>
                                         </div>
@@ -170,7 +170,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/category-import-export.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/category-import-export.js"></script>
 <script>
     "use strict";
     $('#reset_btn').click(function(){

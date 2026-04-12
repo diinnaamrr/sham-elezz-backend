@@ -9,7 +9,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/firebase_auth.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/firebase_auth.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('Firebase OTP Verification')}}
@@ -52,15 +52,15 @@
                                                 <span class="form-label-secondary text-danger d-flex"
                                                       data-toggle="tooltip" data-placement="right"
                                                       data-original-title="{{ translate('If_this_field_is_active_customers_get_the_OTP_through_Firebase.') }}"><img
-                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.firebase_otp_verification') }}"> *
                                                 </span>
                                             </span>
                                             <input type="checkbox"
                                                    data-id="firebase_otp_verification"
                                                    data-type="toggle"
-                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/order-delivery-verification-on.png') }}"
-                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/order-delivery-verification-off.png') }}"
+                                                   data-image-on="{{ asset('assets/admin/img/modal/order-delivery-verification-on.png') }}"
+                                                   data-image-off="{{ asset('assets/admin/img/modal/order-delivery-verification-off.png') }}"
                                                    data-title-on="<strong>{{translate('Want to enable Firebase OTP Verification?')}}</strong>"
                                                    data-title-off="<strong>{{translate('Want to disable Firebase OTP Verification?')}}</strong> "
                                                    data-text-on="<p>{{ translate('With Firebase OTP enabled, verification codes will be sent through Firebase.') .' </p>' .'  <p>   <strong>
@@ -88,7 +88,7 @@
                                             {{-- <span class="form-label-secondary"
                                                   data-toggle="tooltip" data-placement="right"
                                                   data-original-title="{{ translate('Enter_the_maximum_cash_amount_stores_can_hold._If_this_number_exceeds,_stores_will_be_suspended_and_not_receive_any_orders.') }}"><img
-                                                    src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                    src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="{{ translate('messages.dm_cancel_order_hint') }}"></span> --}}
                                         </label>
                                         <input type="text" name="firebase_web_api_key" class="form-control"
@@ -122,7 +122,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="text-center my-5">
-                        <img src="{{ asset('public/assets/admin/img/modal/bell.png') }}">
+                        <img src="{{ asset('assets/admin/img/modal/bell.png') }}">
                     </div>
 
                     <h5 class="modal-title my-3" id="instructionsModalLabel">{{translate('Instructions')}}</h5>

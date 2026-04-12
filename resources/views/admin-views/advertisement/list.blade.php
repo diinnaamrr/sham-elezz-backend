@@ -27,7 +27,7 @@ active
     <div class="card">
         <div class="card-body">
             <div class="text-center max-w-700 mb-10 mt-10 mx-auto pt-5">
-                <img src="{{asset('public/assets/admin/img/advertisement-list.png')}}" class="mw-100 mb-3" alt="">
+                <img src="{{asset('assets/admin/img/advertisement-list.png')}}" class="mw-100 mb-3" alt="">
                 <h4 class="mb-2">{{ translate('Advertisement List') }}</h4>
                 <p class="mb-4">{{ translate('Create an advertisement for your targeted audience, as none has been created yet.') }}</p>
                 {{-- <div class="pb-4">
@@ -50,7 +50,7 @@ active
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="page-header-title d-flex align-items-center gap-2">
-            <img src="{{asset('public/assets/admin/img/advertisement.png')}}" alt="">
+            <img src="{{asset('assets/admin/img/advertisement.png')}}" alt="">
             {{ translate('messages.Ads_list') }}
             <span class="badge badge-soft-dark ml-2">{{ $adds->total() }}</span>
         </h1>
@@ -113,7 +113,7 @@ active
                             <td>{{ Str::limit($add->title, 20) }}</td>
                             <td>
                                 <a class="media align-items-center text-body" href="{{route('admin.store.view', $add?->store_id)}}">
-                                    <img class="avatar avatar-lg mr-3" src="{{ $add->store['logo_full_url'] ?? asset('public/assets/admin/img/100x100/food-default-image.png') }}" alt="">
+                                    <img class="avatar avatar-lg mr-3" src="{{ $add->store['logo_full_url'] ?? asset('assets/admin/img/100x100/food-default-image.png') }}" alt="">
                                     <div class="media-body">
                                         <h5 class="mb-0">{{ $add?->store?->name }}</h5>
                                         <small class="text-body">{{ $add?->store?->email }}</small>
@@ -144,7 +144,7 @@ active
                             <td>
                                 @if ( in_array($add->status ,['denied','expired']) || $add->active == 0)
                                 <div class="d-flex align-items-center gap-2 ml-3" data-toggle="tooltip" title="{{ translate('Expired & Denied ads has no priority.') }}">
-                                    <span>{{  translate('N/A') }}</span> <img src="{{asset('public/assets/admin/img/na.png')}}" alt="">
+                                    <span>{{  translate('N/A') }}</span> <img src="{{asset('assets/admin/img/na.png')}}" alt="">
                                 </div>
                                 @else
 
@@ -200,7 +200,7 @@ active
 
                                             data-title="{{translate('Are you sure you want to Resume the request?')}}"
                                             data-text="<p>{{translate('This ad will be run again and will show in the user app & websites.')}}</p>"
-                                            data-image="{{asset('public/assets/admin/img/modal/resume.png')}}"
+                                            data-image="{{asset('assets/admin/img/modal/resume.png')}}"
                                             data-type="resume"
                                             data-btn_class = "btn-primary"
 
@@ -226,7 +226,7 @@ active
                                         data-id="data-add-{{ $add->id }}"
                                         data-title="{{translate('Are you sure you want to Pause the request?')}}"
                                         data-text="<p>{{translate('This ad will be pause and not show in the user app & websites.')}}</p>"
-                                        data-image="{{asset('public/assets/admin/img/modal/pause.png')}}"
+                                        data-image="{{asset('assets/admin/img/modal/pause.png')}}"
                                         data-type="pause"
 
                                         href="#">
@@ -259,13 +259,13 @@ active
                                             @if ($add->status != 'paused' && $add->active == 1)
                                                 data-title="{{translate('You can’t delete the ad')}}"
                                                 data-text="<p>{{translate('This Advertisement is currently running, To delete this ad from the list, please  resume the Ad first . Once the status is updated, you can proceed with deletion')}}</p>"
-                                                data-image="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}"
+                                                data-image="{{asset('assets/admin/img/modal/package-status-disable.png')}}"
                                                 data-type="warning"
                                             @else
                                                 data-type="delete"
                                                 data-title="{{translate('Confirm Ad Deletion')}}"
                                                 data-text="<p>{{translate('Deleting this ad will remove it permanently. Are you sure you want to proceed?')}}</p>"
-                                                data-image="{{asset('public/assets/admin/img/modal/delete-icon.png')}}"
+                                                data-image="{{asset('assets/admin/img/modal/delete-icon.png')}}"
                                             @endif
                                             >
                                             <i class="tio-delete"></i>
@@ -288,7 +288,7 @@ active
                 </table>
                 @if(count($adds) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -325,7 +325,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}" class="mb-20">
+                            <img src="{{asset('assets/admin/img/modal/package-status-disable.png')}}" class="mb-20">
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">

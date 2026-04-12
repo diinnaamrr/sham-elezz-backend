@@ -10,7 +10,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <h1 class="page-header-title">
                     <span class="page-header-icon">
-                        <img src="{{asset('public/assets/admin/img/campaign.png')}}" class="w--26" alt="">
+                        <img src="{{asset('assets/admin/img/campaign.png')}}" class="w--26" alt="">
                     </span>
                     <span>
                         {{translate('messages.campaign')}}
@@ -61,14 +61,14 @@
                                 {{ route('admin.campaign.basic_campaign_export', ['type' => 'excel', request()->getQueryString()]) }}
                                 ">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                                    src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="
                             {{ route('admin.campaign.basic_campaign_export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -115,8 +115,8 @@
                                     <input type="checkbox" data-url=""
                                     data-id="stocksCheckbox{{$campaign->id}}"
                                     data-type="status"
-                                    data-image-on="{{ asset('/public/assets/admin/img/modal/basic_campaign_on.png') }}"
-                                    data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
+                                    data-image-on="{{ asset('assets/admin/img/modal/basic_campaign_on.png') }}"
+                                    data-image-off="{{ asset('assets/admin/img/modal/basic_campaign_off.png') }}"
                                     data-title-on="{{ translate('By_Turning_ON_Campaign!') }}"
                                     data-title-off="{{ translate('By_Turning_OFF_Campaign!') }}"
                                     data-text-on="<p>{{ translate('If_you_turn_on_this_status,_it_will_show_on_user_website_and_app.') }}</p>"
@@ -157,7 +157,7 @@
                 </div>
                 @if(count($campaigns) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>

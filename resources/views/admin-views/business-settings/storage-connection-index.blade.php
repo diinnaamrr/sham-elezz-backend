@@ -9,7 +9,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/captcha.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/captcha.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.storage_connection_credentials_setup')}}
@@ -36,15 +36,15 @@
                                     <span class="line--limit-1">
                                         {{translate('Local Storage')}}
                                     </span>
-                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_System_will_store_all_files_and_images_to_local_storage')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
+                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_System_will_store_all_files_and_images_to_local_storage')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
                                 </span>
                                 <input type="hidden" name="toggle_type" value="local_storage">
                                 <input
                                     type="checkbox" id="local_storage_status"
                                     data-id="local_storage_status"
                                     data-type="status"
-                                    data-image-on="{{ asset('/public/assets/admin/img/modal/local_storage.png') }}"
-                                    data-image-off="{{ asset('/public/assets/admin/img/modal/local_storage.png') }}"
+                                    data-image-on="{{ asset('assets/admin/img/modal/local_storage.png') }}"
+                                    data-image-off="{{ asset('assets/admin/img/modal/local_storage.png') }}"
                                     data-title-on="{{ translate('By Turning ON Local Storage Option') }}"
                                     data-title-off="{{ translate('By Turning OFF Local Storage Option') }}"
                                     data-text-on="<p>{{ translate('System_will_store_all_files_and_images_to_local_storage') }}</p>"
@@ -67,15 +67,15 @@
                                     <span class="line--limit-1">
                                         {{translate('3rd Party Storage')}}
                                     </span>
-                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_System_will_store_all_files_and_images_to_3rd_party_storage')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
+                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_System_will_store_all_files_and_images_to_3rd_party_storage')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
                                 </span>
                                 <input type="hidden" name="toggle_type" value="3rd_party_storage">
                                 <input
                                     type="checkbox" id="3rd_party_storage_status"
                                     data-id="3rd_party_storage_status"
                                     data-type="status"
-                                    data-image-on="{{ asset('/public/assets/admin/img/modal/3rd_party_storage.png') }}"
-                                    data-image-off="{{ asset('/public/assets/admin/img/modal/3rd_party_storage.png') }}"
+                                    data-image-on="{{ asset('assets/admin/img/modal/3rd_party_storage.png') }}"
+                                    data-image-off="{{ asset('assets/admin/img/modal/3rd_party_storage.png') }}"
                                     data-title-on="{{ translate('By Turning ON 3rd Party Storage Option') }}"
                                     data-title-off="{{ translate('By Turning OFF 3rd Party Storage Option') }}"
                                     data-text-on="<p>{{ translate('System_will_store_all_files_and_images_to_3rd_party_storage') }}</p>"

@@ -12,7 +12,7 @@
             <div class="d-flex flex-wrap justify-content-between">
                 <h1 class="page-header-title text-break">
                     <span class="page-header-icon">
-                        <img src="{{ asset('public/assets/admin/img/p_gal.png') }}" class="w--22" alt="">
+                        <img src="{{ asset('assets/admin/img/p_gal.png') }}" class="w--22" alt="">
                     </span>
                     <span>{{ translate('Product_Details') }}</span>
                 </h1>
@@ -28,8 +28,8 @@
                     <div>
                         <div class="d-flex flex-wrap align-items-center food--media position-relative mr-4 mt-4">
                             <img class="avatar avatar-xxl avatar-4by3 onerror-image aspect-ratio-1 h-unset"
-                            src="{{ $product['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                            src="{{ $product['image_full_url'] ?? asset('assets/admin/img/160x160/img2.jpg') }}"
+                                data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                                 alt="Image Description">
                                 @if ($product['is_rejected'] == 1 )
 

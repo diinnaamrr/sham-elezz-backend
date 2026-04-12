@@ -2,7 +2,7 @@
 
 @section('title', translate('email_template'))
 @push('css_or_js')
-<link rel="stylesheet" href="{{asset('public/assets/admin/css/view-pages/email-templates.css')}}">
+<link rel="stylesheet" href="{{asset('assets/admin/css/view-pages/email-templates.css')}}">
 @endpush
 
 
@@ -13,7 +13,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center __gap-15px">
                 <h1 class="page-header-title mr-3 mb-0">
                     <span class="page-header-icon">
-                        <img src="{{ asset('public/assets/admin/img/email-setting.png') }}" class="w--26" alt="">
+                        <img src="{{ asset('assets/admin/img/email-setting.png') }}" class="w--26" alt="">
                     </span>
                     <span>
                         {{ translate('messages.Email Templates') }}
@@ -33,15 +33,15 @@
                             <h5 class="text-capitalize m-0 text--primary pl-2">
                                 {{translate('Send_Mail_On_‘Forgot_Password’?')}}
                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('If_a_user_clicks_‘Forgot_Password’_during_login,_an_automated_email_will_be_sent_to_the_admin.') }}">
-                                    <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                 </span>
                             </h5>
                             <label class="toggle-switch toggle-switch-sm">
                                 <input type="checkbox" class="status toggle-switch-input dynamic-checkbox"
                                         data-id="mail-status"
                                         data-type="status"
-                                        data-image-on='{{asset('/public/assets/admin/img/modal')}}/place-order-on.png'
-                                        data-image-off="{{asset('/public/assets/admin/img/modal')}}/place-order-off.png"
+                                        data-image-on='{{asset('assets/admin/img/modal')}}/place-order-on.png'
+                                        data-image-off="{{asset('assets/admin/img/modal')}}/place-order-off.png"
                                         data-title-on="{{translate('Want_to_enable_Forget_Password_mail?')}}"
                                         data-title-off="{{translate('Want_to_disable_Forget_Password_mail?')}}"
                                         data-text-on="<p>{{translate('If_enabled,_admin_will_receive_an_email_when_a_user_click_on_‘Forgot_Password.’')}}</p>"
@@ -117,7 +117,7 @@
                                     <br>
                                     <div>
                                         <h5 class="card-title mb-3">
-                                            <img src="{{asset('public/assets/admin/img/pointer.png')}}" class="mr-2" alt="">
+                                            <img src="{{asset('assets/admin/img/pointer.png')}}" class="mr-2" alt="">
                                             {{translate('Header Content')}}
                                         </h5>
                                         @if ($language)
@@ -192,7 +192,7 @@
                                     <br>
                                     <div>
                                         <h5 class="card-title mb-3">
-                                            <img src="{{asset('public/assets/admin/img/pointer.png')}}" class="mr-2" alt="">
+                                            <img src="{{asset('assets/admin/img/pointer.png')}}" class="mr-2" alt="">
                                             {{translate('Footer Content')}}
                                         </h5>
                                         <div class="__bg-F8F9FC-card">
@@ -294,8 +294,8 @@
 @endsection
 @push('script_2')
     <!-- Email Template-->
-    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
-    <script src="{{asset('public/assets/admin/js/view-pages/email-templates.js')}}"></script>
+    <script src="{{asset('assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('assets/admin/js/view-pages/email-templates.js')}}"></script>
     <!-- Email Template End-->
 @endpush
 

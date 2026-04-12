@@ -5,10 +5,10 @@
                 <!-- Logo -->
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
                 <a class="navbar-brand" href="{{ route('admin.dispatch.dashboard') }}" aria-label="Front">
-                       <img class="navbar-brand-logo initial--36 onerror-image onerror-image" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                       <img class="navbar-brand-logo initial--36 onerror-image onerror-image" data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                     src="{{\App\CentralLogics\Helpers::get_full_url('business', $store_logo?->value?? '', $store_logo?->storage[0]?->value ?? 'public','favicon')}}"
                     alt="Logo">
-                    <img class="navbar-brand-logo-mini initial--36 onerror-image onerror-image" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                    <img class="navbar-brand-logo-mini initial--36 onerror-image onerror-image" data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                     src="{{\App\CentralLogics\Helpers::get_full_url('business', $store_logo?->value?? '', $store_logo?->storage[0]?->value ?? 'public','favicon')}}"
                     alt="Logo">
                 </a>
@@ -172,7 +172,7 @@
                             <div class="cmn--media right-dropdown-icon d-flex align-items-center">
                                 <div class="avatar avatar-sm avatar-circle">
                                    <img class="avatar-img onerror-image"
-                                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                    data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
 
                                     src="{{ auth('admin')->user()?->toArray()['image_full_url'] }}"
 
@@ -195,7 +195,7 @@
                                 <div class="media align-items-center">
                                     <div class="avatar avatar-sm avatar-circle mr-2">
                                         <img class="avatar-img onerror-image"
-                                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                    data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
 
                                     src="{{auth('admin')->user()?->toArray()['image_full_url']}}"
 

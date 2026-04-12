@@ -10,8 +10,8 @@
                         <div>
                             <img class="avatar avatar-xxl avatar-4by3 onerror-image aspect-ratio-1 h-unset"
 
-                            src="{{ $item['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                            src="{{ $item['image_full_url'] ?? asset('assets/admin/img/160x160/img2.jpg') }}"
+                                data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                                 alt="Image Description">
                         </div>
                         <div class="col-10">
@@ -159,4 +159,4 @@
         </div>
     </div>
 @endforeach
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

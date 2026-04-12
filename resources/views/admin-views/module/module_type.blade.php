@@ -84,7 +84,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('assets/admin/ckeditor/ckeditor.js')}}"></script>
     <script>
         "use strict";
         $(document).ready(function () {

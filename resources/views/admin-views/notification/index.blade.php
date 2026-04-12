@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/notification.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/notification.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.notification')}}
@@ -73,7 +73,7 @@
                                         </label>
                                         <div class="text-center py-3 my-auto">
                                             <img class="img--vertical" id="viewer"
-                                                src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" alt="image"/>
+                                                src="{{asset('assets/admin/img/900x400/img1.jpg')}}" alt="image"/>
                                         </div>
                                         <div class="custom-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input"
@@ -133,13 +133,13 @@
 
                                     <a id="export-excel" class="dropdown-item" href="{{route('admin.notification.export', ['type'=>'excel' , request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                                            src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                             alt="Image Description">
                                         {{ translate('messages.excel') }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item" href="{{route('admin.notification.export', ['type'=>'csv', request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                            src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                             alt="Image Description">
                                         .{{ translate('messages.csv') }}
                                     </a>
@@ -187,7 +187,7 @@
                                         @if($notification['image']!=null)
                                             <img class="h--50px onerror-image"
                                             src="{{ $notification['image_full_url'] }}"
-                                                data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}">
+                                                data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}">
                                         @else
                                             <label class="badge badge-soft-warning">{{translate('No Image')}}</label>
                                         @endif
@@ -232,7 +232,7 @@
                     </div>
                     @if(count($notifications) === 0)
                     <div class="empty--data">
-                        <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
                             {{translate('no_data_found')}}
                         </h5>
@@ -247,7 +247,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/notification.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/notification.js"></script>
     <script>
         "use strict";
         $('#notification').on('submit', function (e) {
@@ -303,7 +303,7 @@
 
             $('#reset_btn').click(function(){
                 $('#zone').val('all').trigger('change');
-                $('#viewer').attr('src','{{asset('public/assets/admin/img/900x400/img1.jpg')}}');
+                $('#viewer').attr('src','{{asset('assets/admin/img/900x400/img1.jpg')}}');
                 $('#customFileEg1').val(null);
             })
         </script>

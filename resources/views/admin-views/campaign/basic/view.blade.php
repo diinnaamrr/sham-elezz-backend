@@ -20,7 +20,7 @@
                 <div class="row align-items-md-center gx-md-5">
                     <div class="col-md-4 mb-3 mb-md-0">
                         <img class="rounded initial--5 onerror-image" src="{{ $campaign->image_full_url }}"
-                        data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="Image Description">
+                        data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}" alt="Image Description">
                     </div>
 
                     <div class="col-md-8">
@@ -88,7 +88,7 @@
                         <tr>
                             <td>{{$key+1}}</td>
                             <td>
-                                <img width="45" class="img--circle onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" src="{{ $store['logo_full_url'] }}"
+                                <img width="45" class="img--circle onerror-image" data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}" src="{{ $store['logo_full_url'] }}"
                                 >
                             </td>
                             <td>

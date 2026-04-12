@@ -134,7 +134,7 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="">
-                                    <img src="{{asset('/public/assets/admin/img/how-it-works/Step-1.svg')}}" alt=""
+                                    <img src="{{asset('assets/admin/img/how-it-works/Step-1.svg')}}" alt=""
                                          class="mb-20">
                                     <div class="how-it-count">
                                         <span>1</span>
@@ -147,7 +147,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="">
-                                    <img src="{{asset('/public/assets/admin/img/how-it-works/step-3.svg')}}" alt=""
+                                    <img src="{{asset('assets/admin/img/how-it-works/step-3.svg')}}" alt=""
                                          class="mb-20">
                                     <div class="how-it-count">
                                         <span>2</span>
@@ -167,7 +167,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="">
-                                    <img src="{{asset('/public/assets/admin/img/how-it-works/step-2.svg')}}" alt=""
+                                    <img src="{{asset('assets/admin/img/how-it-works/step-2.svg')}}" alt=""
                                          class="mb-20">
                                     <div class="how-it-count">
                                         <span>3</span>

@@ -19,7 +19,7 @@
                     <label class="label_1 text-center">{{translate('messages.sold')}} : {{$item['order_count']}}</label>
                     <img class="initial--28 onerror-image"
                     src="{{ $item['image_full_url'] }}"
-                         data-onerror-image="{{asset('public/assets/admin/img/placeholder-2.png')}}"
+                         data-onerror-image="{{asset('assets/admin/img/placeholder-2.png')}}"
                          alt="{{$item->name}} image">
                     <div class="text-center mt-2">
                         <span class="fz--13">{{Str::limit($item['name'],20,'...')}}</span>
@@ -30,7 +30,7 @@
     </div>
     @else
     <div class="empty--data">
-        <img src="{{ asset('/public/assets/admin/svg/illustrations/empty-state.svg') }}" alt="public">
+        <img src="{{ asset('assets/admin/svg/illustrations/empty-state.svg') }}" alt="public">
         <h5>
             {{ translate('no_data_found') }}
         </h5>
@@ -40,4 +40,4 @@
 
 </div>
 <!-- End Body -->
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

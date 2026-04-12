@@ -17,7 +17,7 @@
                 <div class="col-sm">
                     <h1 class="page-header-title">
                     <span class="page-header-icon">
-                        <img src="{{asset('public/assets/admin/img/category.png')}}" class="w--20" alt="">
+                        <img src="{{asset('assets/admin/img/category.png')}}" class="w--20" alt="">
                     </span>
                         <span>{{translate('messages.dashboard')}}</span>
                     </h1>
@@ -26,7 +26,7 @@
                     @if (isset($out_of_stock_count) &&   $out_of_stock_count  > 1 )
                             <div class="alert __alert-4 m-0 py-1 px-2  max-w-450px hide-warning d-none" role="alert">
                                 <div class="alert-inner">
-                                    <img class="rounded mr-1"  width="25" src="{{ asset('/public/assets/admin/img/invalid-icon.png') }}" alt="">
+                                    <img class="rounded mr-1"  width="25" src="{{ asset('assets/admin/img/invalid-icon.png') }}" alt="">
                                     <div class="cont">
                                         <h4 class="mb-2">{{ translate('Warning!') }} </h4>{{  ( $out_of_stock_count -1).'+ '.  translate('more_products_are_low_on_Stock.') }}
                                         <br>
@@ -41,7 +41,7 @@
                             @elseif (isset($out_of_stock_count)  &&  $out_of_stock_count  == 1  && isset($item))
                             <div class="alert __alert-4 m-0 py-1 px-2  max-w-450px hide-warning d-none" role="alert">
                                 <div class="alert-inner">
-                                    <img class="aspect-1-1 mr-1 object--contain rounded" width="100" src="{{ $item?->image_full_url ?? asset('/public/assets/admin/img/100x100/food-default-image.png') }}" alt="">
+                                    <img class="aspect-1-1 mr-1 object--contain rounded" width="100" src="{{ $item?->image_full_url ?? asset('assets/admin/img/100x100/food-default-image.png') }}" alt="">
                                     <div class="cont">
                                         <h4 class="mb-2">{{ $item?->name }} </h4>{{  translate('This product is low stock.') }}
                                         <br>
@@ -60,9 +60,9 @@
 
 
                     <div class="promo-card-2">
-                        <img src="{{asset('public/assets/admin/img/promo-arrow.png')}}" class="shapes" alt="">
+                        <img src="{{asset('assets/admin/img/promo-arrow.png')}}" class="shapes" alt="">
                         <div class="left">
-                            <img src="{{asset('public/assets/admin/img/promo.png')}}" width="40" class="mw-100" alt="">
+                            <img src="{{asset('assets/admin/img/promo.png')}}" width="40" class="mw-100" alt="">
                             <div class="inner">
                                 <div class="d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between gap-2">
                                     <div>
@@ -255,10 +255,10 @@
 @endsection
 
 @push('script')
-    <script src="{{asset('public/assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
-    <script src="{{asset('public/assets/admin')}}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
     <script
-        src="{{asset('public/assets/admin')}}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
+        src="{{asset('assets/admin')}}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
 
 @endpush
 

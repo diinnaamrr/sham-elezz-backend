@@ -5,7 +5,7 @@
             <div class="chat-user-info-img">
                 <img class="avatar-img onerror-image"
                 src="{{$user['image_full_url'] }}"
-                    data-onerror-image="{{asset('public/assets/admin')}}/img/160x160/img1.jpg"
+                    data-onerror-image="{{asset('assets/admin')}}/img/160x160/img1.jpg"
                     alt="Image Description">
             </div>
             <div class="chat-user-info-content">
@@ -35,7 +35,7 @@
                 @if($con->sender_id == $user->id)
                     <div class="py-2 d-flex gap-2 align-items-end">
                         <div class="chat-user-conv-img">
-                            <img class="avatar-img onerror-image" width="28" height="28" src="{{$user['image_full_url'] }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
+                            <img class="avatar-img onerror-image" width="28" height="28" src="{{$user['image_full_url'] }}" data-onerror-image="{{ asset('assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                         </div>
 
                         <div class="conv-reply-1">
@@ -70,7 +70,7 @@
                 @empty
 
                 <div class="empty-conversation-content d-flex flex-column align-items-center gap-3">
-                    <img width="128" height="128" src="{{asset('/public/assets/admin/img/icons/empty-conversation.png')}}" alt="public">
+                    <img width="128" height="128" src="{{asset('assets/admin/img/icons/empty-conversation.png')}}" alt="public">
                     <h5 class="text-muted">
                         {{translate('no_conversation_found')}}
                     </h5>
@@ -90,7 +90,7 @@
 
             <div class="learn-more-content p-4">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <img class="rounded-circle" width="20" height="20" src="{{asset('public/assets/admin/img/icons/info-icon.png')}}" alt="">
+                    <img class="rounded-circle" width="20" height="20" src="{{asset('assets/admin/img/icons/info-icon.png')}}" alt="">
                     <h6 class="mb-0"> {{ translate('Learn_more') }}</h6>
                 </div>
                 <p class="mb-0 text-muted text-normal">{{ translate('You can’t chat with deliveryman because it’s delivery man previous chat history, only you can monitor or view their conversation to avoid unexpected situation.')}}</p>

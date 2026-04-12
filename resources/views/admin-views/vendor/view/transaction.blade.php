@@ -4,7 +4,7 @@
 
 @push('css_or_js')
     <!-- Custom styles for this page -->
-    <link href="{{asset('public/assets/admin/css/croppie.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/admin/css/croppie.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -46,39 +46,39 @@
                         @if($sub_tab=='cash')
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.store.cash_export', ['type'=>'excel', 'store_id'=>$store->id]) }}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
+                                    src="{{asset('assets/admin')}}/svg/components/excel.svg"
                                     alt="Image Description">
                             {{translate('messages.excel')}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.store.cash_export', ['type'=>'csv', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
+                                    src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                             .{{translate('messages.csv')}}
                         </a>
                         @elseif ($sub_tab=='digital')
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.store.order_export', ['type'=>'excel', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
+                                    src="{{asset('assets/admin')}}/svg/components/excel.svg"
                                     alt="Image Description">
                             {{translate('messages.excel')}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.store.order_export', ['type'=>'csv', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
+                                    src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                             .{{translate('messages.csv')}}
                         </a>
                         @elseif ($sub_tab=='withdraw')
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.store.withdraw_trans_export', ['type'=>'excel', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
+                                    src="{{asset('assets/admin')}}/svg/components/excel.svg"
                                     alt="Image Description">
                             {{translate('messages.excel')}}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.store.withdraw_trans_export', ['type'=>'csv', 'store_id'=>$store->id])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
+                                    src="{{asset('assets/admin')}}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                             .{{translate('messages.csv')}}
                         </a>

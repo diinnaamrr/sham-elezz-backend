@@ -94,7 +94,7 @@
                             <td>{{$key+$deliveryMen->firstItem()}}</td>
                             <td>
                                 <a class="table-rest-info" href="{{route('admin.users.delivery-man.preview',[$dm['id']])}}">
-                                    <img class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                    <img class="onerror-image" data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                                     src="{{$dm['image_full_url']}}"
                                     alt="{{$dm['f_name']}} {{$dm['l_name']}}">
                                     <div class="info">
@@ -153,7 +153,7 @@
                 </div>
                 @if(count($deliveryMen) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -167,7 +167,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/deliveryman-new-denied-list.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/deliveryman-new-denied-list.js"></script>
     <script>
         "use strict";
         function request_alert(url, message) {

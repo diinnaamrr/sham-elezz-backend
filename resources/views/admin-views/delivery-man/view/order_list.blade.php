@@ -9,7 +9,7 @@
         <div class="page-header">
             <h1 class="page-header-title text-break">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
                 </span>
                 <span>{{$deliveryMan['f_name'].' '.$deliveryMan['l_name']}}</span>
             </h1>
@@ -25,7 +25,7 @@
                     <div class="col-sm-6 col-xl-3">
                         <div class="color-card flex-column align-items-center justify-content-center color-2">
                             <div class="img-box">
-                                <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-1.png')}}" alt="transactions">
+                                <img class="resturant-icon w--30" src="{{asset('assets/admin/img/icons/order-icon-1.png')}}" alt="transactions">
                             </div>
 
                             <div class="d-flex flex-column align-items-center">
@@ -39,7 +39,7 @@
                     <div class="col-sm-6 col-xl-3">
                         <div class="color-card flex-column align-items-center justify-content-center color-5">
                             <div class="img-box">
-                                <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-2.png')}}" alt="transactions">
+                                <img class="resturant-icon w--30" src="{{asset('assets/admin/img/icons/order-icon-2.png')}}" alt="transactions">
                             </div>
                             <div class="d-flex flex-column align-items-center">
                                 <h2 class="title"> {{\App\CentralLogics\Helpers::format_currency($deliveryMan->total_ongoing_orders->sum('order_amount'))}} </h2>
@@ -52,7 +52,7 @@
                     <div class="col-sm-6 col-xl-3">
                         <div class="color-card flex-column align-items-center justify-content-center color-7">
                             <div class="img-box">
-                                <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-3.png')}}" alt="transactions">
+                                <img class="resturant-icon w--30" src="{{asset('assets/admin/img/icons/order-icon-3.png')}}" alt="transactions">
                             </div>
                             <div class="d-flex flex-column align-items-center">
                                 <h2 class="title">
@@ -68,7 +68,7 @@
                     <div class="col-sm-6 col-xl-3">
                         <div class="color-card flex-column align-items-center justify-content-center color-4">
                             <div class="img-box">
-                                <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-4.png')}}" alt="transactions">
+                                <img class="resturant-icon w--30" src="{{asset('assets/admin/img/icons/order-icon-4.png')}}" alt="transactions">
                             </div>
                             <div class="d-flex flex-column align-items-center">
                                 <h2 class="title"> {{$deliveryMan->total_canceled_orders->count()}} </h2>
@@ -153,7 +153,7 @@
                 </div>
                 @if(count($order_lists) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>

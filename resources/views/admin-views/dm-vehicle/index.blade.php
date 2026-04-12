@@ -83,7 +83,7 @@
                                         \App\CentralLogics\Helpers::currency_symbol() }}) <span
                                             class="input-label-secondary" data-toggle="tooltip" data-placement="right"
                                             data-original-title="{{translate('This amount will be added with delivery charge')}}"><img
-                                                src="{{asset('public/assets/admin/img/info-circle.svg')}}"
+                                                src="{{asset('assets/admin/img/info-circle.svg')}}"
                                                 alt="public/img"></span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
                                             data-original-title="{{ translate('messages.Required.')}}"> *
@@ -104,7 +104,7 @@
                                         translate('messages.km') }}) <span class="input-label-secondary"
                                             data-toggle="tooltip" data-placement="right"
                                             data-original-title="{{translate('the_starting_coverage_area_represents_the_location_where_deliveries_are_made.')}}"><img
-                                                src="{{asset('public/assets/admin/img/info-circle.svg')}}"
+                                                src="{{asset('assets/admin/img/info-circle.svg')}}"
                                                 alt="public/img"></span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
                                             data-original-title="{{ translate('messages.Required.')}}"> *
@@ -119,7 +119,7 @@
                                     <label class="input-label text-capitalize"
                                         for="title">{{translate('messages.maximum_coverage_area')}} ({{
                                         translate('messages.km') }}) <span class="input-label-secondary"
-                                            data-toggle="tooltip" data-placement="right" data-original-title="{{translate('the_maximum_coverage_area_represents_the_farthest_or_widest_extent_to_which_deliveries_can_be_made')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}"
+                                            data-toggle="tooltip" data-placement="right" data-original-title="{{translate('the_maximum_coverage_area_represents_the_farthest_or_widest_extent_to_which_deliveries_can_be_made')}}"><img src="{{asset('assets/admin/img/info-circle.svg')}}"
                                                 alt="public/img"></span><span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
                                             data-original-title="{{ translate('messages.Required.')}}"> *
@@ -146,7 +146,7 @@
 @endsection
 
 @push('script_2')
-<script src="{{asset('public/assets/admin')}}/js/view-pages/dm-vehichle.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/dm-vehichle.js"></script>
 <script>
     "use strict";
         $('#vehicle-form').on('submit', function (e) {
@@ -186,7 +186,7 @@
 
         $('#reset_btn').click(function(){
             $('#choice_item').val(null).trigger('change');
-            $('#viewer').attr('src','{{asset('public/assets/admin/img/900x400/img1.jpg')}}');
+            $('#viewer').attr('src','{{asset('assets/admin/img/900x400/img1.jpg')}}');
         })
 </script>
 @endpush

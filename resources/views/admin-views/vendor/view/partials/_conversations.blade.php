@@ -7,7 +7,7 @@
                 <img class="avatar-img onerror-image"
 
                 src="{{ $user['image_full_url'] }}"
-                    data-onerror-image="{{asset('public/assets/admin')}}/img/160x160/img1.jpg"
+                    data-onerror-image="{{asset('assets/admin')}}/img/160x160/img1.jpg"
                     alt="Image Description">
             </div>
             <div class="chat-user-info-content">
@@ -65,7 +65,7 @@
     </div>
     <!-- Body -->
 </div>
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>
 <script>
     "use strict";
     $(document).ready(function () {

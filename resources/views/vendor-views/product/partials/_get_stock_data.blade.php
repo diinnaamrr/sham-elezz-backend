@@ -2,7 +2,7 @@
 <h3 class="modal-title text-center fs-20 mb-4">{{ translate('messages.stock_Update') }}</h3>
 
 <div class="d-flex gap-4 mb-3">
-    <img class="rounded img--100"  src="{{ $product['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"alt="product">
+    <img class="rounded img--100"  src="{{ $product['image_full_url'] ?? asset('assets/admin/img/160x160/img2.jpg') }}"alt="product">
     <div>
         <div class="d-flex gap-2 fs-16 align-items-center">
             <span>{{ translate('Product_Name') }} </span>:

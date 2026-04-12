@@ -4,7 +4,7 @@
         <div class="chat-user-info w-100 d-flex align-items-center">
             <div class="chat-user-info-img">
                 <img class="avatar-img onerror-image"
-                     data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                     data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                      src="{{ $user['image_full_url'] }}"
                      alt="Image Description">
             </div>
@@ -79,11 +79,11 @@
                     <div id="file-upload-filename" class="upload__file-wrap"></div>
                     <div class="upload-btn-grp">
                         <label class="m-0">
-                            <img src="{{asset('/public/assets/admin/img/gallery.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/gallery.png')}}" alt="">
                             <input type="file" name="images[]" class="d-none upload_input_images" data-max_length="2"  multiple="" >
                         </label>
                         <label class="m-0 emoji-icon-hidden">
-                            <img src="{{asset('/public/assets/admin/img/emoji.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/emoji.png')}}" alt="">
                         </label>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
     </div>
 </div>
 
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>
 <!-- Emoji Conv -->
 <script>
     "use strict";
@@ -197,7 +197,7 @@
             groupClassName: 'attc--img',
             maxFileSize: '',
             placeholderImage: {
-                image: '{{ asset('public/assets/admin/img/attatchments.png') }}',
+                image: '{{ asset('assets/admin/img/attatchments.png') }}',
                 width: '100%'
             },
             dropFileLabel: "Drop Here",

@@ -13,7 +13,7 @@
     <!-- Page Header -->
     <div class="page-header report-page-header">
         <div class="d-flex">
-            <img src="{{asset('public/assets/admin/img/store-report.svg')}}" class="page-header-icon" alt="">
+            <img src="{{asset('assets/admin/img/store-report.svg')}}" class="page-header-icon" alt="">
             <div class="w-0 flex-grow-1 pl-3">
                 <h1 class="page-header-title m-0">
                     {{translate('Store Report')}}
@@ -68,14 +68,14 @@
     <div class="store-report-content">
         <div class="left-content">
             <div class="left-content-card">
-                <img src="{{asset('/public/assets/admin/img/report/store.svg')}}" alt="">
+                <img src="{{asset('assets/admin/img/report/store.svg')}}" alt="">
                 <div class="info">
                     <h4 class="subtitle">{{ $new_stores }}</h4>
                     <h6 class="subtext">{{ translate('messages.Registered Stores') }}</h6>
                 </div>
             </div>
             <div class="left-content-card">
-                <img src="{{asset('/public/assets/admin/img/report/cart.svg')}}" alt="">
+                <img src="{{asset('assets/admin/img/report/cart.svg')}}" alt="">
                 <div class="info">
                     <h4 class="subtitle">{{ $orders->count() }}</h4>
                     <h6 class="subtext">{{ translate('messages.Total Orders') }}</h6>
@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div class="left-content-card">
-                <img src="{{asset('/public/assets/admin/img/report/product.svg')}}" alt="">
+                <img src="{{asset('assets/admin/img/report/product.svg')}}" alt="">
                 <div class="info">
                     <h4 class="subtitle">{{ $items->count() }}</h4>
                     <h6 class="subtext">{{ translate('New Items') }}</h6>
@@ -247,13 +247,13 @@
                         <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                         <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.report.store-summary-report-export', ['type'=>'excel',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                                src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                 alt="Image Description">
                             {{ translate('messages.excel') }}
                         </a>
                         <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.report.store-summary-report-export', ['type'=>'csv',request()->getQueryString()])}}">
                             <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                 alt="Image Description">
                             .{{ translate('messages.csv') }}
                         </a>
@@ -333,7 +333,7 @@
         @endif
         @if(count($stores) === 0)
         <div class="empty--data">
-            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+            <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
             <h5>
                 {{translate('no_data_found')}}
             </h5>
@@ -352,13 +352,13 @@
 
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
-    <script src="{{asset('public/assets/admin')}}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
-    <script src="{{asset('public/assets/admin')}}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
+    <script src="{{asset('assets/admin')}}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
 
 
     <!-- Apex Charts -->
-    <script src="{{asset('/public/assets/admin/js/apex-charts/apexcharts.js')}}"></script>
+    <script src="{{asset('assets/admin/js/apex-charts/apexcharts.js')}}"></script>
     <!-- Apex Charts -->
 
     <!-- Dognut Pie Chart -->

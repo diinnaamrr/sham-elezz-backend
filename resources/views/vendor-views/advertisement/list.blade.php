@@ -37,7 +37,7 @@ active
 <div class="card">
     <div class="card-body">
         <div class="text-center max-w-700 mx-auto pt-5">
-            <img src="{{asset('public/assets/admin/img/advertisement-list.png')}}" class="mw-100 mb-3" alt="">
+            <img src="{{asset('assets/admin/img/advertisement-list.png')}}" class="mw-100 mb-3" alt="">
             <h4 class="mb-2">{{ translate('Advertisement List') }}</h4>
             <p class="mb-4">{{ translate('Uh oh! You didn’t created any advertisement yet') }}!</p>
             <div class="pb-4">
@@ -59,7 +59,7 @@ active
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="page-header-title d-flex align-items-center gap-2">
-            <img src="{{asset('public/assets/admin/img/advertisement.png')}}" alt="">
+            <img src="{{asset('assets/admin/img/advertisement.png')}}" alt="">
             {{ translate('messages.Ads_list') }}
             <span class="badge badge-soft-dark ml-2">{{ $adds->total() }}</span>
         </h1>
@@ -173,7 +173,7 @@ active
 
                                                 data-title="{{translate('Do You Want to Edit?')}}"
                                                 data-text="<p>{{translate('Your ad is running. If you edit this ad, it will be listed for pending and needs to be approved by the Admin. After the approval, it will be running again.')}}</p>"
-                                                data-image="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}"
+                                                data-image="{{asset('assets/admin/img/modal/package-status-disable.png')}}"
                                                 data-type="resume"
                                                 data-btn_class = "btn-primary"
                                                 data-success_btn_text = "{{ translate('Yes, Edit') }}"
@@ -199,7 +199,7 @@ active
 
                                             data-title="{{translate('Are you sure you want to Resume the request?')}}"
                                             data-text="<p>{{translate('This ad will be run again and will show in the user app & websites.')}}</p>"
-                                            data-image="{{asset('public/assets/admin/img/modal/resume.png')}}"
+                                            data-image="{{asset('assets/admin/img/modal/resume.png')}}"
                                             data-type="resume"
                                             data-btn_class = "btn-primary"
 
@@ -225,7 +225,7 @@ active
                                         data-id="data-add-{{ $add->id }}"
                                         data-title="{{translate('Are you sure you want to Pause the request?')}}"
                                         data-text="<p>{{translate('This ad will be pause and not show in the user app & websites.')}}</p>"
-                                        data-image="{{asset('public/assets/admin/img/modal/pause.png')}}"
+                                        data-image="{{asset('assets/admin/img/modal/pause.png')}}"
                                         data-type="pause"
 
                                         href="#">
@@ -253,13 +253,13 @@ active
                                             @if ($add->status == 'approved' && $add->active == 1)
                                                 data-title="{{translate('You can’t delete the ad')}}"
                                                 data-text="<p>{{translate('This Advertisement is currently running, To delete this ad from the list, please  resume the Ad first . Once the status is updated, you can proceed with deletion')}}</p>"
-                                                data-image="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}"
+                                                data-image="{{asset('assets/admin/img/modal/package-status-disable.png')}}"
                                                 data-type="warning"
                                             @else
                                                 data-type="delete"
                                                 data-title="{{translate('Confirm Ad Deletion')}}"
                                                 data-text="<p>{{translate('Deleting this ad will remove it permanently. Are you sure you want to proceed?')}}</p>"
-                                                data-image="{{asset('public/assets/admin/img/modal/delete-icon.png')}}"
+                                                data-image="{{asset('assets/admin/img/modal/delete-icon.png')}}"
                                             @endif
                                             >
                                             <i class="tio-delete"></i>
@@ -282,7 +282,7 @@ active
                 </table>
                 @if(count($adds) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -310,7 +310,7 @@ active
             </div>
             <div class="modal-body pt-0">
                 <div class="text-center max-w-700 mx-auto">
-                    <img src="{{asset('public/assets/admin/img/created.png')}}" class="mw-100 mb-4" alt="">
+                    <img src="{{asset('assets/admin/img/created.png')}}" class="mw-100 mb-4" alt="">
                     <h4 class="mb-2">{{ translate('Ad Created Successfully!') }}</h4>
                     <p class="mb-4 fs-12 mx-auto max-w-520">{{ translate('Congratulations on creating your ad! It’s now awaiting approval. To finalize the process & make payment arrangements, please contact our')}} <a class="text--underline" href="mailto:{{\App\CentralLogics\Helpers::get_settings('email_address')  }}">{{ translate('Admin directly.') }}</a>
                    {{   translate(' We look forward to helping you boost your visibility & reach more customers') }}</p>

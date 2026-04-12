@@ -97,8 +97,8 @@
                                             <input type="checkbox"
                                             data-id="statusCheckbox{{$vehicle->id}}"
                                             data-type="status"
-                                            data-image-on="{{ asset('/public/assets/admin/img/modal/mail-success.png') }}"
-                                            data-image-off="{{ asset('/public/assets/admin/img/modal/mail-warning.png') }}"
+                                            data-image-on="{{ asset('assets/admin/img/modal/mail-success.png') }}"
+                                            data-image-off="{{ asset('assets/admin/img/modal/mail-warning.png') }}"
                                             data-title-on="{{ translate('By_Turning_ON_Vehicle_Category!') }}"
                                             data-title-off="{{ translate('By_Turning_OFF_Vehicle_Category!') }}"
                                             data-text-on="<p>{{ translate('Turned_on_this_vehicle_category_extra_charge_will_be_added_on_the_delivery_charge_and_this_categories_deliverymen_can_receives_the_order.') }}</p>"
@@ -144,7 +144,7 @@
                         </table>
                         @if(count($vehicles) === 0)
                         <div class="empty--data">
-                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                            <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
                                 {{translate('no_data_found')}}
                             </h5>

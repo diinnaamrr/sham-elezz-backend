@@ -13,7 +13,7 @@ active
 active
 @endsection
 @push('css_or_js')
-    <link rel="stylesheet" type="text/css" href="{{asset('public/assets/admin/css/daterangepicker.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/admin/css/daterangepicker.css')}}"/>
 @endpush
 
 @section('content')
@@ -22,7 +22,7 @@ active
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
         <div>
             <h1 class="page-header-title mb-1 d-flex align-items-center gap-2">
-                {{-- <img src="{{asset('public/assets/admin/img/advertisement.png')}}" alt=""> --}}
+                {{-- <img src="{{asset('assets/admin/img/advertisement.png')}}" alt=""> --}}
                 {{ translate('Advertisement ID') }} #{{ $advertisement->id }}
             </h1>
             <p class="d-flex gap-2 align-items-center mb-0">
@@ -59,7 +59,7 @@ active
 
             data-title="{{translate('Do You Want to Edit?')}}"
             data-text="<p>{{translate('Your ad is running. If you edit this ad, it will be listed for pending and needs to be approved by the Admin. After the approval, it will be running again.')}}</p>"
-            data-image="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}"
+            data-image="{{asset('assets/admin/img/modal/package-status-disable.png')}}"
             data-type="resume"
             data-btn_class = "btn-primary"
             data-success_btn_text = "{{ translate('Yes, Edit') }}"
@@ -344,8 +344,8 @@ active
 
 @push('script_2')
 
-    <script type="text/javascript" src="{{asset('public/assets/admin/js/moment.min.js')}}"></script>
-    <script type="text/javascript" src="{{asset('public/assets/admin/js/daterangepicker.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/admin/js/moment.min.js')}}"></script>
+    <script type="text/javascript" src="{{asset('assets/admin/js/daterangepicker.min.js')}}"></script>
 
     <script>
         $(function() {

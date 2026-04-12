@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/star.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/star.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.customers_reviews')}}
@@ -55,14 +55,14 @@
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('vendor.reviewsExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
+                                    src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{ route('vendor.reviewsExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
+                                    src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -106,7 +106,7 @@
                                 @if ($review->item)
                                     <div class="position-relative media align-items-center">
                                         <a class=" text-hover-primary absolute--link" href="{{route('vendor.item.view',[$review->item['id']])}}">
-                                            <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                            <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                                                  src="{{ $review->item['image_full_url'] }}" alt="{{$review->item->name}} image">
                                         </a>
                                         <div class="media-body">
@@ -182,7 +182,7 @@
                                             <div class="position-relative media align-items-center">
                                                 <a class="absolute--link" href="{{route('vendor.item.view',[$review->item['id']])}}">
                                                 </a>
-                                                <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                                <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                                                      src="{{ $review->item['image_full_url'] }}" alt="{{$review->item->name}} image">
                                                 <div>
                                                     <h5 class="text-hover-primary mb-0">{{ $review->item['name'] }}</h5>
@@ -325,7 +325,7 @@
                 </table>
                 @if(count($reviews) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>

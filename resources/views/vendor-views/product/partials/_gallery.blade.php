@@ -11,7 +11,7 @@
                             <div class="d-flex flex-wrap align-items-center food--media position-relative mr-4">
                                 <img class="avatar avatar-xxl avatar-4by3 onerror-image"
                                 src="{{ $item['image_full_url'] }}"
-                                    data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                    data-onerror-image="{{ asset('assets/admin/img/160x160/img2.jpg') }}"
                                     alt="Image Description">
                             </div>
                         </div>
@@ -137,4 +137,4 @@
     </div>
 </div>
 @endforeach
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

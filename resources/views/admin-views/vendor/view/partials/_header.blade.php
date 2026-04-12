@@ -4,7 +4,7 @@
             <div>
                 <h1 class="page-header-title text-break">
                     <span class="page-header-icon">
-                        <img src="{{asset('public/assets/admin/img/store.png')}}" class="w--26" alt="">
+                        <img src="{{asset('assets/admin/img/store.png')}}" class="w--26" alt="">
                     </span>
                     <span>{{$store->name}}</span>
                 </h1>

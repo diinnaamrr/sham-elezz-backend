@@ -8,7 +8,7 @@
         <div class="d-flex flex-wrap justify-content-between">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/landing.png')}}" class="w--20" alt="">
+                    <img src="{{asset('assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
                     {{ translate('messages.admin_landing_pages') }}
@@ -65,8 +65,8 @@
                             <input type="checkbox" name="status" id="counter_status"
                                    data-id="counter_status"
                                    data-type="toggle"
-                                   data-image-on="{{ asset('/public/assets/admin/img/modal/counter-on.png') }}"
-                                   data-image-off="{{ asset('/public/assets/admin/img/modal/counter-off.png') }}"
+                                   data-image-on="{{ asset('assets/admin/img/modal/counter-on.png') }}"
+                                   data-image-off="{{ asset('assets/admin/img/modal/counter-off.png') }}"
                                    data-title-on="{{ translate('By Turning ON Counter Section') }}"
                                    data-title-off="{{ translate('By Turning OFF Counter Section') }}"
                                    data-text-on="<p>{{ translate('Counter Section is enabled. You can now access its features and functionality') }}</p>"
@@ -131,7 +131,7 @@
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="download_user_app_title" type="text" maxlength="20" name="download_user_app_title[]" value="{{ $download_user_app_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
@@ -141,7 +141,7 @@
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
-                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="download_user_app_sub_title" type="text" maxlength="50" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title?->getRawOriginal('value') }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
@@ -179,7 +179,7 @@
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="download_user_app_title{{$lang}}" type="text" maxlength="20" name="download_user_app_title[]" value="{{ $download_user_app_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
@@ -189,7 +189,7 @@
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
-                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="download_user_app_sub_title{{$lang}}" type="text" maxlength="50" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
@@ -206,7 +206,7 @@
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="download_user_app_title" type="text" maxlength="20" name="download_user_app_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
@@ -216,7 +216,7 @@
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
-                                                        <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                        <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
                                                 <input id="download_user_app_sub_title" type="text" maxlength="50" name="download_user_app_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
@@ -236,7 +236,7 @@
                                         <img
                                         src="{{\App\CentralLogics\Helpers::get_full_url('download_user_app_image', $download_user_app_image?->value?? '', $download_user_app_image?->storage[0]?->value ?? 'public','aspect_1')}}"
 
-                                        data-onerror-image="{{asset('/public/assets/admin/img/aspect-1.png')}}" alt="" class="img__aspect-1 min-w-187px max-w-187px onerror-image">
+                                        data-onerror-image="{{asset('assets/admin/img/aspect-1.png')}}" alt="" class="img__aspect-1 min-w-187px max-w-187px onerror-image">
                                     </div>
                                       <input type="file"  name="image" hidden>
                                             @if (isset($download_user_app_image['value']))
@@ -253,7 +253,7 @@
                         <div class="row g-3 mt-3">
                             <div class="col-md-6">
                                 <h5 class="card-title mb-2">
-                                    <img src="{{asset('public/assets/admin/img/playstore.png')}}" class="mr-2" alt="">
+                                    <img src="{{asset('assets/admin/img/playstore.png')}}" class="mr-2" alt="">
                                     {{translate('Playstore Button')}}
                                 </h5>
                                 <div class="__bg-F8F9FC-card">
@@ -267,8 +267,8 @@
                                                        id="play-store-dm-status"
                                                        data-id="play-store-dm-status"
                                                        data-type="toggle"
-                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/play-store-on.png') }}"
-                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/play-store-off.png') }}"
+                                                       data-image-on="{{ asset('assets/admin/img/modal/play-store-on.png') }}"
+                                                       data-image-off="{{ asset('assets/admin/img/modal/play-store-off.png') }}"
                                                        data-title-on="{{ translate('Playstore Button Enabled for Delivery Man') }}"
                                                        data-title-off="{{ translate('Playstore Button Disabled for Delivery Man') }}"
                                                        data-text-on="<p>{{ translate('Playstore button is enabled now everyone can use or see the button') }}</p>"
@@ -287,7 +287,7 @@
                             </div>
                             <div class="col-md-6">
                                 <h5 class="card-title mb-2">
-                                    <img src="{{asset('public/assets/admin/img/ios.png')}}" class="mr-2" alt="">
+                                    <img src="{{asset('assets/admin/img/ios.png')}}" class="mr-2" alt="">
                                     {{translate('App Store Button')}}
                                 </h5>
                                 <div class="__bg-F8F9FC-card">
@@ -301,8 +301,8 @@
                                                        id="apple-dm-status"
                                                        data-id="apple-dm-status"
                                                        data-type="toggle"
-                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/apple-on.png') }}"
-                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/apple-off.png') }}"
+                                                       data-image-on="{{ asset('assets/admin/img/modal/apple-on.png') }}"
+                                                       data-image-off="{{ asset('assets/admin/img/modal/apple-off.png') }}"
                                                        data-title-on="{{ translate('App Store Button Enabled for Delivery Man') }}"
                                                        data-title-off="{{ translate('App Store Button Disabled for Delivery Man') }}"
                                                        data-text-on="<p>{{ translate('App Store button is enabled now everyone can use or see the button') }}</p>"

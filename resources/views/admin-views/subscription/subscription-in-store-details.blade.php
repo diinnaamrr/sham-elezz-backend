@@ -13,7 +13,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center py-2">
                 <div class="flex-grow-1">
                     <div class="d-flex align-items-start">
-                        <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
+                        <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title">{{translate('Green Mart Subscription')}}</h1>
                         </div>
@@ -56,7 +56,7 @@
             <div class="card-header border-0 align-items-center">
                 <h4 class="card-title align-items-center gap-2">
                     <span class="card-header-icon">
-                        <img src="{{asset('public/assets/admin/img/billing.png')}}" alt="">
+                        <img src="{{asset('assets/admin/img/billing.png')}}" alt="">
                     </span>
                     <span class="text-title">Billing</span>
                 </h4>
@@ -65,7 +65,7 @@
                 <div class="row g-3">
                     <div class="col-sm-6 col-lg-4">
                         <a class="__card-2 __bg-1 flex-row align-items-center gap-4" href="#">
-                            <img src="{{asset('public/assets/admin/img/expiring.png')}}" alt="report/new" class="w-60px">
+                            <img src="{{asset('assets/admin/img/expiring.png')}}" alt="report/new" class="w-60px">
                             <div class="w-0 flex-grow-1 py-md-3">
                                 <span class="text-body">Expire Date</span>
                                 <h4 class="title m-0">20 Jun 2024</h4>
@@ -74,7 +74,7 @@
                     </div>
                     <div class="col-sm-6 col-lg-4">
                         <a class="__card-2 __bg-8 flex-row align-items-center gap-4" href="#">
-                            <img src="{{asset('public/assets/admin/img/total-bill.png')}}" alt="report/new" class="w-60px">
+                            <img src="{{asset('assets/admin/img/total-bill.png')}}" alt="report/new" class="w-60px">
                             <div class="w-0 flex-grow-1 py-md-3">
                                 <span class="text-body">Total Bill</span>
                                 <h4 class="title m-0">$ 2,000</h4>
@@ -83,7 +83,7 @@
                     </div>
                     <div class="col-sm-6 col-lg-4">
                         <a class="__card-2 __bg-4 flex-row align-items-center gap-4" href="#">
-                            <img src="{{asset('public/assets/admin/img/number.png')}}" alt="report/new" class="w-60px">
+                            <img src="{{asset('assets/admin/img/number.png')}}" alt="report/new" class="w-60px">
                             <div class="w-0 flex-grow-1 py-md-3">
                                 <span class="text-body">Number of Uses</span>
                                 <h4 class="title m-0">2</h4>
@@ -97,7 +97,7 @@
             <div class="card-header border-0 align-items-center">
                 <h4 class="card-title align-items-center gap-2">
                     <span class="card-header-icon">
-                        <img width="25" src="{{asset('public/assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
+                        <img width="25" src="{{asset('assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
                     </span>
                     <span>Package Overview</span>
                 </h4>
@@ -115,63 +115,63 @@
                     <div class="check--grid-wrapper mt-3 max-w-850px">
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">400 Order</span>
                             </div>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">POS Access</span>
                             </div>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">400 Order</span>
                             </div>
                         </div>
 
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">400 Products Upload</span>
                             </div>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">Mobile App Access</span>
                             </div>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">400 Order</span>
                             </div>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">POS Access</span>
                             </div>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">400 Order</span>
                             </div>
                         </div>
 
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">400 Products Upload</span>
                             </div>
                         </div>
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                                 <span class="form-check-label text-dark">Mobile App Access</span>
                             </div>
                         </div>
@@ -328,7 +328,7 @@
                                 </div>
                                 <!-- Plan Seperator Arrow -->
                                 <div class="plan-seperator-arrow mx-auto">
-                                    <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
+                                    <img src="{{asset('assets/admin/img/exchange.svg')}}" alt="" class="w-100">
                                 </div>
                                 <!-- Plan Seperator Arrow -->
                                 <div class="__plan-item active">
@@ -376,11 +376,11 @@
                                         <input type="radio" class="d-none" name="payment">
                                         <div class="payment-item-inner">
                                             <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                                                <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                                <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                             </div>
                                             <span>Bkash</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/bkash1.png')}}" width="30" alt="">
+                                            <img class="ml-auto" src="{{asset('assets/admin/img/bkash1.png')}}" width="30" alt="">
                                         </div>
                                     </label>
                                 </div>
@@ -389,11 +389,11 @@
                                         <input type="radio" class="d-none" name="payment">
                                         <div class="payment-item-inner">
                                             <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                                                <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                                <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                             </div>
                                             <span>Marcado pago</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/marcado1.png')}}" width="30" alt="">
+                                            <img class="ml-auto" src="{{asset('assets/admin/img/marcado1.png')}}" width="30" alt="">
                                         </div>
                                     </label>
                                 </div>
@@ -402,11 +402,11 @@
                                         <input type="radio" class="d-none" name="payment">
                                         <div class="payment-item-inner">
                                             <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                                                <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                                <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                             </div>
                                             <span>SSL COMMERZ</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/sslcomz1.png')}}" width="60" alt="">
+                                            <img class="ml-auto" src="{{asset('assets/admin/img/sslcomz1.png')}}" width="60" alt="">
                                         </div>
                                     </label>
                                 </div>
@@ -415,11 +415,11 @@
                                         <input type="radio" class="d-none" name="payment">
                                         <div class="payment-item-inner">
                                             <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                                                <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                                <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                             </div>
                                             <span>PayStack</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/paystack1.png')}}" width="30" alt="">
+                                            <img class="ml-auto" src="{{asset('assets/admin/img/paystack1.png')}}" width="30" alt="">
                                         </div>
                                     </label>
                                 </div>
@@ -493,11 +493,11 @@
                                         <input type="radio" class="d-none" name="payment">
                                         <div class="payment-item-inner">
                                             <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                                                <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                                <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                             </div>
                                             <span>Bkash</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/bkash1.png')}}" width="30" alt="">
+                                            <img class="ml-auto" src="{{asset('assets/admin/img/bkash1.png')}}" width="30" alt="">
                                         </div>
                                     </label>
                                 </div>
@@ -506,11 +506,11 @@
                                         <input type="radio" class="d-none" name="payment">
                                         <div class="payment-item-inner">
                                             <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                                                <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                                <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                             </div>
                                             <span>Marcado pago</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/marcado1.png')}}" width="30" alt="">
+                                            <img class="ml-auto" src="{{asset('assets/admin/img/marcado1.png')}}" width="30" alt="">
                                         </div>
                                     </label>
                                 </div>
@@ -519,11 +519,11 @@
                                         <input type="radio" class="d-none" name="payment">
                                         <div class="payment-item-inner">
                                             <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                                                <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                                <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                             </div>
                                             <span>SSL COMMERZ</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/sslcomz1.png')}}" width="60" alt="">
+                                            <img class="ml-auto" src="{{asset('assets/admin/img/sslcomz1.png')}}" width="60" alt="">
                                         </div>
                                     </label>
                                 </div>
@@ -532,11 +532,11 @@
                                         <input type="radio" class="d-none" name="payment">
                                         <div class="payment-item-inner">
                                             <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                                                <img src="{{asset('assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                                                <img src="{{asset('assets/admin/img/check-2.png')}}" class="check" alt="">
                                             </div>
                                             <span>PayStack</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/paystack1.png')}}" width="30" alt="">
+                                            <img class="ml-auto" src="{{asset('assets/admin/img/paystack1.png')}}" width="30" alt="">
                                         </div>
                                     </label>
                                 </div>

@@ -8,7 +8,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/condition.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/condition.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.flash_sale_setup')}}
@@ -75,7 +75,7 @@
                                                 <label class="input-label"
                                                     for="default_title">{{ translate('messages.discount_Bearer') }}
                                                     <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Define_the_cost_amount_you_want_to_bear_for_this_Flash_Sale.The_total_bear_amount_should_be_100.') }}">
-                                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                                        <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span>
                                                 </label>
                                             </div>
@@ -198,8 +198,8 @@
                                             <input type="checkbox" class="toggle-switch-input dynamic-checkbox" {{$flash_sale->is_publish?'checked':''}}
                                                     data-id="is_publish-{{$flash_sale['id']}}"
                                                    data-type="status"
-                                                   data-image-on='{{asset('/public/assets/admin/img/modal')}}/zone-is_publish-on.png'
-                                                   data-image-off="{{asset('/public/assets/admin/img/modal')}}/zone-is_publish-off.png"
+                                                   data-image-on='{{asset('assets/admin/img/modal')}}/zone-is_publish-on.png'
+                                                   data-image-off="{{asset('assets/admin/img/modal')}}/zone-is_publish-off.png"
                                                    data-title-on="{{translate('Want_to_publish_this_flash_sale?')}}"
                                                    data-title-off="{{translate('Want_to_hide_this_flash_sale?')}}"
                                                    data-text-on="<p>{{translate('If_you_publish_this_flash_sale,_Customers_can_see_all_stores_&_products_available_under_this_flash_sale_from_the_Customer_App_&_Website._other_flash_sales_will_be_turned_off.')}}</p>"
@@ -239,7 +239,7 @@
                     </div>
                     @if(count($flash_sales) === 0)
                     <div class="empty--data">
-                        <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
                             {{translate('no_data_found')}}
                         </h5>
@@ -254,5 +254,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/flash-sale-index.js"></script>
+    <script src="{{asset('assets/admin')}}/js/view-pages/flash-sale-index.js"></script>
 @endpush

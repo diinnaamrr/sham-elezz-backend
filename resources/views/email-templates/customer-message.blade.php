@@ -111,7 +111,7 @@ $company_links = json_decode(BusinessSetting::where('key','landing_page_links')-
                         @foreach ($social_media as $item)
                         <div style="display:inline-block;">
                             <a href="{{$item->link}}" target=”_blank”>
-                                <img src="{{ asset('public/assets/landing/img/footer/'. $item->name.'.svg') }}"  style="height: 14px; width:14px; padding: 0px 3px 0px 5px;" alt="">
+                                <img src="{{ asset('assets/landing/img/footer/'. $item->name.'.svg') }}"  style="height: 14px; width:14px; padding: 0px 3px 0px 5px;" alt="">
                             </a>
                         </div>
                         @endforeach

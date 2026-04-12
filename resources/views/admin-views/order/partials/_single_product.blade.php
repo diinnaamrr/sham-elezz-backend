@@ -1,7 +1,7 @@
 <div class="product-card card cursor-pointer quick-view" data-product-id="{{$product->id}}">
     <div class="card-header inline_product clickable p-0">
         <img class="img--134 onerror-image" src="{{ $product['image_full_url'] }}"
-         data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}">
+         data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}">
     </div>
 
     <div class="card-body inline_product text-center p-3 clickable">
@@ -17,4 +17,4 @@
         </div>
     </div>
 </div>
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

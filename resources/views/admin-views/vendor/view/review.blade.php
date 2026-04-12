@@ -4,7 +4,7 @@
 
 @push('css_or_js')
     <!-- Custom styles for this page -->
-    <link href="{{asset('public/assets/admin/css/croppie.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/admin/css/croppie.css')}}" rel="stylesheet">
 
 @endpush
 
@@ -237,13 +237,13 @@
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.store.store_wise_reviwe_export', ['type'=>'excel', 'id' => $store->id,request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
+                                    src="{{ asset('assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item" href="{{route('admin.store.store_wise_reviwe_export', ['type'=>'csv','id' => $store->id,request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
+                                    src="{{ asset('assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -292,10 +292,10 @@
                                             <a class="media align-items-center" href="{{route('admin.item.view',[$review->item['id']])}}">
                                                 <img class="avatar avatar-lg mr-3 onerror-image"
 
-                                                     src="{{ $review?->item['image_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                                     src="{{ $review?->item['image_full_url'] ?? asset('assets/admin/img/160x160/img1.jpg') }}"
 
 
-                                                     data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" alt="{{$review->item->name}} image">
+                                                     data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}" alt="{{$review->item->name}} image">
                                                 <div class="media-body">
                                                     <h5 class="text-hover-primary mb-0">{{Str::limit($review->item['name'],10)}}</h5>
                                                     <!-- Static Order ID -->
@@ -367,7 +367,7 @@
                         </div>
                         @if(count($reviews) === 0)
                         <div class="empty--data">
-                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                            <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
                                 {{translate('no_data_found')}}
                             </h5>

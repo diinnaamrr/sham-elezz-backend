@@ -9,7 +9,7 @@
         <div class="page-header">
             <h1 class="page-header-title text-break">
                 <span class="page-header-icon">
-                    <img src="{{ asset('public/assets/admin/img/delivery-man.png') }}" class="w--26" alt="">
+                    <img src="{{ asset('assets/admin/img/delivery-man.png') }}" class="w--26" alt="">
                 </span>
                 <span>{{ translate('messages.add_new_deliveryman') }}</span>
             </h1>
@@ -143,7 +143,7 @@
                                 </label>
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--100" id="viewer"
-                                        src="{{ asset('public/assets/admin/img/admin.png') }}"
+                                        src="{{ asset('assets/admin/img/admin.png') }}"
                                         alt="delivery-man image" />
                                 </div>
                                 <div class="custom-file">
@@ -197,7 +197,7 @@
                                     <span
                                         class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                         data-original-title="{{ translate('messages.Max_5_Identity_Images') }}"><img
-                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="{{ translate('messages.Max_5_Identity_Images') }}"></span>
 
                                     <span
@@ -243,7 +243,7 @@
                                     for="signupSrPassword">{{ translate('messages.password') }}<span
                                         class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                         data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img
-                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                            src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                             alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span> <span
                                             class="form-label-secondary text-danger" data-toggle="tooltip"
                                             data-placement="right"
@@ -316,7 +316,7 @@
 
 @push('script_2')
 
-    <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script>
         "use strict";
 
@@ -344,7 +344,7 @@
                 groupClassName: 'col-6 spartan_item_wrapper size--md',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/400x400/img2.jpg') }}',
+                    image: '{{ asset('assets/admin/img/400x400/img2.jpg') }}',
                     width: '100%'
                 },
                 dropFileLabel: "Drop Here",
@@ -374,7 +374,7 @@
         });
 
         $('#reset_btn').click(function() {
-            $('#viewer').attr('src', '{{ asset('public/assets/admin/img/400x400/img2.jpg') }}');
+            $('#viewer').attr('src', '{{ asset('assets/admin/img/400x400/img2.jpg') }}');
             $("#coba").empty().spartanMultiImagePicker({
                 fieldName: 'identity_image[]',
                 maxCount: 5,
@@ -382,7 +382,7 @@
                 groupClassName: 'col-6 spartan_item_wrapper size--md',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/400x400/img2.jpg') }}',
+                    image: '{{ asset('assets/admin/img/400x400/img2.jpg') }}',
                     width: '100%'
                 },
                 dropFileLabel: "Drop Here",

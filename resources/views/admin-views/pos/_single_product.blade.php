@@ -12,8 +12,8 @@ $index = array_search($product->id, $keys);
     <div class="inline_product clickable p-0 initial--31">
         <div class="d-flex align-items-center justify-content-center h-100 d-block w-100 ">
             <img
-            src="{{ $product['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg')}}"
-            data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"
+            src="{{ $product['image_full_url'] ?? asset('assets/admin/img/160x160/img2.jpg')}}"
+            data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}"
                 class="w-100 h-100 object-cover onerror-image" alt="image">
         </div>
     </div>
@@ -30,4 +30,4 @@ $index = array_search($product->id, $keys);
         </div>
     </div>
 </div>
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('assets/admin')}}/js/view-pages/common.js"></script>

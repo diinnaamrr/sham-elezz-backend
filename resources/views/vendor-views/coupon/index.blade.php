@@ -275,7 +275,7 @@
                 </table>
                 @if(count($coupons) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
@@ -296,7 +296,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin/js/view-pages/vendor-coupon.js')}}"></script>
+    <script src="{{asset('assets/admin/js/view-pages/vendor-coupon.js')}}"></script>
 <script>
     "use strict";
     $(document).on('ready', function () {

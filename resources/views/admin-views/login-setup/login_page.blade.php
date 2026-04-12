@@ -12,7 +12,7 @@
         <div class="page-header d-flex flex-wrap align-items-center justify-content-between">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/app.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/app.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('login_setup')}}
@@ -188,7 +188,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
+                        <img src="{{asset('assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
                         <h5 class="modal-title">{{translate('Important Alert !')}}</h5>
                     </div>
                     <p>{{ translate('At least one login method must remain active for the customer; otherwise, they will be unable to log in to the system') }}</p>
@@ -210,7 +210,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
+                        <img src="{{asset('assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
                         <h5 class="modal-title">{{translate('Set Up SMS Configuration First')}}</h5>
                     </div>
                     <p>{{ translate('It looks like your SMS configuration is not set up yet. To enable the OTP system, please set up the SMS configuration first.') }}</p>
@@ -232,7 +232,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
+                        <img src="{{asset('assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
                         <h5 class="modal-title">{{translate('Important Alert !')}}</h5>
                     </div>
                     <p>{{ translate('If you are activating only social login as the login method, you must enable at least one option between Google and Facebook for Android users.') }}</p>
@@ -253,7 +253,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
+                        <img src="{{asset('assets/admin/img/modal/package-status-disable.png')}}" alt="" class="mb-20">
                         <h5 class="modal-title">{{translate('Important Alert !')}}</h5>
                     </div>
                     <p>{{ translate('If you are activating social login as the login method, you must enable at least one option between Google, Facebook & Apple.') }}</p>
@@ -275,7 +275,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/modal/google.png')}}" alt="" class="mb-20">
+                        <img src="{{asset('assets/admin/img/modal/google.png')}}" alt="" class="mb-20">
                         <h5 class="modal-title">{{translate('Set Up Google Configuration First')}}</h5>
                     </div>
                     <p>{{ translate('It looks like your Google Login configuration is not set up yet. To enable the Google Login option, please set up the Google configuration first.') }}</p>
@@ -297,7 +297,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/modal/facebook.png')}}" alt="" class="mb-20">
+                        <img src="{{asset('assets/admin/img/modal/facebook.png')}}" alt="" class="mb-20">
                         <h5 class="modal-title">{{translate('Set Up Facebook Configuration First')}}</h5>
                     </div>
                     <p>{{ translate('It looks like your Facebook Login configuration is not set up yet. To enable the Facebook Login option, please set up the Facebook configuration first.') }}</p>
@@ -319,7 +319,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/modal/apple.png')}}" alt="" class="mb-20">
+                        <img src="{{asset('assets/admin/img/modal/apple.png')}}" alt="" class="mb-20">
                         <h5 class="modal-title">{{translate('Set Up Apple Configuration First')}}</h5>
                     </div>
                     <p>{{ translate('It looks like your Apple Login configuration is not set up yet. To enable the Apple Login option, please set up the Apple configuration first.') }}</p>
@@ -341,7 +341,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
+                        <img src="{{asset('assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
                         <h5 class="modal-title">{{translate('Set Up SMS Configuration First')}}</h5>
                     </div>
                     <p>{{ translate('It looks like your SMS configuration is not set up yet. To enable the phone verification, please set up the SMS configuration first.') }}</p>
@@ -363,7 +363,7 @@
                 </div>
                 <div class="modal-body pb-0"><b></b>
                     <div class="text-center mb-20">
-                        <img src="{{asset('public/assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
+                        <img src="{{asset('assets/admin/img/sms-configuration.svg')}}" alt="" class="mb-20 img--80">
                         <h5 class="modal-title">{{translate('Set Up Email Configuration First')}}</h5>
                     </div>
                     <p>{{ translate('It looks like your Email configuration is not set up yet. To enable the email verification, please set up the SMS configuration first.') }}</p>

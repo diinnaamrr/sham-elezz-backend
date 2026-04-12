@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap justify-content-between">
                 <h1 class="page-header-title">
                     <span class="page-header-icon">
-                        <img src="{{ asset('public/assets/admin/img/flutter.png') }}" class="w--15" alt="">
+                        <img src="{{ asset('assets/admin/img/flutter.png') }}" class="w--15" alt="">
                     </span>
                     <span>
                         {{ translate('messages.flutter_web_landing_page') }}
@@ -77,8 +77,8 @@
 
                             <label class="toggle-switch justify-content-end  rounded">
                                 <input type="checkbox" data-id="join_seller_flutter_status" data-type="status"
-                                    data-image-on="{{ asset('/public/assets/admin/img/modal/seller-app-on.png') }}"
-                                    data-image-off="{{ asset('/public/assets/admin/img/modal/seller-app-off.png') }}"
+                                    data-image-on="{{ asset('assets/admin/img/modal/seller-app-on.png') }}"
+                                    data-image-off="{{ asset('assets/admin/img/modal/seller-app-off.png') }}"
                                     data-title-on="<strong>{{ translate('messages.Want_to_enable_Join_as_a_Seller_Section?') }}</strong>"
                                     data-title-off="<strong>{{ translate('messages.Want_to_disable_Join_as_a_Seller_Section?') }}</strong>"
                                     data-text-on="<p>{{ translate('messages.If_you_enable_this,_Join_as_a_Seller_Section_will_be_visible.') }}</p>"
@@ -99,7 +99,7 @@
                                             ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                 data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input type="text" id="join_seller_title" maxlength="20"
@@ -113,7 +113,7 @@
                                             ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                 data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_15_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input id="join_seller_button_name" type="text" maxlength="15"
@@ -126,7 +126,7 @@
                                             ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                 data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_60_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <textarea id="join_seller_sub_title" placeholder="{{ translate('messages.sub_title_here...') }}" maxlength="60"
@@ -169,7 +169,7 @@
                                                 ({{ strtoupper($lang) }})<span class="form-label-secondary"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                    <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="">
                                                 </span></label>
                                             <input type="text" id="join_seller_title{{ $lang }}"
@@ -184,7 +184,7 @@
                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                     data-placement="right"
                                                     data-original-title="{{ translate('Write_the_title_within_15_characters') }}">
-                                                    <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="">
                                                 </span></label>
                                             <input id="join_seller_button_name{{ $lang }}" type="text"
@@ -199,7 +199,7 @@
                                                 ({{ strtoupper($lang) }})<span class="form-label-secondary"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('Write_the_title_within_60_characters') }}">
-                                                    <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="">
                                                 </span></label>
                                             <textarea id="join_seller_sub_title{{ $lang }}" type="text"
@@ -216,7 +216,7 @@
                                         <label for="join_seller_title" class="form-label">{{ translate('Title') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input type="text" id="join_seller_title" maxlength="20"
@@ -228,7 +228,7 @@
                                             class="form-label">{{ translate('Button Name') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_15_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input id="join_seller_button_name" type="text" maxlength="15"
@@ -240,7 +240,7 @@
                                             class="form-label">{{ translate('Sub Title') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_60_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <textarea id="join_seller_sub_title" value="join_seller_sub_title" maxlength="60" name="join_seller_sub_title[]"
@@ -276,8 +276,8 @@
 
                             <label class="toggle-switch justify-content-end  rounded">
                                 <input type="checkbox" data-id="join_DM_flutter_status" data-type="status"
-                                    data-image-on="{{ asset('/public/assets/admin/img/modal/home-delivery-on.png') }}"
-                                    data-image-off="{{ asset('/public/assets/admin/img/modal/home-delivery-off.png') }}"
+                                    data-image-on="{{ asset('assets/admin/img/modal/home-delivery-on.png') }}"
+                                    data-image-off="{{ asset('assets/admin/img/modal/home-delivery-off.png') }}"
                                     data-title-on="<strong>{{ translate('messages.Want_to_enable_Join_as_a_Deliveryman_Section?') }}</strong>"
                                     data-title-off="<strong>{{ translate('messages.Want_to_disable_Join_as_a_Deliveryman_Section?') }}</strong>"
                                     data-text-on="<p>{{ translate('messages.If_you_enable_this,_Join_as_a_Deliveryman_Section_will_be_visible.') }}</p>"
@@ -299,7 +299,7 @@
                                             ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                 data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input type="text" id="join_delivery_man_title" maxlength="20"
@@ -313,7 +313,7 @@
                                             ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                 data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_15_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input id="join_delivery_man_button_name" type="text" maxlength="15"
@@ -327,7 +327,7 @@
                                             ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                 data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_60_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <textarea id="join_delivery_man_sub_title" placeholder="{{ translate('messages.sub_title_here...') }}"
@@ -372,7 +372,7 @@
                                                 <span class="form-label-secondary" data-toggle="tooltip"
                                                     data-placement="right"
                                                     data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                    <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="">
                                                 </span></label>
                                             <input type="text" id="join_delivery_man_title{{ $lang }}"
@@ -386,7 +386,7 @@
                                                 ({{ strtoupper($lang) }})<span class="form-label-secondary"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('Write_the_title_within_15_characters') }}">
-                                                    <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="">
                                                 </span></label>
                                             <input type="text" id="join_delivery_man_button_name{{ $lang }}"
@@ -401,7 +401,7 @@
                                                 ({{ strtoupper($lang) }})<span class="form-label-secondary"
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('Write_the_title_within_60_characters') }}">
-                                                    <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                    <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                         alt="">
                                                 </span></label>
                                             <textarea id="join_delivery_man_sub_title{{ $lang }}"
@@ -418,7 +418,7 @@
                                             class="form-label">{{ translate('Title') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input id="join_delivery_man_title" type="text" maxlength="20"
@@ -430,7 +430,7 @@
                                             class="form-label">{{ translate('Sub Title') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_60_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input id="join_delivery_man_sub_title" type="text" maxlength="60"
@@ -442,7 +442,7 @@
                                             class="form-label">{{ translate('Button Name') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_15_characters') }}">
-                                                <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                                <img src="{{ asset('assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
                                         <input id="join_delivery_man_button_name" type="text" maxlength="15"

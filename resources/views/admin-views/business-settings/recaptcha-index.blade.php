@@ -9,7 +9,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/captcha.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/captcha.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.reCaptcha_credentials_setup')}}
@@ -58,8 +58,8 @@
                         <input type="checkbox"
                                 data-id="recaptcha_status"
                                 data-type="toggle"
-                                data-image-on="{{ asset('/public/assets/admin/img/modal/important-recapcha.png') }}"
-                                data-image-off="{{ asset('/public/assets/admin/img/modal/warning-recapcha.png') }}"
+                                data-image-on="{{ asset('assets/admin/img/modal/important-recapcha.png') }}"
+                                data-image-off="{{ asset('assets/admin/img/modal/warning-recapcha.png') }}"
                                 data-title-on="{{ translate('Important!') }}"
                                 data-title-off="{{ translate('Warning!') }}"
                                 data-text-on="<p>{{ translate('reCAPTCHA is now enabled for added security. Users may be prompted to complete a reCAPTCHA challenge to verify their human identity and protect against spam and malicious activity.') }}</p>"
@@ -105,7 +105,7 @@
                 </div>
                 <div class="modal-body pt-0">
                     <div class="text-center">
-                        <img src="{{asset('/public/assets/admin/img/icons/wallet.png')}}" width="80" alt="">
+                        <img src="{{asset('assets/admin/img/icons/wallet.png')}}" width="80" alt="">
                     </div>
                     <h4 class="modal-title">Instructions</h4>
                     <ol class="list-gap-5 fs-13 mt-3">

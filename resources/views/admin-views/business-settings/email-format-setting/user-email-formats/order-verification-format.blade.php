@@ -2,7 +2,7 @@
 
 @section('title', translate('email_template'))
 @push('css_or_js')
-<link rel="stylesheet" href="{{asset('public/assets/admin/css/view-pages/email-templates.css')}}">
+<link rel="stylesheet" href="{{asset('assets/admin/css/view-pages/email-templates.css')}}">
 @endpush
 
 
@@ -13,7 +13,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center __gap-15px">
                 <h1 class="page-header-title mr-3 mb-0">
                     <span class="page-header-icon">
-                        <img src="{{ asset('public/assets/admin/img/email-setting.png') }}" class="w--26" alt="">
+                        <img src="{{ asset('assets/admin/img/email-setting.png') }}" class="w--26" alt="">
                     </span>
                     <span>
                         {{ translate('messages.Email Templates') }}
@@ -34,15 +34,15 @@
                             <h5 class="text-capitalize m-0 text--primary pl-2">
                                 {{translate('Send_Mail_On_‘Delivery_Verification’?')}}
                         <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Customers_will_receive_a_Delivery_Verification_code_via_email_during_delivery._The_Customer_then_gives_the_code_to_the_Deliveryman_to_confirm_delivery.') }}">
-                                    <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                    <img src="{{asset('assets/admin/img/info-circle.svg')}}" alt="">
                                 </span>
                             </h5>
                             <label class="toggle-switch toggle-switch-sm">
                                 <input type="checkbox" class="status toggle-switch-input dynamic-checkbox"
                                        data-id="mail-status"
                                        data-type="status"
-                                       data-image-on='{{asset('/public/assets/admin/img/modal')}}/place-order-on.png'
-                                       data-image-off="{{asset('/public/assets/admin/img/modal')}}/place-order-off.png"
+                                       data-image-on='{{asset('assets/admin/img/modal')}}/place-order-on.png'
+                                       data-image-off="{{asset('assets/admin/img/modal')}}/place-order-off.png"
                                        data-title-on="{{translate('Want_to_enable_Order_Verification_mail?')}}"
                                        data-title-off="{{translate('Want_to_disable_Order_Verification_mail?')}}"
                                        data-text-on="<p>{{translate('If_enabled,_Customers_will_receive_a_Verification_code_via_mail_during_delivery_and_Deliveryman_can_verify_the_order_with_the_given_code.')}}</p>"
@@ -120,7 +120,7 @@
                                     <br>
                                     <div>
                                         <h5 class="card-title mb-3">
-                                            <img src="{{asset('public/assets/admin/img/pointer.png')}}" class="mr-2" alt="">
+                                            <img src="{{asset('assets/admin/img/pointer.png')}}" class="mr-2" alt="">
                                             {{translate('Header Content')}}
                                         </h5>
                                         @if ($language)
@@ -195,7 +195,7 @@
                                     <br>
                                     <div>
                                         <h5 class="card-title mb-3">
-                                            <img src="{{asset('public/assets/admin/img/pointer.png')}}" class="mr-2" alt="">
+                                            <img src="{{asset('assets/admin/img/pointer.png')}}" class="mr-2" alt="">
                                             {{translate('Footer Content')}}
                                         </h5>
                                         <div class="__bg-F8F9FC-card">
@@ -296,7 +296,7 @@
 @endsection
 @push('script_2')
     <!-- Email Template-->
-    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
-    <script src="{{asset('public/assets/admin/js/view-pages/email-templates.js')}}"></script>
+    <script src="{{asset('assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('assets/admin/js/view-pages/email-templates.js')}}"></script>
     <!-- Email Template End-->
 @endpush

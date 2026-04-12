@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/privacy-policy.png')}}" class="w--26" alt="">
+                    <img src="{{asset('assets/admin/img/privacy-policy.png')}}" class="w--26" alt="">
                 </span>
                 <span>
                     {{translate('messages.privacy_policy')}}
@@ -82,5 +82,5 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('assets/admin/ckeditor/ckeditor.js')}}"></script>
 @endpush

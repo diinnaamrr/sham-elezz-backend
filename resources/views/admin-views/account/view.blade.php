@@ -9,7 +9,7 @@
     <div class="page-header">
         <h1 class="page-header-title">
             <span class="page-header-icon">
-                <img src="{{asset('public/assets/admin/img/report.png')}}" class="w--22" alt="">
+                <img src="{{asset('assets/admin/img/report.png')}}" class="w--22" alt="">
             </span>
             <span>
                 {{translate('messages.account_transaction_information')}}

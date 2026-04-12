@@ -16,7 +16,7 @@ active
         <div class="row align-items-center py-2">
             <div class="col-sm">
                 <div class="d-flex align-items-start">
-                    <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
+                    <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                     <div class="w-0 flex-grow pl-2">
                         <h1 class="page-header-title">{{translate('Subscription Package')}}</h1>
                     </div>
@@ -79,7 +79,7 @@ active
         <div class="card-header border-0 align-items-center">
             <h4 class="card-title align-items-center gap-2">
                 <span class="card-header-icon">
-                    <img width="25" src="{{asset('public/assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
+                    <img width="25" src="{{asset('assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
                 </span>
                 <span>{{ translate('Package_details') }}</span>
             </h4>
@@ -112,7 +112,7 @@ active
 
                     <div>
                         <div class="d-flex align-items-center gap-2">
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @if ( $subscriptionackage->max_order == 'unlimited' )
                             <span class="form-check-label text-dark">{{ translate('messages.unlimited_orders') }}</span>
                             @else
@@ -126,9 +126,9 @@ active
                     <div>
                         <div class="d-flex align-items-center gap-2">
                             @if ( $subscriptionackage->pos == 1 )
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @else
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check-1.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
                             <span class="form-check-label text-dark">{{ translate('messages.POS') }}</span>
                         </div>
@@ -137,9 +137,9 @@ active
                     <div>
                         <div class="d-flex align-items-center gap-2">
                             @if ( $subscriptionackage->mobile_app == 1 )
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @else
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check-1.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
                             <span class="form-check-label text-dark">{{ translate('messages.Mobile_App') }}</span>
                         </div>
@@ -147,9 +147,9 @@ active
                     <div>
                         <div class="d-flex align-items-center gap-2">
                             @if ( $subscriptionackage->self_delivery == 1 )
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @else
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check-1.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
                             <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
                         </div>
@@ -157,7 +157,7 @@ active
 
                     <div>
                         <div class="d-flex align-items-center gap-2">
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @if ( $subscriptionackage->max_product == 'unlimited' )
                             <span class="form-check-label text-dark">{{ translate('messages.unlimited_item_Upload')
                                 }}</span>
@@ -171,9 +171,9 @@ active
                     <div>
                         <div class="d-flex align-items-center gap-2">
                             @if ( $subscriptionackage->review == 1 )
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @else
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check-1.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
                             <span class="form-check-label text-dark">{{ translate('messages.review') }}</span>
                         </div>
@@ -182,9 +182,9 @@ active
                     <div>
                         <div class="d-flex align-items-center gap-2">
                             @if ( $subscriptionackage->chat == 1 )
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check.png')}}" alt="">
                             @else
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/check-1.png')}}" alt="">
+                            <img src="{{asset('assets/admin/img/subscription-plan/check-1.png')}}" alt="">
                             @endif
                             <span class="form-check-label text-dark">{{ translate('messages.chat') }}</span>
                         </div>
@@ -212,7 +212,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
+                            <img src="{{asset('assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
@@ -244,7 +244,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/tick.png')}}" class="mb-20">
+                            <img src="{{asset('assets/admin/img/subscription-plan/tick.png')}}" class="mb-20">
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">
@@ -279,7 +279,7 @@ active
                 <div class="max-349 mx-auto mb-20">
                     <div>
                         <div class="text-center">
-                            <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
+                            <img src="{{asset('assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
                             <h5 class="modal-title" id="toggle-title"></h5>
                         </div>
                         <div class="text-center" id="toggle-message">

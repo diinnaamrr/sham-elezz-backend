@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/deliveryman.png')}}" class="w--30" alt="">
+                    <img src="{{asset('assets/admin/img/deliveryman.png')}}" class="w--30" alt="">
                 </span>
                 <span>
                     {{translate('messages.delivery_man_details')}}
@@ -41,7 +41,7 @@
                     <h5 class="subtitle">
                         {{translate('messages.total_delivered_orders')}}
                     </h5>
-                    <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/tick.png')}}" alt="img">
+                    <img class="resturant-icon w--30" src="{{asset('assets/admin/img/tick.png')}}" alt="img">
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
                     <h5 class="subtitle">
                         {{translate('messages.cash_in_hand')}}
                     </h5>
-                    <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/withdraw-amount.png')}}" alt="img">
+                    <img class="resturant-icon w--30" src="{{asset('assets/admin/img/withdraw-amount.png')}}" alt="img">
                 </div>
             </div>
 
@@ -67,7 +67,7 @@
                     <h5 class="subtitle">
                         {{translate('messages.total_earning')}}
                     </h5>
-                    <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/pending.png')}}" alt="img">
+                    <img class="resturant-icon w--30" src="{{asset('assets/admin/img/pending.png')}}" alt="img">
                 </div>
             </div>
 
@@ -93,7 +93,7 @@
                     <div class="col-md-6">
                         <div class="d-flex align-items-center justify-content-center">
                             <img class="avatar avatar-xxl avatar-4by3 mr-4 img--120 onerror-image"
-                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                 data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                                  src="{{ $dm['image_full_url'] }}"
                                  alt="Image Description">
                                  <div class="d-block">
@@ -332,7 +332,7 @@
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-circle">
                                             <img class="avatar-img onerror-image" width="75" height="75"
-                                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                                 data-onerror-image="{{asset('assets/admin/img/160x160/img1.jpg')}}"
                                                  src="{{ $review->customer->image_full_url }}"
                                                 alt="Image Description">
                                         </div>
@@ -362,7 +362,7 @@
                             <td>
                                 @foreach(json_decode($review['attachment'],true) as $attachment)
                                 @php($attachment = is_array($attachment)?$attachment:['img'=>$attachment,'storage'=>'public'])
-                                    <img width="100" class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"  src="{{\App\CentralLogics\Helpers::get_full_url($attachment['img'],$attachment['img'],$attachment['storage'] ?? 'public') }}"
+                                    <img width="100" class="onerror-image" data-onerror-image="{{asset('assets/admin/img/160x160/img2.jpg')}}"  src="{{\App\CentralLogics\Helpers::get_full_url($attachment['img'],$attachment['img'],$attachment['storage'] ?? 'public') }}"
                                     alt="image">
                                 @endforeach
                             </td>
@@ -380,7 +380,7 @@
 
             @if(count($reviews) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>

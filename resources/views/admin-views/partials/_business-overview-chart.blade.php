@@ -9,7 +9,7 @@
     <canvas id="business-overview" class="mt-2"></canvas>
 </div>
 
-<script src="{{asset('public/assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
+<script src="{{asset('assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
 
 <script>
     "use strict";

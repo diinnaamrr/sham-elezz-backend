@@ -18,7 +18,7 @@ active
             <div class="row align-items-center py-2">
                 <div class="col-sm">
                     <div class="d-flex align-items-start">
-                        <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
+                        <img src="{{asset('assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title">{{translate('Subscription Package')}}</h1>
                         </div>
@@ -131,14 +131,14 @@ active
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.business-settings.subscriptionackage.TransactionExport', ['id'=> $id , 'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
+                                    src="{{ asset('assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
                                 href="{{  route('admin.business-settings.subscriptionackage.TransactionExport', ['id' => $id, 'export_type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
+                                    src="{{ asset('assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
@@ -179,7 +179,7 @@ active
 
                                         @if ($transaction?->subscription?->status == 1 && $transaction?->subscription?->expiry_date_parsed && $transaction->subscription->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()))
                                         <span title="<div class='text-left'>Expiring Soon <br /> Expiration Date: {{ \App\CentralLogics\Helpers::date_format($transaction->subscription->expiry_date_parsed)  }}</div>" data-toggle="tooltip" data-html="true">
-                                            <img src="{{asset('/public/assets/admin/img/invalid.svg')}}" alt="">
+                                            <img src="{{asset('assets/admin/img/invalid.svg')}}" alt="">
                                         </span>
                                         @endif
 
@@ -236,7 +236,7 @@ active
                 </div>
                 @if(count($transactions) === 0)
                 <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <img src="{{asset('assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
