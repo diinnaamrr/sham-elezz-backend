@@ -26,6 +26,10 @@ RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-interacti
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+COPY docker/php/docker-entrypoint-fpm.sh /usr/local/bin/docker-entrypoint-fpm.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint-fpm.sh
+
 EXPOSE 9000
 
+ENTRYPOINT ["docker-entrypoint-fpm.sh"]
 CMD ["php-fpm"]

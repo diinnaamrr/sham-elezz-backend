@@ -6,6 +6,7 @@ use App\CentralLogics\Helpers;
 use App\Routing\UrlGenerator as AppUrlGenerator;
 use App\Traits\AddonHelper;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Routing\UrlGenerator as IlluminateUrlGenerator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use ReflectionObject;
@@ -20,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->extend('url', function (FrameworkUrlGenerator $original) {
+        $this->app->extend('url', function (IlluminateUrlGenerator $original) {
             if (! config('app.strip_public_prefix_from_asset_urls', true)) {
                 return $original;
             }
