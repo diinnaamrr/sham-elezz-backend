@@ -20,8 +20,12 @@ services:
       - APP_DEBUG=${APP_DEBUG:-true}
       # لازم يطابق عنوان المتصفح (مع https لو Cloudflare / بروكسي SSL). غيّر في .env: APP_URL=...
       - APP_URL=${APP_URL:-https://dev-sham-elezz.duckdns.org}
+      - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-asttoin}
+      - DB_USERNAME=${DB_USERNAME:-asttoin}
+      - DB_PASSWORD=${DB_PASSWORD:-Aa@201917110}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
 
@@ -45,10 +49,10 @@ services:
     container_name: sham_el_ezz_db_dev
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-nasia_db}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-${DB_PASSWORD}}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME:-nasia_user}
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-Aa@201917110}"
+      MYSQL_DATABASE: ${DB_DATABASE:-asttoin}
+      MYSQL_USER: ${DB_USERNAME:-asttoin}
+      MYSQL_PASSWORD: "${DB_PASSWORD:-Aa@201917110}"
     volumes:
       - dbdata_dev:/var/lib/mysql
     networks:
@@ -64,6 +68,23 @@ services:
     networks:
       - sham-dev-network
 
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: sham_el_ezz_phpmyadmin_dev
+    restart: unless-stopped
+    ports:
+      - "${PHPMYADMIN_PORT:-8050}:80"
+    volumes:
+      - ./docker/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php:ro
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 512M
+    networks:
+      - sham-dev-network
+    depends_on:
+      - db
+
 networks:
   sham-dev-network:
     driver: bridge
@@ -73,4 +94,3 @@ volumes:
     driver: local
   redisdata_dev:
     driver: local
-
