@@ -67,6 +67,23 @@ services:
     networks:
       - sham-prod-network
 
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: sham_el_ezz_phpmyadmin_prod
+    restart: unless-stopped
+    ports:
+      - "${PHPMYADMIN_PORT:-8051}:80"
+    volumes:
+      - ./docker/phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php:ro
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 512M
+    networks:
+      - sham-prod-network
+    depends_on:
+      - db
+
 networks:
   sham-prod-network:
     driver: bridge
