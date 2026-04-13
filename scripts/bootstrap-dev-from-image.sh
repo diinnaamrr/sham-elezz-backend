@@ -28,11 +28,11 @@ docker run --rm -v "$ROOT:/target" "$IMAGE" sh -c "
 chmod -R 755 storage bootstrap/cache vendor public 2>/dev/null || true
 
 echo "==> Start stack ($COMPOSE_FILE)"
-if docker compose version >/dev/null 2>&1; then
-  docker compose -f "$COMPOSE_FILE" up -d
-else
-  docker-compose -f "$COMPOSE_FILE" up -d
+if ! docker compose version >/dev/null 2>&1; then
+  echo "❌ ركّب Docker Compose V2: sudo apt-get install -y docker-compose-plugin" >&2
+  exit 1
 fi
+docker compose -f "$COMPOSE_FILE" up -d
 
 echo "==> Wait for PHP container..."
 sleep 10

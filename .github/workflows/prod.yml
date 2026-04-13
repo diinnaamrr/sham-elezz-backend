@@ -25,12 +25,14 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/diinnaamrr/nasia-backend
+          # نفس حزمة dev (sham-el-ezz-backend) حتى يوجد تاج واحد على GHCR لـ main/latest
+          images: ghcr.io/diinnaamrr/sham-el-ezz-backend
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest,enable={{is_default_branch}}
+            # دائمًا (لو كان مربوط بـ is_default_branch وفروعك الافتراضية dev، latest ما كانش يتبنى أبدًا → manifest unknown)
+            type=raw,value=latest
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
@@ -166,8 +168,8 @@ jobs:
             fi
             
             # Pull latest image from GHCR (built by this workflow)
-            echo "Pulling from GHCR: ghcr.io/diinnaamrr/nasia-backend:main"
-            PULL_OUTPUT=$(docker pull ghcr.io/diinnaamrr/nasia-backend:main 2>&1)
+            echo "Pulling from GHCR: ghcr.io/diinnaamrr/sham-el-ezz-backend:latest"
+            PULL_OUTPUT=$(docker pull ghcr.io/diinnaamrr/sham-el-ezz-backend:latest 2>&1)
             PULL_EXIT_CODE=$?
             
             if echo "$PULL_OUTPUT" | grep -qi "docker hub\|hub.docker.com\|login prior to pull"; then
@@ -180,18 +182,18 @@ jobs:
               echo "⚠️  Failed to pull from GHCR (exit code: $PULL_EXIT_CODE). Check GHCR_TOKEN secret and package visibility."
               echo "$PULL_OUTPUT"
               if [ -f Dockerfile ]; then
-                docker build -t ghcr.io/diinnaamrr/nasia-backend:main . || exit 1
+                docker build -t ghcr.io/diinnaamrr/sham-el-ezz-backend:latest . || exit 1
               else
                 echo "❌ Dockerfile not found. Cannot build locally."
                 exit 1
               fi
             else
-              echo "✅ Pulled image ghcr.io/diinnaamrr/nasia-backend:main"
+              echo "✅ Pulled image ghcr.io/diinnaamrr/sham-el-ezz-backend:latest"
             fi
             
             # Copy application files from image to host directory
             echo "Copying application files from image to host..."
-            docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/nasia-backend:main sh -c "
+            docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:latest sh -c "
               # Copy all files except storage and bootstrap/cache (preserve existing data)
               cd /var/www/html
               find . -mindepth 1 -maxdepth 1 ! -name 'storage' ! -name '.env' -exec cp -a {} /target/ \;
@@ -208,12 +210,12 @@ jobs:
               echo 'Files copied successfully'
             " || {
               echo "⚠️  Copy method 1 failed, trying alternative..."
-              docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/nasia-backend:main sh -c "
+              docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:latest sh -c "
                 cd /var/www/html
                 tar --exclude='storage' --exclude='bootstrap/cache' --exclude='.env' -cf - . | tar -xf - -C /target/ 2>&1 | head -50
               " || {
                 echo "⚠️  Copy method 2 failed, trying simple copy..."
-                docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/nasia-backend:main sh -c "cp -a /var/www/html/. /target/ 2>&1 | head -100"
+                docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:latest sh -c "cp -a /var/www/html/. /target/ 2>&1 | head -100"
               }
             }
             

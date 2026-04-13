@@ -49,7 +49,7 @@ services:
     container_name: sham_el_ezz_db_dev
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-Aa@201917110}"
+      MYSQL_ROOT_PASSWORD: "Aa@201917110"
       MYSQL_DATABASE: ${DB_DATABASE:-asttoin}
       MYSQL_USER: ${DB_USERNAME:-asttoin}
       MYSQL_PASSWORD: "${DB_PASSWORD:-Aa@201917110}"
