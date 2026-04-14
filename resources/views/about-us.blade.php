@@ -14,7 +14,7 @@
                         <div class="about-content">
                             <div class="section-header text-start">
                                 <h2 class="title">{{ $data_title }}</h2>
-                                <p class="fs-5 text-muted mt-2 mb-0">llllll</p>
+                                <p class="fs-5 text-muted mt-2 mb-0">شام</p>
                             </div>
                             <svg class="w-50" width="560" viewBox="0 0 560 434" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_28_2046)">
