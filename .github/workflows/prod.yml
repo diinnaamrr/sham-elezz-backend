@@ -76,7 +76,15 @@ jobs:
             echo "📦 Syncing app files from latest image (no manual git pull needed)..."
             docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
             docker create --name sham_el_ezz_sync_tmp ghcr.io/diinnaamrr/sham-el-ezz-backend:latest >/dev/null
-            docker cp sham_el_ezz_sync_tmp:/var/www/html/. /var/www/sham-elezz-prod/
+
+            # docker cp can fail on file/dir type conflicts from old deployments.
+            # Stream a tar archive instead; tar extraction handles replacement safely.
+            rm -rf /tmp/sham_sync_extract
+            mkdir -p /tmp/sham_sync_extract
+            docker cp sham_el_ezz_sync_tmp:/var/www/html/. /tmp/sham_sync_extract/
+            tar -C /tmp/sham_sync_extract -cf - . | tar -C /var/www/sham-elezz-prod -xf -
+
+            rm -rf /tmp/sham_sync_extract
             docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
 
             echo "🔄 Recreating containers..."
