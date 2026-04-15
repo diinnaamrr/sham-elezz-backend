@@ -56,6 +56,16 @@ jobs:
 
           script: |
             cd /var/www/sham-elezz-prod
+            set -e
+
+            if docker compose version >/dev/null 2>&1; then
+              COMPOSE_CMD="docker compose"
+            elif docker-compose version >/dev/null 2>&1; then
+              COMPOSE_CMD="docker-compose"
+            else
+              echo "❌ Neither docker compose nor docker-compose is installed on server"
+              exit 1
+            fi
             
             echo "🔐 Login to GHCR on server..."
             echo "${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
@@ -70,9 +80,24 @@ jobs:
             docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
 
             echo "🔄 Recreating containers..."
-            docker-compose -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
+            $COMPOSE_CMD -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 
             echo "🧹 Clearing Laravel cache..."
             docker exec sham_el_ezz_app_prod php artisan optimize:clear || true
+
+            echo "🩺 Checking running containers..."
+            docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+            if [ -z "$(docker ps -q -f name=sham_el_ezz_nginx_prod)" ]; then
+              echo "❌ nginx container is not running"
+              docker logs sham_el_ezz_nginx_prod || true
+              exit 1
+            fi
+
+            if [ -z "$(docker ps -q -f name=sham_el_ezz_app_prod)" ]; then
+              echo "❌ app container is not running"
+              docker logs sham_el_ezz_app_prod || true
+              exit 1
+            fi
 
             echo "✅ Deployment completed successfully"
