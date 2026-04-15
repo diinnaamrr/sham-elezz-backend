@@ -56,12 +56,21 @@ jobs:
 
           script: |
             cd /var/www/sham-elezz-prod
+            
+            echo "🔐 Login to GHCR on server..."
+            echo "${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
 
             echo "🚀 Pulling latest image..."
             docker pull ghcr.io/diinnaamrr/sham-el-ezz-backend:latest
 
+            echo "📦 Syncing app files from latest image (no manual git pull needed)..."
+            docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
+            docker create --name sham_el_ezz_sync_tmp ghcr.io/diinnaamrr/sham-el-ezz-backend:latest >/dev/null
+            docker cp sham_el_ezz_sync_tmp:/var/www/html/. /var/www/sham-elezz-prod/
+            docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
+
             echo "🔄 Recreating containers..."
-            docker-compose -f docker-compose.prod.yml up -d --force-recreate
+            docker-compose -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 
             echo "🧹 Clearing Laravel cache..."
             docker exec sham_el_ezz_app_prod php artisan optimize:clear || true
