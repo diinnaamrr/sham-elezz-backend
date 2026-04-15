@@ -88,6 +88,11 @@ jobs:
             docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
 
             echo "🔄 Recreating containers..."
+            if [ "${NGINX_PORT:-8016}" = "80" ]; then
+              if ss -ltn | grep -q ':80 '; then
+                echo "⚠️ Port 80 is already in use on server. Set NGINX_PORT in .env to a free port (example: 8016)."
+              fi
+            fi
             $COMPOSE_CMD -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 
             echo "🧹 Clearing Laravel cache..."
