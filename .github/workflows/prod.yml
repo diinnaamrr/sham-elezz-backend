@@ -88,10 +88,20 @@ jobs:
             docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
 
             echo "🔄 Recreating containers..."
-            if [ "${NGINX_PORT:-8016}" = "80" ]; then
-              if ss -ltn | grep -q ':80 '; then
-                echo "⚠️ Port 80 is already in use on server. Set NGINX_PORT in .env to a free port (example: 8016)."
-              fi
+            RESOLVED_NGINX_PORT=$($COMPOSE_CMD -f docker-compose.prod.yml config --format json 2>/dev/null | python3 -c 'import json,sys; data=json.load(sys.stdin); ports=data["services"]["nginx"].get("ports", []); published=None
+for port in ports:
+    if isinstance(port, dict) and str(port.get("target")) == "80":
+        published = port.get("published")
+        if published is not None:
+            print(published)
+            break
+' || true)
+            RESOLVED_NGINX_PORT=${RESOLVED_NGINX_PORT:-8016}
+            echo "🌐 Resolved nginx host port: ${RESOLVED_NGINX_PORT}"
+            if ss -ltn | grep -q ":${RESOLVED_NGINX_PORT} "; then
+              echo "❌ Host port ${RESOLVED_NGINX_PORT} is already in use on server."
+              echo "Set NGINX_PORT in /var/www/sham-elezz-prod/.env to a free port (example: 8016) and redeploy."
+              exit 1
             fi
             $COMPOSE_CMD -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 
