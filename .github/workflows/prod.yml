@@ -105,6 +105,11 @@ jobs:
             # nginx host port is fixed in docker-compose.prod.yml (8016:80), so no port auto-selection here.
             $COMPOSE_CMD -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 
+            echo "🖼️ Fixing public storage symlink..."
+            rm -f public/storage
+            ln -s ../storage/app/public public/storage
+            ls -la public | grep storage || true
+
             echo "🧹 Clearing Laravel cache..."
             docker exec sham_el_ezz_app_prod php artisan optimize:clear || true
 
