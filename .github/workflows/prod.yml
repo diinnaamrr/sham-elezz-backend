@@ -93,23 +93,38 @@ jobs:
             echo "🌐 Resolved nginx host port: ${RESOLVED_NGINX_PORT}"
             if ss -ltn | grep -q ":${RESOLVED_NGINX_PORT} "; then
               echo "⚠️ Host port ${RESOLVED_NGINX_PORT} is already in use on server."
-              if [ "${RESOLVED_NGINX_PORT}" = "80" ]; then
-                echo "🔁 Switching NGINX_PORT to 8016 in .env automatically..."
-                if [ -f .env ]; then
-                  if grep -q '^NGINX_PORT=' .env; then
-                    sed -i 's/^NGINX_PORT=.*/NGINX_PORT=8016/' .env
-                  else
-                    printf '\nNGINX_PORT=8016\n' >> .env
+              NEXT_FREE_PORT=8016
+              case "${RESOLVED_NGINX_PORT}" in
+                ''|*[!0-9]*)
+                  NEXT_FREE_PORT=8016
+                  ;;
+                *)
+                  if [ "${RESOLVED_NGINX_PORT}" -ge 1024 ]; then
+                    NEXT_FREE_PORT="${RESOLVED_NGINX_PORT}"
                   fi
-                else
-                  printf 'NGINX_PORT=8016\n' > .env
+                  ;;
+              esac
+
+              while ss -ltn | awk '{print $4}' | grep -Eq "[:.]${NEXT_FREE_PORT}$"; do
+                NEXT_FREE_PORT=$((NEXT_FREE_PORT + 1))
+                if [ "${NEXT_FREE_PORT}" -gt 8999 ]; then
+                  echo "❌ Could not find a free port between 8016 and 8999 for nginx."
+                  exit 1
                 fi
-                RESOLVED_NGINX_PORT=8016
-                echo "✅ NGINX_PORT is now ${RESOLVED_NGINX_PORT}"
+              done
+
+              echo "🔁 Switching NGINX_PORT to ${NEXT_FREE_PORT} in .env automatically..."
+              if [ -f .env ]; then
+                if grep -q '^NGINX_PORT=' .env; then
+                  sed -i "s/^NGINX_PORT=.*/NGINX_PORT=${NEXT_FREE_PORT}/" .env
+                else
+                  printf '\nNGINX_PORT=%s\n' "${NEXT_FREE_PORT}" >> .env
+                fi
               else
-                echo "❌ Port ${RESOLVED_NGINX_PORT} is busy. Please set NGINX_PORT in /var/www/sham-elezz-prod/.env to a free port and redeploy."
-                exit 1
+                printf 'NGINX_PORT=%s\n' "${NEXT_FREE_PORT}" > .env
               fi
+              RESOLVED_NGINX_PORT="${NEXT_FREE_PORT}"
+              echo "✅ NGINX_PORT is now ${RESOLVED_NGINX_PORT}"
             fi
             $COMPOSE_CMD -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 
