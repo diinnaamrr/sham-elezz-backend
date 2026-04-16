@@ -88,14 +88,7 @@ jobs:
             docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
 
             echo "🔄 Recreating containers..."
-            RESOLVED_NGINX_PORT=$($COMPOSE_CMD -f docker-compose.prod.yml config --format json 2>/dev/null | python3 -c 'import json,sys; data=json.load(sys.stdin); ports=data["services"]["nginx"].get("ports", []); published=None
-for port in ports:
-    if isinstance(port, dict) and str(port.get("target")) == "80":
-        published = port.get("published")
-        if published is not None:
-            print(published)
-            break
-' || true)
+            RESOLVED_NGINX_PORT=$($COMPOSE_CMD -f docker-compose.prod.yml config --format json 2>/dev/null | python3 -c 'import json,sys; ports=json.load(sys.stdin)["services"]["nginx"].get("ports", []); print(next((str(p.get("published")) for p in ports if isinstance(p, dict) and str(p.get("target"))=="80" and p.get("published") is not None), ""))' || true)
             RESOLVED_NGINX_PORT=${RESOLVED_NGINX_PORT:-8016}
             echo "🌐 Resolved nginx host port: ${RESOLVED_NGINX_PORT}"
             if ss -ltn | grep -q ":${RESOLVED_NGINX_PORT} "; then
