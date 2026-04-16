@@ -91,40 +91,16 @@ jobs:
             RESOLVED_NGINX_PORT=$($COMPOSE_CMD -f docker-compose.prod.yml config --format json 2>/dev/null | python3 -c 'import json,sys; ports=json.load(sys.stdin)["services"]["nginx"].get("ports", []); print(next((str(p.get("published")) for p in ports if isinstance(p, dict) and str(p.get("target"))=="80" and p.get("published") is not None), ""))' || true)
             RESOLVED_NGINX_PORT=${RESOLVED_NGINX_PORT:-8016}
             echo "🌐 Resolved nginx host port: ${RESOLVED_NGINX_PORT}"
-            if ss -ltn | grep -q ":${RESOLVED_NGINX_PORT} "; then
-              echo "⚠️ Host port ${RESOLVED_NGINX_PORT} is already in use on server."
-              NEXT_FREE_PORT=8016
-              case "${RESOLVED_NGINX_PORT}" in
-                ''|*[!0-9]*)
-                  NEXT_FREE_PORT=8016
-                  ;;
-                *)
-                  if [ "${RESOLVED_NGINX_PORT}" -ge 1024 ]; then
-                    NEXT_FREE_PORT="${RESOLVED_NGINX_PORT}"
-                  fi
-                  ;;
-              esac
-
-              while ss -ltn | awk '{print $4}' | grep -Eq "[:.]${NEXT_FREE_PORT}$"; do
-                NEXT_FREE_PORT=$((NEXT_FREE_PORT + 1))
-                if [ "${NEXT_FREE_PORT}" -gt 8999 ]; then
-                  echo "❌ Could not find a free port between 8016 and 8999 for nginx."
-                  exit 1
-                fi
-              done
-
-              echo "🔁 Switching NGINX_PORT to ${NEXT_FREE_PORT} in .env automatically..."
-              if [ -f .env ]; then
-                if grep -q '^NGINX_PORT=' .env; then
-                  sed -i "s/^NGINX_PORT=.*/NGINX_PORT=${NEXT_FREE_PORT}/" .env
-                else
-                  printf '\nNGINX_PORT=%s\n' "${NEXT_FREE_PORT}" >> .env
-                fi
-              else
-                printf 'NGINX_PORT=%s\n' "${NEXT_FREE_PORT}" > .env
-              fi
-              RESOLVED_NGINX_PORT="${NEXT_FREE_PORT}"
-              echo "✅ NGINX_PORT is now ${RESOLVED_NGINX_PORT}"
+            if [ "${RESOLVED_NGINX_PORT}" != "8016" ]; then
+              echo "❌ Expected NGINX_PORT to stay fixed at 8016 for the reverse proxy, but got ${RESOLVED_NGINX_PORT}."
+              echo "Set NGINX_PORT=8016 in /var/www/sham-elezz-prod/.env and redeploy."
+              exit 1
+            fi
+            if ss -ltn | grep -q ':8016 '; then
+              EXISTING_PID=$(ss -ltnp '( sport = :8016 )' 2>/dev/null | awk 'NR>1 {print $NF; exit}')
+              echo "❌ Host port 8016 is already in use on server: ${EXISTING_PID:-unknown process}."
+              echo "Keep the reverse proxy pointing to http://127.0.0.1:8016 and free that port before redeploying."
+              exit 1
             fi
             $COMPOSE_CMD -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 
