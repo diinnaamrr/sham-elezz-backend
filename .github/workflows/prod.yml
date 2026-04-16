@@ -74,6 +74,7 @@ jobs:
             docker pull ghcr.io/diinnaamrr/sham-el-ezz-backend:latest
 
             echo "📦 Syncing app files from latest image (no manual git pull needed)..."
+            cp .env .env.backup.deploy 2>/dev/null || true
             docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
             docker create --name sham_el_ezz_sync_tmp ghcr.io/diinnaamrr/sham-el-ezz-backend:latest >/dev/null
 
@@ -82,26 +83,26 @@ jobs:
             rm -rf /tmp/sham_sync_extract
             mkdir -p /tmp/sham_sync_extract
             docker cp sham_el_ezz_sync_tmp:/var/www/html/. /tmp/sham_sync_extract/
-            tar -C /tmp/sham_sync_extract -cf - . | tar -C /var/www/sham-elezz-prod -xf -
+            tar -C /tmp/sham_sync_extract --exclude='.env' -cf - . | tar -C /var/www/sham-elezz-prod -xf -
 
             rm -rf /tmp/sham_sync_extract
             docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
+            if [ -f .env.backup.deploy ]; then
+              mv .env.backup.deploy .env
+            fi
+
+            if [ -f .env ]; then
+              if grep -q '^NGINX_PORT=' .env; then
+                sed -i 's/^NGINX_PORT=.*/NGINX_PORT=8016/' .env
+              else
+                printf '\nNGINX_PORT=8016\n' >> .env
+              fi
+            else
+              printf 'NGINX_PORT=8016\n' > .env
+            fi
 
             echo "🔄 Recreating containers..."
-            RESOLVED_NGINX_PORT=$($COMPOSE_CMD -f docker-compose.prod.yml config --format json 2>/dev/null | python3 -c 'import json,sys; ports=json.load(sys.stdin)["services"]["nginx"].get("ports", []); print(next((str(p.get("published")) for p in ports if isinstance(p, dict) and str(p.get("target"))=="80" and p.get("published") is not None), ""))' || true)
-            RESOLVED_NGINX_PORT=${RESOLVED_NGINX_PORT:-8016}
-            echo "🌐 Resolved nginx host port: ${RESOLVED_NGINX_PORT}"
-            if [ "${RESOLVED_NGINX_PORT}" != "8016" ]; then
-              echo "❌ Expected NGINX_PORT to stay fixed at 8016 for the reverse proxy, but got ${RESOLVED_NGINX_PORT}."
-              echo "Set NGINX_PORT=8016 in /var/www/sham-elezz-prod/.env and redeploy."
-              exit 1
-            fi
-            if ss -ltn | grep -q ':8016 '; then
-              EXISTING_PID=$(ss -ltnp '( sport = :8016 )' 2>/dev/null | awk 'NR>1 {print $NF; exit}')
-              echo "❌ Host port 8016 is already in use on server: ${EXISTING_PID:-unknown process}."
-              echo "Keep the reverse proxy pointing to http://127.0.0.1:8016 and free that port before redeploying."
-              exit 1
-            fi
+            # nginx host port is fixed in docker-compose.prod.yml (8016:80), so no port auto-selection here.
             $COMPOSE_CMD -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
 
             echo "🧹 Clearing Laravel cache..."
