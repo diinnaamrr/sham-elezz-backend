@@ -7,6 +7,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,333 +26,106 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # نفس حزمة dev (sham-el-ezz-backend) حتى يوجد تاج واحد على GHCR لـ main/latest
           images: ghcr.io/diinnaamrr/sham-el-ezz-backend
           tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            # دائمًا (لو كان مربوط بـ is_default_branch وفروعك الافتراضية dev، latest ما كانش يتبنى أبدًا → manifest unknown)
             type=raw,value=latest
+            type=ref,event=branch
 
-      - name: Build Docker image
+      - name: Build & Push Image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code (for Dockerfile)
-        uses: actions/checkout@v4
-      
-      - name: Debug - Check secrets (masked)
-        run: |
-          if [ -n "${{ secrets.SSH_HOST }}" ]; then echo "SSH_HOST is set: YES"; else echo "SSH_HOST is set: NO"; fi
-          if [ -n "${{ secrets.SSH_USER }}" ]; then echo "SSH_USER is set: YES"; else echo "SSH_USER is set: NO"; fi
-          if [ -n "${{ secrets.SSH_PASSWORD }}" ]; then echo "SSH_PASSWORD is set: YES"; else echo "SSH_PASSWORD is set: NO"; fi
-          if [ -n "${{ secrets.SSH_KEY_PROD }}" ]; then echo "SSH_KEY_PROD is set: YES"; else echo "SSH_KEY_PROD is set: NO"; fi
-          if [ -n "${{ secrets.SSH_PORT }}" ]; then echo "SSH_PORT is set: YES"; else echo "SSH_PORT is set: NO"; fi
-      
-      - name: Copy Dockerfile to server (for local builds)
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY_PROD }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          source: "Dockerfile"
-          target: "/var/www/nasia-prod/"
-        continue-on-error: true
-      
-      - name: SSH to server & deploy
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
-        env:
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY_PROD }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT || 22 }}
-          envs: GHCR_TOKEN
+
           script: |
-            cd /var/www/nasia-prod
-            # Ensure required directories exist
-            mkdir -p docker/ngnix docker/php storage bootstrap/cache backups
-            
-            # Remove old nginx config if it exists (may have old config)
-            rm -f docker/ngnix/default.conf
-            
-            # Create fresh nginx config with proper location blocks
-            # Includes proper location blocks for /storage/, /public/, and static files
-            cat > docker/ngnix/default.conf << 'EOF'
-            server {
-                listen 80;
-                server_name _;
-                root /var/www/html/public;
-                index index.php;
-                
-                client_max_body_size 100M;
-                
-                # Handle /storage/app/public/... (if Laravel generates this path)
-                location ^~ /storage/app/public/ {
-                    alias /var/www/html/storage/app/public/;
-                    try_files $uri =404;
-                    access_log off;
-                    log_not_found off;
-                    expires 30d;
-                }
-                
-                # Handle /storage/... (standard Laravel path with symlink)
-                location ^~ /storage/ {
-                    alias /var/www/html/storage/app/public/;
-                    try_files $uri =404;
-                    access_log off;
-                    log_not_found off;
-                    expires 30d;
-                }
-                
-                # Serve files referenced with asset('public/...') correctly
-                location ^~ /public/ {
-                    alias /var/www/html/public/;
-                    try_files $uri $uri/ =404;
-                    access_log off;
-                    log_not_found off;
-                    expires 30d;
-                }
-                
-                # Static files (CSS, JS, Images, Fonts)
-                location ~* \.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff2?|eot|ttf|otf|mp4|webp|json|xml)$ {
-                    root /var/www/html/public;
-                    try_files $uri =404;
-                    access_log off;
-                    log_not_found off;
-                    expires 30d;
-                    add_header Cache-Control "public, immutable";
-                }
-                
-                location / {
-                    try_files $uri $uri/ /index.php?$query_string;
-                }
-                
-                location ~ \.php$ {
-                    fastcgi_pass app:9000;
-                    fastcgi_index index.php;
-                    fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-                    include fastcgi_params;
-                }
-                
-                location ~ /\.(?!well-known).* {
-                    deny all;
-                }
-            }
-            EOF
-            chmod 644 docker/ngnix/default.conf
-            
-            # Verify nginx config file exists and is a file (not directory)
-            if [ ! -f docker/ngnix/default.conf ]; then
-              echo "ERROR: nginx config file does not exist or is not a file"
-              ls -la docker/ngnix/ || true
-              exit 1
-            fi
-            # Log in to GHCR so the server can pull the (private) image (fixes "denied: denied")
-            if [ -n "$GHCR_TOKEN" ]; then
-              echo "$GHCR_TOKEN" | docker login ghcr.io -u diinnaamrr --password-stdin
-            fi
-            
-            # Pull latest image from GHCR (built by this workflow)
-            echo "Pulling from GHCR: ghcr.io/diinnaamrr/sham-el-ezz-backend:latest"
-            PULL_OUTPUT=$(docker pull ghcr.io/diinnaamrr/sham-el-ezz-backend:latest 2>&1)
-            PULL_EXIT_CODE=$?
-            
-            if echo "$PULL_OUTPUT" | grep -qi "docker hub\|hub.docker.com\|login prior to pull"; then
-              echo "❌ ERROR: Docker is trying to pull from Docker Hub instead of GHCR!"
-              echo "$PULL_OUTPUT"
+            cd /var/www/sham-elezz-prod
+            set -e
+
+            if docker compose version >/dev/null 2>&1; then
+              COMPOSE_CMD="docker compose"
+            elif docker-compose version >/dev/null 2>&1; then
+              COMPOSE_CMD="docker-compose"
+            else
+              echo "❌ Neither docker compose nor docker-compose is installed on server"
               exit 1
             fi
             
-            if [ $PULL_EXIT_CODE -ne 0 ]; then
-              echo "⚠️  Failed to pull from GHCR (exit code: $PULL_EXIT_CODE). Check GHCR_TOKEN secret and package visibility."
-              echo "$PULL_OUTPUT"
-              if [ -f Dockerfile ]; then
-                docker build -t ghcr.io/diinnaamrr/sham-el-ezz-backend:latest . || exit 1
+            echo "🔐 Login to GHCR on server..."
+            echo "${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
+
+            echo "🚀 Pulling latest image..."
+            docker pull ghcr.io/diinnaamrr/sham-el-ezz-backend:latest
+
+            echo "📦 Syncing app files from latest image (no manual git pull needed)..."
+            cp .env .env.backup.deploy 2>/dev/null || true
+            docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
+            docker create --name sham_el_ezz_sync_tmp ghcr.io/diinnaamrr/sham-el-ezz-backend:latest >/dev/null
+
+            # docker cp can fail on file/dir type conflicts from old deployments.
+            # Stream a tar archive instead; tar extraction handles replacement safely.
+            rm -rf /tmp/sham_sync_extract
+            mkdir -p /tmp/sham_sync_extract
+            docker cp sham_el_ezz_sync_tmp:/var/www/html/. /tmp/sham_sync_extract/
+            tar -C /tmp/sham_sync_extract --exclude='.env' -cf - . | tar -C /var/www/sham-elezz-prod -xf -
+
+            rm -rf /tmp/sham_sync_extract
+            docker rm -f sham_el_ezz_sync_tmp >/dev/null 2>&1 || true
+            if [ -f .env.backup.deploy ]; then
+              mv .env.backup.deploy .env
+            fi
+
+            if [ -f .env ]; then
+              if grep -q '^NGINX_PORT=' .env; then
+                sed -i 's/^NGINX_PORT=.*/NGINX_PORT=8016/' .env
               else
-                echo "❌ Dockerfile not found. Cannot build locally."
-                exit 1
+                printf '\nNGINX_PORT=8016\n' >> .env
               fi
             else
-              echo "✅ Pulled image ghcr.io/diinnaamrr/sham-el-ezz-backend:latest"
+              printf 'NGINX_PORT=8016\n' > .env
             fi
-            
-            # Copy application files from image to host directory
-            echo "Copying application files from image to host..."
-            docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:latest sh -c "
-              # Copy all files except storage and bootstrap/cache (preserve existing data)
-              cd /var/www/html
-              find . -mindepth 1 -maxdepth 1 ! -name 'storage' ! -name '.env' -exec cp -a {} /target/ \;
-              # Copy bootstrap/cache structure but not contents
-              mkdir -p /target/bootstrap/cache
-              # Copy vendor directory (important!)
-              if [ -d vendor ]; then
-                cp -a vendor /target/ 2>&1 | head -20
-              fi
-              # Copy public directory
-              if [ -d public ]; then
-                cp -a public /target/ 2>&1 | head -20
-              fi
-              echo 'Files copied successfully'
-            " || {
-              echo "⚠️  Copy method 1 failed, trying alternative..."
-              docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:latest sh -c "
-                cd /var/www/html
-                tar --exclude='storage' --exclude='bootstrap/cache' --exclude='.env' -cf - . | tar -xf - -C /target/ 2>&1 | head -50
-              " || {
-                echo "⚠️  Copy method 2 failed, trying simple copy..."
-                docker run --rm -v $(pwd):/target ghcr.io/diinnaamrr/sham-el-ezz-backend:latest sh -c "cp -a /var/www/html/. /target/ 2>&1 | head -100"
-              }
-            }
-            
-            # Set permissions
-            chmod -R 755 storage bootstrap/cache 2>/dev/null || true
-            chmod -R 755 vendor public 2>/dev/null || true
-            
-            # Verify vendor directory exists
-            if [ -d vendor ]; then
-              echo "✅ vendor directory exists"
-              ls -la vendor/autoload.php 2>/dev/null && echo "✅ vendor/autoload.php found" || echo "⚠️  vendor/autoload.php not found"
-            else
-              echo "❌ vendor directory missing - this will cause errors!"
+
+            echo "🔄 Recreating containers..."
+            # nginx host port is fixed in docker-compose.prod.yml (8016:80), so no port auto-selection here.
+            $COMPOSE_CMD -f docker-compose.prod.yml up -d --force-recreate --remove-orphans
+
+            echo "🖼️ Fixing public storage symlink..."
+            rm -f public/storage
+            ln -s ../storage/app/public public/storage
+            ls -la public | grep storage || true
+
+            echo "🧹 Clearing Laravel cache..."
+            docker exec sham_el_ezz_app_prod php artisan optimize:clear || true
+
+            echo "🩺 Checking running containers..."
+            docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+            if [ -z "$(docker ps -q -f name=sham_el_ezz_nginx_prod)" ]; then
+              echo "❌ nginx container is not running"
+              docker logs sham_el_ezz_nginx_prod || true
+              exit 1
             fi
-            
-            # Backup .env before deployment (to preserve APP_KEY and other critical settings)
-            echo "=== Backing up .env ==="
-            if [ -f .env ]; then
-              cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
-              echo "✅ .env backed up"
-            else
-              echo "⚠️  .env not found - will need to be created manually"
+
+            if [ -z "$(docker ps -q -f name=sham_el_ezz_app_prod)" ]; then
+              echo "❌ app container is not running"
+              docker logs sham_el_ezz_app_prod || true
+              exit 1
             fi
-            
-            # Stop and remove old containers
-            docker-compose -f docker-compose.prod.yml down || docker compose -f docker-compose.prod.yml down || true
-            
-            # Start containers with new image
-            docker-compose -f docker-compose.prod.yml up -d || docker compose -f docker-compose.prod.yml up -d
-            
-            # Wait for containers to be ready before running artisan commands
-            sleep 5
-            
-            # Restart nginx to ensure new config is loaded
-            echo "Restarting nginx to load new config..."
-            docker-compose -f docker-compose.prod.yml restart nginx || \
-            docker compose -f docker-compose.prod.yml restart nginx || \
-            docker restart nasia_nginx || true
-            
-            # Wait a bit more
-            sleep 5
-            
-            # Create storage symlink (important for /storage/ URLs to work)
-            echo "Creating storage symlink..."
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan storage:link || \
-            docker compose -f docker-compose.prod.yml exec -T app php artisan storage:link || \
-            echo "⚠️  Storage link failed (may already exist)"
-            
-            # Copy .env to container (important for APP_KEY and session config)
-            echo "=== Copying .env to container ==="
-            if [ -f .env ]; then
-              docker cp .env nasia_app:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env (container may not be ready yet)"
-            fi
-            
-            # Wait for app container to be ready
-            sleep 5
-            
-            # IMPORTANT: Clear config cache FIRST (before any other operations)
-            # This ensures .env changes are loaded properly
-            echo "=== Clearing config cache (CRITICAL for 419 errors) ==="
-            docker-compose -f docker-compose.prod.yml exec -T app rm -f /var/www/html/bootstrap/cache/config.php || \
-            docker compose -f docker-compose.prod.yml exec -T app rm -f /var/www/html/bootstrap/cache/config.php || true
-            
-            # Verify APP_KEY exists and is not empty (critical for sessions/CSRF)
-            echo "=== Verifying APP_KEY ==="
-            APP_KEY_CHECK=$(docker-compose -f docker-compose.prod.yml exec -T app grep "^APP_KEY=" /var/www/html/.env 2>/dev/null | cut -d'=' -f2- || echo "")
-            if [ -z "$APP_KEY_CHECK" ] || [ "$APP_KEY_CHECK" = "null" ] || [ "$APP_KEY_CHECK" = "" ]; then
-              echo "⚠️  WARNING: APP_KEY is missing or empty!"
-              echo "   This will cause 419 Page Expired errors!"
-              echo "   Generating new APP_KEY..."
-              docker-compose -f docker-compose.prod.yml exec -T app php artisan key:generate --force || \
-              docker compose -f docker-compose.prod.yml exec -T app php artisan key:generate --force || true
-            else
-              echo "✅ APP_KEY exists"
-            fi
-            
-            # Verify session configuration
-            echo "=== Verifying session configuration ==="
-            docker-compose -f docker-compose.prod.yml exec -T app sh -c "
-              if grep -q '^SESSION_SECURE_COOKIE=' /var/www/html/.env; then
-                echo 'SESSION_SECURE_COOKIE is set'
-              else
-                echo 'SESSION_SECURE_COOKIE=null' >> /var/www/html/.env
-                echo 'Added SESSION_SECURE_COOKIE=null'
-              fi
-            " || true
-            
-            # Run artisan commands (vendor should be in image now)
-            echo "=== Clearing all caches ==="
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan config:clear || \
-            docker compose -f docker-compose.prod.yml exec -T app php artisan config:clear || \
-            echo "Config clear failed, continuing..."
-            
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan cache:clear || \
-            docker compose -f docker-compose.prod.yml exec -T app php artisan cache:clear || true
-            
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan view:clear || \
-            docker compose -f docker-compose.prod.yml exec -T app php artisan view:clear || true
-            
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan route:clear || \
-            docker compose -f docker-compose.prod.yml exec -T app php artisan route:clear || true
-            
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan optimize:clear || \
-            docker compose -f docker-compose.prod.yml exec -T app php artisan optimize:clear || true
-            
-            # Delete compiled views (important for CSRF tokens in forms)
-            echo "=== Deleting compiled views ==="
-            docker-compose -f docker-compose.prod.yml exec -T app find /var/www/html/storage/framework/views -name "*.php" -delete 2>/dev/null || \
-            docker compose -f docker-compose.prod.yml exec -T app find /var/www/html/storage/framework/views -name "*.php" -delete 2>/dev/null || true
-            
-            # Copy .env to container again (after cache clear)
-            echo "=== Copying .env to container (after cache clear) ==="
-            if [ -f .env ]; then
-              docker cp .env nasia_app:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env"
-            fi
-            
-            # Restart app container to reload .env and clear any cached config
-            echo "=== Restarting app container to reload configuration ==="
-            docker-compose -f docker-compose.prod.yml restart app || \
-            docker compose -f docker-compose.prod.yml restart app || true
-            
-            # Wait for container to restart
-            sleep 8
-            
-            # Copy .env one more time after restart (to ensure it's loaded)
-            if [ -f .env ]; then
-              docker cp .env nasia_app:/var/www/html/.env 2>/dev/null || echo "⚠️  Cannot copy .env after restart"
-            fi
-            
-            # Verify configuration is loaded correctly
-            echo "=== Verifying configuration ==="
-            docker-compose -f docker-compose.prod.yml exec -T app php artisan tinker --execute="
-              echo 'APP_KEY: ' . (config('app.key') ? 'SET' : 'MISSING') . PHP_EOL;
-              echo 'APP_URL: ' . config('app.url') . PHP_EOL;
-              echo 'Session Driver: ' . config('session.driver') . PHP_EOL;
-              echo 'Session Secure: ' . (config('session.secure') ? 'true' : 'false') . PHP_EOL;
-            " || echo "⚠️  Tinker verification failed"
-            
-            docker system prune -f || true
+
+            echo "✅ Deployment completed successfully"
