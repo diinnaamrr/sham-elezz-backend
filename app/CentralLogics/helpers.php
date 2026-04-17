@@ -3564,18 +3564,35 @@ class Helpers
             'email_template' => asset('public/assets/admin/img/blank1.png'),
         ];
 
+        $normalizedData = null;
+        if ($data) {
+            if (filter_var($data, FILTER_VALIDATE_URL)) {
+                return $data;
+            }
+
+            $normalizedData = ltrim((string) $data, '/');
+            foreach (['storage/app/public/', 'storage/', 'public/storage/'] as $prefix) {
+                if (str_starts_with($normalizedData, $prefix)) {
+                    $normalizedData = substr($normalizedData, strlen($prefix));
+                }
+            }
+            if (str_starts_with($normalizedData, $path . '/')) {
+                $normalizedData = substr($normalizedData, strlen($path) + 1);
+            }
+        }
+
         try {
-            if ($data && $type == 's3' && Storage::disk('s3')->exists($path .'/'. $data)) {
-                return Storage::disk('s3')->url($path .'/'. $data);
+            if ($normalizedData && $type == 's3' && Storage::disk('s3')->exists($path .'/'. $normalizedData)) {
+                return Storage::disk('s3')->url($path .'/'. $normalizedData);
 //                $awsUrl = config('filesystems.disks.s3.url');
 //                $awsBucket = config('filesystems.disks.s3.bucket');
-//                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
+//                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $normalizedData, '/');
             }
         } catch (\Exception $e){
         }
 
-        if ($data && Storage::disk('public')->exists($path .'/'. $data)) {
-            return Storage::disk('public')->url($path . '/' . $data);
+        if ($normalizedData && Storage::disk('public')->exists($path .'/'. $normalizedData)) {
+            return Storage::disk('public')->url($path . '/' . $normalizedData);
         }
 
         if (request()->is('api/*')) {
