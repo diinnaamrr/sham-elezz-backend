@@ -73,9 +73,13 @@ class AppServiceProvider extends ServiceProvider
                 view()->share($key, $value);
             }
         }
-        catch(\Exception $e)
-        {
-
+        catch (\Exception $e) {
+            if (config('addon_admin_routes') === null) {
+                Config::set('addon_admin_routes', []);
+            }
+            if (config('get_payment_publish_status') === null) {
+                Config::set('get_payment_publish_status', []);
+            }
         }
 
     }
