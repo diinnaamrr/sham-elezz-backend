@@ -18,7 +18,7 @@ public function sendSMS($mobile, $message)
 {
     try {
         $apiToken = '1046|WGTMJFtNKsY2oZheN06qL1cviTrZjGBYX6AX0mSP1823eed6';
-        $senderId = 'EasyTech';
+        $senderId = 'Sham AlEzz';
 
         // إزالة علامة + من الرقم
         $cleanPhone = ltrim($mobile, '+');
