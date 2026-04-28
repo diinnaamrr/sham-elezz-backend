@@ -66,8 +66,10 @@ class CustomerAuthController extends Controller
             ], 200);
         }
 
+        $normalizedPhone = $this->normalizePhoneNumber($request->phone);
+
         $verification = DB::table('phone_verifications')->where([
-            'phone' => $request->phone,
+            'phone' => $normalizedPhone,
             'token' => $request->otp,
         ])->first();
 
@@ -80,7 +82,7 @@ class CustomerAuthController extends Controller
         }
 
         DB::table('phone_verifications')->where([
-            'phone' => $request->phone,
+            'phone' => $normalizedPhone,
             'token' => $request->otp,
         ])->delete();
 
@@ -562,8 +564,9 @@ class CustomerAuthController extends Controller
         if(isset($login_settings['phone_verification_status']) && $login_settings['phone_verification_status'] == 1){
             $phone =0;
             if(!$firebase_otp_verification){
+                $normalizedPhone = $this->normalizePhoneNumber($request['phone']);
                 $otp_interval_time= 60; //seconds
-                $verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+                $verification_data= DB::table('phone_verifications')->where('phone', $normalizedPhone)->first();
 
                 if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
                     $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
@@ -578,7 +581,7 @@ class CustomerAuthController extends Controller
                 if(env('APP_MODE') == 'test'){
                     $otp = '123456';
                 }
-                DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                DB::table('phone_verifications')->updateOrInsert(['phone' => $normalizedPhone],
                     [
                         'token' => $otp,
                         'otp_hit_count' => 0,
@@ -1113,9 +1116,10 @@ class CustomerAuthController extends Controller
         $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value??0;
         if(!$firebase_otp_verification)
         {
+            $normalizedPhone = $this->normalizePhoneNumber($request_data['phone']);
             $otp_interval_time= 60; //seconds
 
-            $verification_data= DB::table('phone_verifications')->where('phone', $request_data['phone'])->first();
+            $verification_data= DB::table('phone_verifications')->where('phone', $normalizedPhone)->first();
 
             if(!$forceResend && isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
 
@@ -1130,7 +1134,7 @@ class CustomerAuthController extends Controller
             if(env('APP_MODE') == 'test'){
                 $otp = '123456';
             }
-            DB::table('phone_verifications')->updateOrInsert(['phone' => $request_data['phone']],
+            DB::table('phone_verifications')->updateOrInsert(['phone' => $normalizedPhone],
                 [
                     'token' => $otp,
                     'otp_hit_count' => 0,
@@ -1165,6 +1169,24 @@ class CustomerAuthController extends Controller
             }
         }
         return true;
+    }
+
+    private function normalizePhoneNumber($phone)
+    {
+        $phone = trim((string)$phone);
+        $digits = preg_replace('/\D+/', '', $phone);
+
+        if (str_starts_with($digits, '00')) {
+            $digits = substr($digits, 2);
+        }
+
+        if (str_starts_with($digits, '0')) {
+            $digits = '2'.$digits;
+        } elseif (!str_starts_with($digits, '2')) {
+            $digits = '2'.$digits;
+        }
+
+        return '+'.$digits;
     }
 
     private function refer_code_check($user){
