@@ -689,6 +689,7 @@ class DeliverymanController extends Controller
                 $order->order_proof = json_encode($images);
             }
 
+            OrderLogic::ensureLoyaltyPointForOrder($order);
             OrderLogic::update_unpaid_order_payment(order_id:$order->id, payment_method:$order->payment_method);
 
         }
