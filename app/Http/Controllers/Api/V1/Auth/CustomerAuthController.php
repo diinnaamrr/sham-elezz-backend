@@ -487,7 +487,7 @@ class CustomerAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'unique:users',
+            'email' => 'nullable|email|unique:users,email',
             'phone' => 'required|unique:users',
             'password' => ['required', Password::min(8)],
 
@@ -617,7 +617,7 @@ class CustomerAuthController extends Controller
                 }
             }
 
-        }elseif (isset($login_settings['email_verification_status']) && $login_settings['email_verification_status'] == 1){
+        }elseif (isset($login_settings['email_verification_status']) && $login_settings['email_verification_status'] == 1 && $request->filled('email')){
             $mail =0;
             $otp = rand(100000, 999999);
             if(env('APP_MODE') == 'test'){
