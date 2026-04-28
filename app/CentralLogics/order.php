@@ -16,7 +16,9 @@ use App\CentralLogics\CustomerLogic;
 use App\Models\OrderPayment;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\LoyaltyPointTransaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -327,7 +329,31 @@ class OrderLogic
                         }
                     }
 
-                   $create_loyalty_point_transaction= CustomerLogic::create_loyalty_point_transaction($order->user_id, $order->id, $order->order_amount, 'order_place');
+                    $existingLoyaltyTxn = LoyaltyPointTransaction::where([
+                        'user_id' => $order->user_id,
+                        'reference' => (string)$order->id,
+                        'transaction_type' => 'order_place',
+                    ])->first();
+
+                    $create_loyalty_point_transaction = 0;
+                    if (!$existingLoyaltyTxn) {
+                        $create_loyalty_point_transaction = (int) CustomerLogic::create_loyalty_point_transaction(
+                            $order->user_id,
+                            $order->id,
+                            $order->order_amount,
+                            'order_place'
+                        );
+                    } else {
+                        $create_loyalty_point_transaction = (int) $existingLoyaltyTxn->credit;
+                    }
+
+                    Log::info('Loyalty point processing after order transaction', [
+                        'order_id' => $order->id,
+                        'user_id' => $order->user_id,
+                        'already_exists' => (bool)$existingLoyaltyTxn,
+                        'awarded_points' => $create_loyalty_point_transaction,
+                    ]);
+
                     if($create_loyalty_point_transaction > 0) {
                         $notification_data = [
                             'title' => translate('messages.Congratulation'),
