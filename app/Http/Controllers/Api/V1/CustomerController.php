@@ -190,12 +190,13 @@ class CustomerController extends Controller
         $user->current_language_key = $current_language;
         $user->save();
 
-        $data = $request->user();
+        // Use fresh DB state to avoid stale auth-user payload
+        $data = User::with('userinfo')->findOrFail($request->user()->id);
         $data['userinfo'] = $data->userinfo;
-        $data['order_count'] = (integer)$request->user()->orders()->count();
-        $data['member_since_days'] = (integer)$request->user()->created_at->diffInDays();
+        $data['order_count'] = (int)$data->orders()->count();
+        $data['member_since_days'] = (int)$data->created_at->diffInDays();
         $data['selected_modules_for_interest'] = $request->user()?->module_ids ? json_decode($user?->module_ids, true) : [];
-        $discount_data = Helpers::getCusromerFirstOrderDiscount(order_count: $data['order_count'], user_creation_date: $request->user()->created_at, refby: $request->user()->ref_by);
+        $discount_data = Helpers::getCusromerFirstOrderDiscount(order_count: $data['order_count'], user_creation_date: $data->created_at, refby: $data->ref_by);
         $data['is_valid_for_discount'] = data_get($discount_data, 'is_valid');
         $data['discount_amount'] = (float)data_get($discount_data, 'discount_amount');
         $data['discount_amount_type'] = data_get($discount_data, 'discount_amount_type');
