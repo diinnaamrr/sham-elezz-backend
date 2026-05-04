@@ -625,11 +625,12 @@ trait  SmsGateway
 
         if (isset($config) && $config['status'] == 1) {
             $message = str_replace("#OTP#", $otp, $config['otp_template'] ?? 'Your OTP code is #OTP#');
-            $recipient = preg_replace('/\s+/', '', (string)$receiver);
+            $e164 = self::normalizePhone($receiver);
+            $recipient = $e164 !== '' ? ltrim($e164, '+') : preg_replace('/\s+/', '', (string)$receiver);
             $payload = [
-                'api_token' => '1114|8NPzVhiTt0t7tqiEn8y9OTTBsgPF42xX2UeMe5ne92d3c84f',
+                'api_token' => trim((string)($config['api_token'] ?? '')),
                 'recipient' => $recipient,
-                'sender_id' => 'Sham AlEzz',
+                'sender_id' => $config['sender_id'] ?? 'WhySMS',
                 'type' => 'plain',
                 'message' => $message,
             ];
