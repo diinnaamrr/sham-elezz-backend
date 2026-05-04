@@ -215,7 +215,9 @@ class SMS_module
 
         if (isset($config) && $config['status'] == 1) {
             $message = str_replace("#OTP#", $otp, $config['otp_template'] ?? 'Your OTP code is #OTP#');
-            $recipient = preg_replace('/\s+/', '', (string)$receiver);
+            $e164 = self::normalizePhone($receiver);
+            // WhySMS يتوقع رقماً دولياً (أرقام فقط، بدون صيغة محلية 01...)
+            $recipient = $e164 !== '' ? ltrim($e164, '+') : preg_replace('/\s+/', '', (string)$receiver);
             $payload = [
                 'api_token' => trim((string)($config['api_token'] ?? '')),
                 'recipient' => $recipient,
