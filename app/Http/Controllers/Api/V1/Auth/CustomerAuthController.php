@@ -58,7 +58,7 @@ class CustomerAuthController extends Controller
             $user->is_phone_verified = 1;
             $user->save();
 
-            DB::table('phone_verifications')->where('phone', $request->phone)->delete();
+            DB::table('phone_verifications')->where('phone', $this->normalizePhoneNumber($request->phone))->delete();
 
             return response()->json([
                 'message' => translate('messages.phone_number_verified_successfully'),
@@ -116,6 +116,7 @@ class CustomerAuthController extends Controller
             $user = User::where('email', $request->email)->first();
         }
         $temporaryToken = null;
+        $verificationPhone = $request->filled('phone') ? $this->normalizePhoneNumber($request->phone) : null;
 
         if($user && $request->login_type== 'manual')
         {
@@ -175,7 +176,7 @@ class CustomerAuthController extends Controller
                 ])->first();
             }elseif ($request->verification_type == 'phone'){
                 $data = DB::table('phone_verifications')->where([
-                    'phone' => $request['phone'],
+                    'phone' => $verificationPhone,
                     'token' => $request['otp'],
                 ])->first();
             }
@@ -192,7 +193,7 @@ class CustomerAuthController extends Controller
                     $user->is_email_verified = 1;
                 }elseif ($request->verification_type == 'phone'){
                     DB::table('phone_verifications')->where([
-                        'phone' => $request['phone'],
+                        'phone' => $verificationPhone,
                         'token' => $request['otp'],
                     ])->delete();
 
@@ -224,7 +225,7 @@ class CustomerAuthController extends Controller
                     $max_otp_hit_time = 60; // seconds
                     $temp_block_time = 600; // seconds
 
-                    $verification_data = DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+                    $verification_data = DB::table('phone_verifications')->where('phone', $verificationPhone)->first();
 
                     if (isset($verification_data)) {
                         if (isset($verification_data->temp_block_time) && Carbon::parse($verification_data->temp_block_time)->DiffInSeconds() <= $temp_block_time) {
@@ -240,7 +241,7 @@ class CustomerAuthController extends Controller
                         }
 
                         if ($verification_data->is_temp_blocked == 1 && Carbon::parse($verification_data->updated_at)->DiffInSeconds() >= $max_otp_hit_time) {
-                            DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                            DB::table('phone_verifications')->updateOrInsert(['phone' => $verificationPhone],
                                 [
                                     'otp_hit_count' => 0,
                                     'is_temp_blocked' => 0,
@@ -252,7 +253,7 @@ class CustomerAuthController extends Controller
 
                         if ($verification_data->otp_hit_count >= $max_otp_hit && Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $max_otp_hit_time && $verification_data->is_temp_blocked == 0) {
 
-                            DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                            DB::table('phone_verifications')->updateOrInsert(['phone' => $verificationPhone],
                                 [
                                     'is_temp_blocked' => 1,
                                     'temp_block_time' => now(),
@@ -268,7 +269,7 @@ class CustomerAuthController extends Controller
                     }
 
 
-                    DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                    DB::table('phone_verifications')->updateOrInsert(['phone' => $verificationPhone],
                         [
                             'otp_hit_count' => DB::raw('otp_hit_count + 1'),
                             'updated_at' => now(),
@@ -282,7 +283,7 @@ class CustomerAuthController extends Controller
         }
         if($request->login_type== 'otp'){
             $data = DB::table('phone_verifications')->where([
-                'phone' => $request['phone'],
+                'phone' => $verificationPhone,
                 'token' => $request['otp'],
             ])->first();
 
@@ -296,7 +297,7 @@ class CustomerAuthController extends Controller
                     return response()->json(['token' => $temporaryToken, 'is_phone_verified'=>1, 'is_email_verified'=>1, 'is_personal_info' => 1, 'is_exist_user' =>$is_exist_user, 'login_type' => 'otp', 'email' => $user_email], 200);
                 }elseif (($user && $user->is_phone_verified == 1) || ($user && $user->is_phone_verified == 0 && $user->is_from_pos == 1)){
                     DB::table('phone_verifications')->where([
-                        'phone' => $request['phone'],
+                        'phone' => $verificationPhone,
                         'token' => $request['otp'],
                     ])->delete();
                     $is_personal_info = 0;
@@ -558,10 +559,10 @@ class CustomerAuthController extends Controller
 
         $login_settings = array_column(BusinessSetting::whereIn('key',['manual_login_status','otp_login_status','social_login_status','google_login_status','facebook_login_status','apple_login_status','email_verification_status','phone_verification_status'
         ])->get(['key','value'])->toArray(), 'value', 'key');
-        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value??0;
+        $firebase_otp_verification = (int)(BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value ?? 0);
         $phone = 1;
         $mail = 1;
-        if(isset($login_settings['phone_verification_status']) && $login_settings['phone_verification_status'] == 1){
+        if (!empty($login_settings['phone_verification_status']) && (int)$login_settings['phone_verification_status'] === 1) {
             $phone =0;
             if(!$firebase_otp_verification){
                 $normalizedPhone = $this->normalizePhoneNumber($request['phone']);
@@ -615,9 +616,12 @@ class CustomerAuthController extends Controller
                         'errors' => $errors
                     ], 405);
                 }
+            } else {
+                // Firebase OTP: لا يُرسل رمز من السيرفر؛ يجب إكمال التحقق من التطبيق ثم استدعاء firebase-verify-token
+                $token = null;
             }
 
-        }elseif (isset($login_settings['email_verification_status']) && $login_settings['email_verification_status'] == 1 && $request->filled('email')){
+        }elseif (!empty($login_settings['email_verification_status']) && (int)$login_settings['email_verification_status'] === 1 && $request->filled('email')){
             $mail =0;
             $otp = rand(100000, 999999);
             if(env('APP_MODE') == 'test'){
@@ -946,8 +950,9 @@ class CustomerAuthController extends Controller
         }
     }
     private function otp_login($request_data){
+        $verificationPhone = $this->normalizePhoneNumber($request_data['phone']);
         $data = DB::table('phone_verifications')->where([
-            'phone' => $request_data['phone'],
+            'phone' => $verificationPhone,
             'token' => $request_data['otp'],
         ])->first();
 
@@ -985,7 +990,7 @@ class CustomerAuthController extends Controller
             }
 
             DB::table('phone_verifications')->where([
-                'phone' => $request_data['phone'],
+                'phone' => $verificationPhone,
                 'token' => $request_data['otp'],
             ])->delete();
 
