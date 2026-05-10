@@ -2800,28 +2800,27 @@ class BusinessSettingsController extends Controller
     public function updateSocialLogin($service, Request $request)
     {
         $login_setup_status = Helpers::get_business_settings($service.'_login_status')??0;
-        if($login_setup_status && ($request['status']==0)){
+        if ($login_setup_status && !$request->boolean('status')) {
             Toastr::warning(translate($service.'_login_status_is_enabled_in_login_setup._First_disable_from_login_setup.'));
             return redirect()->back();
         }
         $socialLogin = BusinessSetting::where('key', 'social_login')->first();
+        $decoded = json_decode($socialLogin->value, true) ?? [];
         $credential_array = [];
-        foreach (json_decode($socialLogin['value'], true) as $key => $data) {
+        foreach ($decoded as $data) {
             if ($data['login_medium'] == $service) {
-                $cred = [
+                $credential_array[] = [
                     'login_medium' => $service,
                     'client_id' => $request['client_id'],
                     'client_secret' => $request['client_secret'],
-                    'status' => $request['status'],
+                    'status' => $request->boolean('status') ? '1' : '0',
                 ];
-                array_push($credential_array, $cred);
             } else {
-                array_push($credential_array, $data);
+                $credential_array[] = $data;
             }
         }
-        BusinessSetting::where('key', 'social_login')->update([
-            'value' => $credential_array
-        ]);
+        $socialLogin->value = json_encode($credential_array);
+        $socialLogin->save();
 
         Toastr::success(translate('messages.credential_updated', ['service' => $service]));
         return redirect()->back();
