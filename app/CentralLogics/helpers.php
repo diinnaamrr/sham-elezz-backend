@@ -173,19 +173,39 @@ class Helpers
         }
         $data['variations'] = $variations;
         $data_variation = $data['food_variations']?(gettype($data['food_variations']) == 'array' ? $data['food_variations'] : json_decode($data['food_variations'],true)):[];
-        if($data->module->module_type == 'food'){
+        if ($data->module->module_type == 'food' && is_array($selected_variation)) {
             foreach ($selected_variation as $selected_item) {
-                foreach ($data_variation as &$all_item) {
-                    if ($selected_item["name"] === $all_item["name"]) {
-                        foreach ($all_item["values"] as &$value) {
-                            if (in_array($value["label"], $selected_item["values"]["label"])) {
-                                $value["isSelected"] = true;
-                            }else{
-                                $value["isSelected"] = false;
-                            }
+                if (!is_array($selected_item) || !isset($selected_item['name'], $selected_item['values'])) {
+                    continue;
+                }
+                $selectedLabels = [];
+                if (isset($selected_item['values']['label'])) {
+                    $lbl = $selected_item['values']['label'];
+                    $selectedLabels = is_array($lbl) ? $lbl : [$lbl];
+                } elseif (is_array($selected_item['values'])) {
+                    foreach ($selected_item['values'] as $sv) {
+                        if (is_array($sv) && array_key_exists('label', $sv)) {
+                            $selectedLabels[] = $sv['label'];
                         }
                     }
                 }
+                foreach ($data_variation as &$all_item) {
+                    if (!is_array($all_item) || ($selected_item['name'] ?? null) !== ($all_item['name'] ?? null)) {
+                        continue;
+                    }
+                    if (!isset($all_item['values']) || !is_array($all_item['values'])) {
+                        continue;
+                    }
+                    foreach ($all_item['values'] as &$value) {
+                        if (!is_array($value)) {
+                            continue;
+                        }
+                        $valueLabel = $value['label'] ?? null;
+                        $value['isSelected'] = $valueLabel !== null && in_array($valueLabel, $selectedLabels);
+                    }
+                    unset($value);
+                }
+                unset($all_item);
             }
         }
         $data['food_variations'] = $data_variation;
