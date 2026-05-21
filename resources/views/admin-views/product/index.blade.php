@@ -471,7 +471,7 @@
                                             data-original-title="{{ translate('messages.Required.')}}"> *
                                             </span></label>
                                         <input type="number" min="0" max="999999999999.99" step="0.01"
-                                            value="0" name="price" class="form-control"
+                                            value="1" name="price" class="form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>
@@ -521,10 +521,6 @@
                         </div>
                     </div>
                 </div>
-                @include('admin-views.product.partials._product-sizes', [
-                    'hasSizesChecked' => false,
-                    'sizeRows' => [],
-                ])
                 <div class="col-lg-12" id="food_variation_section">
                     <div class="card shadow--card-2 border-0">
                         <div class="card-header flex-wrap">
@@ -1112,24 +1108,6 @@
         $('#item_form').on('submit', function(e) {
             $('#submitButton').attr('disabled', true);
             e.preventDefault();
-            if ($('#has_sizes').is(':checked')) {
-                let hasValidSize = false;
-                $('#size_options_rows .size-option-row').each(function () {
-                    const label = $(this).find('input[name*="[label]"]').val();
-                    if (label && String(label).trim() !== '') {
-                        hasValidSize = true;
-                    }
-                });
-                if (!hasValidSize) {
-                    toastr.error(@json(translate('messages.please_add_options_for') . ' Size'), {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                    $('#size_options_wrapper').removeClass('d-none');
-                    $('#submitButton').attr('disabled', false);
-                    return;
-                }
-            }
             let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {

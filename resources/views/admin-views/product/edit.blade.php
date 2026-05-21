@@ -43,7 +43,7 @@
             </div>
         </div>
         <!-- End Page Header -->
-        <form action="javascript:" method="post" id="product_form" enctype="multipart/form-data" novalidate>
+        <form action="javascript:" method="post" id="product_form" enctype="multipart/form-data">
             @csrf
                 @if (request()->product_gellary  == 1)
                     @php
@@ -615,16 +615,6 @@
                         </div>
                     </div>
                 </div>
-                @php
-                    $sizeRowsForForm = $product->size_options
-                        ? (is_array($product->size_options) ? $product->size_options : json_decode($product->size_options, true))
-                        : \App\CentralLogics\Helpers::size_options_from_food_variations($product->food_variations, $product->price);
-                    $hasSizesForForm = (bool) ($product->has_sizes ?? false) || (is_array($sizeRowsForForm) && count($sizeRowsForForm) > 0);
-                @endphp
-                @include('admin-views.product.partials._product-sizes', [
-                    'hasSizesChecked' => $hasSizesForForm,
-                    'sizeRows' => is_array($sizeRowsForForm) ? $sizeRowsForForm : [],
-                ])
                 <div class="col-lg-12" id="food_variation_section">
                     <div class="card shadow--card-2 border-0">
                         <div class="card-header flex-wrap">
@@ -791,10 +781,10 @@
 @push('script_2')
 <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
 <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
-<script src="{{ asset('public/assets/admin') }}/js/view-pages/product-index.js"></script>
 <script>
     "use strict";
      let removedImageKeys = [];
+    let element = "";
 
 
     $(document).on('click','.function_remove_img' ,function(){
@@ -848,7 +838,7 @@
          hide_min_max(data);
      });
 
-    count = $('.count_div').length;
+    let count =   $('.count_div').length;
 
     $(document).ready(function() {
         $("#add_new_option_button").click(function(e) {
@@ -974,7 +964,7 @@
         let e = $(this);
         deleteRow(e);
     });
-    countRow = 0;
+    let countRow = 0;
 
     function add_new_row_button(data) {
         // count = data;
@@ -1091,15 +1081,15 @@
         @endif
     });
 
-    module_id = {{ $product->module_id }};
-    module_type = "{{ $product->module->module_type }}";
-    parent_category_id = {{ $category ? $category->id : 0 }};
+    let module_id = {{ $product->module_id }};
+    let module_type = "{{ $product->module->module_type }}";
+    let parent_category_id = {{ $category ? $category->id : 0 }};
     <?php
     $module_data = config('module.' . $product->module->module_type);
     unset($module_data['description']);
     ?>
-    module_data = {{ str_replace('"', '', json_encode($module_data)) }};
-    stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
+    let module_data = {{ str_replace('"', '', json_encode($module_data)) }};
+    let stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
     input_field_visibility_update();
 
     function modulChange(id) {
@@ -1389,13 +1379,11 @@
                 $('#loading').show();
             },
             success: function(data) {
+                $('#loading').hide();
                 $('#variant_combination').html(data.view);
                 if (data.length < 1) {
                     $('input[name="current_stock"]').attr("readonly", false);
                 }
-            },
-            complete: function() {
-                $('#loading').hide();
             }
         });
     }
@@ -1409,34 +1397,17 @@
      //        }
      //    });
 
-    $('#product_form').on('submit', function(e) {
-        e.preventDefault();
-        if ($('#has_sizes').is(':checked')) {
-            let hasValidSize = false;
-            $('#size_options_rows .size-option-row').each(function () {
-                const label = $(this).find('input[name*="[label]"]').val();
-                if (label && String(label).trim() !== '') {
-                    hasValidSize = true;
-                }
-            });
-            if (!hasValidSize) {
-                toastr.error(@json(translate('messages.please_add_options_for') . ' Size'), {
-                    CloseButton: true,
-                    ProgressBar: true
-                });
-                $('#size_options_wrapper').removeClass('d-none');
-                return;
-            }
-        }
+    $('#product_form').on('submit', function() {
+        console.log('working');
         let formData = new FormData(this);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        $.ajax({
-            type: 'POST',
-            url: $('.route_url').val(),
+        $.post({
+            url: $('.route_url').val() ,
+            data: $('#product_form').serialize(),
             data: formData,
             cache: false,
             contentType: false,
@@ -1445,6 +1416,8 @@
                 $('#loading').show();
             },
             success: function(data) {
+                console.log(data);
+                $('#loading').hide();
                 if (data.errors) {
                     for (let i = 0; i < data.errors.length; i++) {
                         toastr.error(data.errors[i].message, {
@@ -1453,42 +1426,22 @@
                         });
                     }
                 }
-                if (data.product_approval) {
-                    toastr.success(data.product_approval, {
+                if(data.product_approval){
+                        toastr.success(data.product_approval, {
                         CloseButton: true,
                         ProgressBar: true
                     });
                 }
-                if (data.success) {
+                if(data.success) {
                     toastr.success(data.success, {
                         CloseButton: true,
                         ProgressBar: true
                     });
                     setTimeout(function() {
-                        location.href = '{{ route('admin.item.list') }}';
+                        location.href =
+                            '{{ route('admin.item.list') }}';
                     }, 2000);
                 }
-            },
-            error: function(xhr) {
-                if (xhr.responseJSON && xhr.responseJSON.errors) {
-                    for (let i = 0; i < xhr.responseJSON.errors.length; i++) {
-                        toastr.error(xhr.responseJSON.errors[i].message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    }
-                } else {
-                    toastr.error(xhr.statusText || 'Error', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-                if ($('#has_sizes').is(':checked')) {
-                    $('#size_options_wrapper').removeClass('d-none');
-                }
-            },
-            complete: function() {
-                $('#loading').hide();
             }
         });
     });

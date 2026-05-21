@@ -74,7 +74,7 @@ class ItemController extends Controller
 ],
 
 
-            'price' => 'required|numeric|between:0,999999999999.99',
+            'price' => 'required|numeric|between:.01,999999999999.99',
             'discount' => 'required|numeric|min:0',
             'store_id' => 'required_unless:is_shared_menu,1',
             'shared_menu_default_stock' => 'required_if:is_shared_menu,1|nullable|integer|min:0',
@@ -92,21 +92,17 @@ class ItemController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
-        $discount_exceeds_price = false;
-        if ($request['price'] > 0) {
-            if ($request['discount_type'] == 'percent') {
-                $dis = ($request['price'] / 100) * $request['discount'];
-            } else {
-                $dis = $request['discount'];
-            }
-
-            if ($request['price'] <= $dis) {
-                $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
-                $discount_exceeds_price = true;
-            }
+        if ($request['discount_type'] == 'percent') {
+            $dis = ($request['price'] / 100) * $request['discount'];
+        } else {
+            $dis = $request['discount'];
         }
 
-        if ($discount_exceeds_price || $validator->fails()) {
+        if ($request['price'] <= $dis) {
+                $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
+        }
+
+        if ($request['price'] <= $dis || $validator->fails()) {
                 return response()->json(['errors' => Helpers::error_processor($validator)]);
             }
 
@@ -307,16 +303,9 @@ class ItemController extends Controller
                 $images[]=['img'=>$image_name, 'storage'=> Helpers::getDisk()];
             }
         }
-        $sizePayload = Helpers::build_item_sizes_payload($request);
-        if (isset($sizePayload['errors'])) {
-            return response()->json(['errors' => $sizePayload['errors']], 422);
-        }
-
         // food variation
         $food_variations = [];
-        if ($sizePayload['has_sizes']) {
-            $food_variations = json_decode($sizePayload['food_variations_json'], true) ?? [];
-        } elseif (isset($request->options)) {
+        if (isset($request->options)) {
             foreach (array_values($request->options) as $key => $option) {
 
                 $temp_variation['name'] = $option['name'];
@@ -352,9 +341,7 @@ class ItemController extends Controller
 
         $item->food_variations = json_encode($food_variations);
         $item->variations = json_encode($variations);
-        $item->has_sizes = $sizePayload['has_sizes'] ? 1 : 0;
-        $item->size_options = $sizePayload['has_sizes'] ? $sizePayload['size_options_json'] : null;
-        $item->price = $sizePayload['has_sizes'] ? $sizePayload['base_price'] : $request->price;
+        $item->price = $request->price;
 if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) {
     // If image is an external URL, save it directly
     $item->image = $request->image;
@@ -491,7 +478,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'name.0' => 'required',
             'name.*' => 'max:191',
             'category_id' => 'required',
-            'price' => 'required|numeric|between:0,999999999999.99',
+            'price' => 'required|numeric|between:.01,999999999999.99',
             'store_id' => 'required_unless:is_shared_menu,1',
             'shared_menu_default_stock' => 'required_if:is_shared_menu,1|nullable|integer|min:0',
             'description' => 'array',
@@ -509,21 +496,17 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'description.0.required' => translate('default_description_is_required'),
         ]);
 
-        $discount_exceeds_price = false;
-        if ($request['price'] > 0) {
-            if ($request['discount_type'] == 'percent') {
-                $dis = ($request['price'] / 100) * $request['discount'];
-            } else {
-                $dis = $request['discount'];
-            }
-
-            if ($request['price'] <= $dis) {
-                $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
-                $discount_exceeds_price = true;
-            }
+        if ($request['discount_type'] == 'percent') {
+            $dis = ($request['price'] / 100) * $request['discount'];
+        } else {
+            $dis = $request['discount'];
         }
 
-        if ($discount_exceeds_price || $validator->fails()) {
+        if ($request['price'] <= $dis) {
+            $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
+        }
+
+        if ($request['price'] <= $dis || $validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
@@ -682,15 +665,8 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
 
 
 
-        $sizePayload = Helpers::build_item_sizes_payload($request);
-        if (isset($sizePayload['errors'])) {
-            return response()->json(['errors' => $sizePayload['errors']], 422);
-        }
-
         $food_variations = [];
-        if ($sizePayload['has_sizes']) {
-            $food_variations = json_decode($sizePayload['food_variations_json'], true) ?? [];
-        } elseif (isset($request->options)) {
+        if (isset($request->options)) {
             foreach (array_values($request->options) as $key => $option) {
                 $temp_variation['name'] = $option['name'];
                 $temp_variation['type'] = $option['type'];
@@ -725,9 +701,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
         $item->slug = $item->slug ? $item->slug : "{$slug}{$item->id}";
         $item->food_variations = json_encode($food_variations);
         $item->variations = $request->has('attribute_id') ? json_encode($variations) : json_encode([]);
-        $item->has_sizes = $sizePayload['has_sizes'] ? 1 : 0;
-        $item->size_options = $sizePayload['has_sizes'] ? $sizePayload['size_options_json'] : null;
-        $item->price = $sizePayload['has_sizes'] ? $sizePayload['base_price'] : $request->price;
+        $item->price = $request->price;
 if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) {
     $item->image = $request->image;
 } else {

@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\CentralLogics\Helpers;
 use App\Routing\UrlGenerator as AppUrlGenerator;
 use App\Traits\AddonHelper;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator as IlluminateUrlGenerator;
 use Illuminate\Support\Facades\Config;
@@ -63,10 +62,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Relation::morphMap([
-            'Item' => \App\Models\Item::class,
-            'ItemCampaign' => \App\Models\ItemCampaign::class,
-        ]);
 
         try
         {

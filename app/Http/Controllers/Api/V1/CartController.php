@@ -105,7 +105,7 @@ class CartController extends Controller
         $model = $request->model === 'Item' ? 'App\Models\Item' : 'App\Models\ItemCampaign';
         $item = $request->model === 'Item' ? Item::find($request->item_id) : ItemCampaign::find($request->item_id);
 
-        $cart = Cart::where('item_id',$request->item_id)->whereIn('item_type', [$model, $request->model])->where('variation',json_encode($request->variation))->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->first();
+        $cart = Cart::where('item_id',$request->item_id)->where('item_type',$model)->where('variation',json_encode($request->variation))->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->first();
 
         if($cart){
             return response()->json([
@@ -143,9 +143,11 @@ class CartController extends Controller
         $cart->is_guest = $is_guest;
         $cart->add_on_ids = isset($request->add_on_ids)?json_encode($request->add_on_ids):json_encode([]);
         $cart->add_on_qtys = isset($request->add_on_qtys)?json_encode($request->add_on_qtys):json_encode([]);
+        $cart->item_type = $request->model;
         $cart->price = $request->price;
         $cart->quantity = $request->quantity;
         $cart->variation = isset($request->variation)?json_encode($request->variation):json_encode([]);
+        $cart->save();
 
         $item->carts()->save($cart);
 
@@ -177,9 +179,7 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
         $cart = Cart::find($request->cart_id);
-        $item = $cart->item ?? (in_array($cart->item_type, ['App\Models\Item', 'Item'], true)
-            ? Item::find($cart->item_id)
-            : ItemCampaign::find($cart->item_id));
+        $item = $cart->item_type === 'App\Models\Item' ? Item::find($cart->item_id) : ItemCampaign::find($cart->item_id);
         if($item->maximum_cart_quantity && ($request->quantity>$item->maximum_cart_quantity)){
             return response()->json([
                 'errors' => [

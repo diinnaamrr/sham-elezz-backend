@@ -375,7 +375,6 @@ class Helpers
                 unset($item['pharmacy_item_details']);
                 unset($item['store']);
                 unset($item['rating']);
-                self::append_product_size_fields($item);
                 array_push($storage, $item);
             }
             $data = $storage;
@@ -474,7 +473,6 @@ class Helpers
             unset($data['nutritions']);
             unset($data['allergies']);
             unset($data['generic']);
-            self::append_product_size_fields($data);
 
         }
 
@@ -2855,152 +2853,6 @@ class Helpers
         $expense->created_at = now();
         $expense->updated_at = now();
         return $expense->save();
-    }
-
-    /**
-     * @return array{label: string, price: float}[]
-     */
-    public static function normalize_size_options_array($sizeOptions): array
-    {
-        if (!is_array($sizeOptions)) {
-            return [];
-        }
-        $normalized = [];
-        foreach ($sizeOptions as $row) {
-            if (!is_array($row) || empty($row['label'])) {
-                continue;
-            }
-            $normalized[] = [
-                'label' => trim((string)$row['label']),
-                'price' => round((float)($row['price'] ?? 0), config('round_up_to_digit')),
-            ];
-        }
-
-        return $normalized;
-    }
-
-    /**
-     * Build food_variations JSON from size rows (mobile / cart compatibility).
-     */
-    public static function food_variations_json_from_sizes(array $sizeOptions, string $groupName = 'Size'): string
-    {
-        $sizeOptions = self::normalize_size_options_array($sizeOptions);
-        if (count($sizeOptions) === 0) {
-            return json_encode([]);
-        }
-
-        $minPrice = min(array_column($sizeOptions, 'price'));
-        $values = [];
-        foreach ($sizeOptions as $option) {
-            $values[] = [
-                'label' => $option['label'],
-                'optionPrice' => round(max(0, $option['price'] - $minPrice), config('round_up_to_digit')),
-            ];
-        }
-
-        return json_encode([[
-            'name' => $groupName,
-            'type' => 'single',
-            'min' => 1,
-            'max' => 1,
-            'required' => 'on',
-            'values' => $values,
-        ]], JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * Infer size_options from legacy food_variations (Size group).
-     */
-    public static function size_options_from_food_variations($foodVariations, $basePrice = 0): array
-    {
-        $groups = is_array($foodVariations) ? $foodVariations : json_decode($foodVariations ?? '[]', true);
-        if (!is_array($groups)) {
-            return [];
-        }
-
-        $basePrice = (float)$basePrice;
-
-        foreach ($groups as $group) {
-            if (!is_array($group) || empty($group['values']) || !is_array($group['values'])) {
-                continue;
-            }
-            $name = strtolower((string)($group['name'] ?? ''));
-            $isSizeGroup = in_array($name, ['size', 'sizes', 'الحجم', 'حجم'], true);
-            if (!$isSizeGroup && count($groups) > 1) {
-                continue;
-            }
-            $options = [];
-            foreach ($group['values'] as $value) {
-                if (!is_array($value) || empty($value['label'])) {
-                    continue;
-                }
-                if (isset($value['price'])) {
-                    $price = (float)$value['price'];
-                } else {
-                    $price = $basePrice + (float)($value['optionPrice'] ?? 0);
-                }
-                $options[] = ['label' => $value['label'], 'price' => $price];
-            }
-            if (count($options) > 0) {
-                return self::normalize_size_options_array($options);
-            }
-        }
-
-        return [];
-    }
-
-    public static function append_product_size_fields($item): void
-    {
-        $sizeOptions = [];
-        if (!empty($item->size_options)) {
-            $sizeOptions = is_array($item->size_options)
-                ? $item->size_options
-                : json_decode($item->size_options, true);
-        } elseif (!empty($item->food_variations)) {
-            $sizeOptions = self::size_options_from_food_variations($item->food_variations, $item->price ?? 0);
-        }
-
-        $sizeOptions = self::normalize_size_options_array($sizeOptions ?? []);
-        $item['has_sizes'] = (bool)($item->has_sizes ?? false) || count($sizeOptions) > 0;
-        $item['size_options'] = $sizeOptions;
-    }
-
-    /**
-     * Admin save: has_sizes + size rows from request.
-     *
-     * @return array{has_sizes: bool, size_options: array, size_options_json: ?string, food_variations_json: ?string, base_price: ?float, errors?: array}
-     */
-    public static function build_item_sizes_payload($request): array
-    {
-        $hasSizes = filter_var($request->has_sizes ?? false, FILTER_VALIDATE_BOOLEAN);
-        if (!$hasSizes) {
-            return [
-                'has_sizes' => false,
-                'size_options' => [],
-                'size_options_json' => null,
-                'food_variations_json' => null,
-                'base_price' => null,
-            ];
-        }
-
-        $sizeOptions = self::normalize_size_options_array($request->size_options ?? []);
-        if (count($sizeOptions) === 0) {
-            return [
-                'errors' => [
-                    ['code' => 'size_options', 'message' => translate('messages.please_add_options_for') . ' Size'],
-                ],
-            ];
-        }
-
-        $basePrice = min(array_column($sizeOptions, 'price'));
-
-        return [
-            'has_sizes' => true,
-            'size_options' => $sizeOptions,
-            'size_options_json' => json_encode($sizeOptions, JSON_UNESCAPED_UNICODE),
-            'food_variations_json' => self::food_variations_json_from_sizes($sizeOptions),
-            'base_price' => $basePrice,
-        ];
     }
 
     public static function get_varient(array $product_variations, $variations)
