@@ -615,6 +615,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 d-none" id="zero_price_variation_hint">
+                    <div class="alert alert-warning mb-0">
+                        عند سعر المنتج 0: أضف Food Variations مطلوبة (Required) وضع سعر أكبر من 0 على الأقل في خيار واحد.
+                    </div>
+                </div>
                 <div class="col-lg-12" id="food_variation_section">
                     <div class="card shadow--card-2 border-0">
                         <div class="card-header flex-wrap">
@@ -781,6 +786,7 @@
 @push('script_2')
 <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
 <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+<script src="{{ asset('public/assets/admin') }}/js/view-pages/product-index.js"></script>
 <script>
     "use strict";
      let removedImageKeys = [];

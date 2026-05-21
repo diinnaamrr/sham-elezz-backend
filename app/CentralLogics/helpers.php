@@ -2855,6 +2855,108 @@ class Helpers
         return $expense->save();
     }
 
+    /**
+     * When base price is 0, product must have variations so cart line price can be > 0.
+     *
+     * @return array<int, array{code: string, message: string}>|null
+     */
+    public static function validate_zero_base_price_variations(
+        float $price,
+        array $foodVariations,
+        array $attributeVariations,
+        ?string $moduleType = null
+    ): ?array {
+        if ($price > 0) {
+            return null;
+        }
+
+        if ($moduleType === 'food') {
+            if (count($foodVariations) === 0) {
+                return [[
+                    'code' => 'food_variations',
+                    'message' => translate('messages.when_price_is_zero_add_food_variations'),
+                ]];
+            }
+
+            $hasRequiredGroup = false;
+            $hasPricedOption = false;
+            foreach ($foodVariations as $group) {
+                if (($group['required'] ?? 'off') === 'on') {
+                    $hasRequiredGroup = true;
+                }
+                foreach ($group['values'] ?? [] as $value) {
+                    if ((float)($value['optionPrice'] ?? 0) > 0) {
+                        $hasPricedOption = true;
+                    }
+                }
+            }
+
+            if (!$hasRequiredGroup) {
+                return [[
+                    'code' => 'food_variations',
+                    'message' => translate('messages.when_price_is_zero_variation_must_be_required'),
+                ]];
+            }
+
+            if (!$hasPricedOption) {
+                return [[
+                    'code' => 'food_variations',
+                    'message' => translate('messages.when_price_is_zero_option_price_required'),
+                ]];
+            }
+
+            return null;
+        }
+
+        if (count($attributeVariations) === 0) {
+            return [[
+                'code' => 'variations',
+                'message' => translate('messages.when_price_is_zero_add_variations'),
+            ]];
+        }
+
+        $maxVariationPrice = 0;
+        foreach ($attributeVariations as $variation) {
+            $maxVariationPrice = max($maxVariationPrice, (float)($variation['price'] ?? 0));
+        }
+
+        if ($maxVariationPrice <= 0) {
+            return [[
+                'code' => 'variations',
+                'message' => translate('messages.when_price_is_zero_variation_price_required'),
+            ]];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<int, array{code: string, message: string}>|null
+     */
+    public static function validate_cart_zero_base_price_item($item, $requestPrice, $variation): ?array
+    {
+        if (!$item || (float)$item->price > 0) {
+            return null;
+        }
+
+        $variations = is_array($variation) ? $variation : json_decode($variation ?? '[]', true);
+        if (!is_array($variations) || count($variations) === 0) {
+            return [[
+                'code' => 'variation',
+                'message' => translate('messages.when_price_is_zero_select_variation_for_cart'),
+            ]];
+        }
+
+        if ((float)$requestPrice <= 0) {
+            return [[
+                'code' => 'price',
+                'message' => translate('messages.when_price_is_zero_cart_price_must_be_greater_than_zero'),
+            ]];
+        }
+
+        return null;
+    }
+
     public static function get_varient(array $product_variations, $variations)
     {
         $result = [];

@@ -471,7 +471,7 @@
                                             data-original-title="{{ translate('messages.Required.')}}"> *
                                             </span></label>
                                         <input type="number" min="0" max="999999999999.99" step="0.01"
-                                            value="1" name="price" class="form-control"
+                                            value="0" name="price" class="form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>
@@ -519,6 +519,11 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-12 d-none" id="zero_price_variation_hint">
+                    <div class="alert alert-warning mb-0">
+                        عند سعر المنتج 0: أضف Food Variations مطلوبة (Required) وضع سعر أكبر من 0 على الأقل في خيار واحد — لا يُضاف للسلة بدون اختيار variation.
                     </div>
                 </div>
                 <div class="col-lg-12" id="food_variation_section">

@@ -123,6 +123,15 @@ class CartController extends Controller
             ], 403);
         }
 
+        $zeroPriceCartErrors = Helpers::validate_cart_zero_base_price_item(
+            $item,
+            $request->price,
+            $request->variation ?? []
+        );
+        if ($zeroPriceCartErrors) {
+            return response()->json(['errors' => $zeroPriceCartErrors], 403);
+        }
+
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('item')->get();
 
 //        foreach($carts as $cart){
@@ -186,6 +195,18 @@ class CartController extends Controller
                     ['code' => 'cart_item_limit', 'message' => translate('messages.maximum_cart_quantity_exceeded')]
                 ]
             ], 403);
+        }
+
+        $variationForValidation = $request->has('variation')
+            ? $request->variation
+            : json_decode($cart->variation, true);
+        $zeroPriceCartErrors = Helpers::validate_cart_zero_base_price_item(
+            $item,
+            $request->price,
+            $variationForValidation
+        );
+        if ($zeroPriceCartErrors) {
+            return response()->json(['errors' => $zeroPriceCartErrors], 403);
         }
 
         $cart->user_id = $user_id;

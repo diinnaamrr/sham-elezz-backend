@@ -135,3 +135,18 @@ $('#category_id').on('change', function () {
 $(document).on('change', '.combination_update', function () {
     combination_update();
 });
+
+function toggleZeroPriceVariationHint() {
+    const price = parseFloat($('input[name="price"]').val());
+    if (!isNaN(price) && price === 0) {
+        $('#zero_price_variation_hint').removeClass('d-none');
+        $('#food_variation_section').removeClass('d-none');
+    } else {
+        $('#zero_price_variation_hint').addClass('d-none');
+    }
+}
+
+$(document).on('input change', 'input[name="price"]', toggleZeroPriceVariationHint);
+$(document).ready(function () {
+    toggleZeroPriceVariationHint();
+});

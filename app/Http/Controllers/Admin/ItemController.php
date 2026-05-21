@@ -74,7 +74,7 @@ class ItemController extends Controller
 ],
 
 
-            'price' => 'required|numeric|between:.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'discount' => 'required|numeric|min:0',
             'store_id' => 'required_unless:is_shared_menu,1',
             'shared_menu_default_stock' => 'required_if:is_shared_menu,1|nullable|integer|min:0',
@@ -92,19 +92,21 @@ class ItemController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
 
-        if ($request['price'] <= $dis) {
+            if ($request['price'] <= $dis) {
                 $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
-        }
+            }
 
-        if ($request['price'] <= $dis || $validator->fails()) {
+            if ($request['price'] <= $dis || $validator->fails()) {
                 return response()->json(['errors' => Helpers::error_processor($validator)]);
             }
+        }
 
         $images = [];
         $sku = $request->sku ?? 'SKU-' . strtoupper(Str::random(8));
@@ -339,6 +341,17 @@ class ItemController extends Controller
             }
         }
 
+        $module_type = Config::get('module.current_module_type');
+        $zeroPriceVariationErrors = Helpers::validate_zero_base_price_variations(
+            (float)$request->price,
+            $food_variations,
+            $variations,
+            $module_type
+        );
+        if ($zeroPriceVariationErrors) {
+            return response()->json(['errors' => $zeroPriceVariationErrors], 422);
+        }
+
         $item->food_variations = json_encode($food_variations);
         $item->variations = json_encode($variations);
         $item->price = $request->price;
@@ -478,7 +491,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'name.0' => 'required',
             'name.*' => 'max:191',
             'category_id' => 'required',
-            'price' => 'required|numeric|between:.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'store_id' => 'required_unless:is_shared_menu,1',
             'shared_menu_default_stock' => 'required_if:is_shared_menu,1|nullable|integer|min:0',
             'description' => 'array',
@@ -496,17 +509,21 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'description.0.required' => translate('default_description_is_required'),
         ]);
 
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
 
-        if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
-        }
+            if ($request['price'] <= $dis) {
+                $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
+            }
 
-        if ($request['price'] <= $dis || $validator->fails()) {
+            if ($request['price'] <= $dis || $validator->fails()) {
+                return response()->json(['errors' => Helpers::error_processor($validator)]);
+            }
+        } elseif ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
@@ -697,6 +714,17 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
                 array_push($food_variations, $temp_variation);
             }
         }
+
+        $zeroPriceVariationErrors = Helpers::validate_zero_base_price_variations(
+            (float)$request->price,
+            $food_variations,
+            $variations,
+            $item->module?->module_type
+        );
+        if ($zeroPriceVariationErrors) {
+            return response()->json(['errors' => $zeroPriceVariationErrors], 422);
+        }
+
         $slug = Str::slug($request->name[array_search('default', $request->lang)]);
         $item->slug = $item->slug ? $item->slug : "{$slug}{$item->id}";
         $item->food_variations = json_encode($food_variations);

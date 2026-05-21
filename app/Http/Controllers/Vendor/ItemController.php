@@ -73,7 +73,7 @@ class ItemController extends Controller
                     return (Helpers::get_store_data()->module->module_type != 'food' && $request?->product_gellary == null )  ;
                 })
             ],
-            'price' => 'required|numeric|between:.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'description.*' => 'max:1000',
             'description.0' => 'required',
             'discount' => 'required|numeric|min:0',
@@ -84,17 +84,21 @@ class ItemController extends Controller
             'description.*.max' => translate('messages.description_length_warning'),
         ]);
 
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
 
-        if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
-        }
+            if ($request['price'] <= $dis) {
+                $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
+            }
 
-        if ($request['price'] <= $dis || $validator->fails()) {
+            if ($request['price'] <= $dis || $validator->fails()) {
+                return response()->json(['errors' => Helpers::error_processor($validator)]);
+            }
+        } elseif ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
@@ -355,6 +359,16 @@ class ItemController extends Controller
             }
         }
 
+        $zeroPriceVariationErrors = Helpers::validate_zero_base_price_variations(
+            (float)$request->price,
+            $food_variations,
+            $variations,
+            $store->module?->module_type
+        );
+        if ($zeroPriceVariationErrors) {
+            return response()->json(['errors' => $zeroPriceVariationErrors], 422);
+        }
+
         $food->food_variations = json_encode($food_variations);
 
         $food->variations = json_encode($variations);
@@ -505,7 +519,7 @@ class ItemController extends Controller
             'name.0' => 'required',
             'name.*' => 'max:191',
             'category_id' => 'required',
-            'price' => 'required|numeric|between:0.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'description.*' => 'max:1000',
             'description.0' => 'required',
             'discount' => 'required|numeric|min:0',
@@ -516,17 +530,21 @@ class ItemController extends Controller
             'description.*.max' => translate('messages.description_length_warning'),
         ]);
 
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
 
-        if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
-        }
+            if ($request['price'] <= $dis) {
+                $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
+            }
 
-        if ($request['price'] <= $dis || $validator->fails()) {
+            if ($request['price'] <= $dis || $validator->fails()) {
+                return response()->json(['errors' => Helpers::error_processor($validator)]);
+            }
+        } elseif ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
@@ -690,6 +708,16 @@ class ItemController extends Controller
                 $temp_variation['values'] = $temp_value;
                 array_push($food_variations, $temp_variation);
             }
+        }
+
+        $zeroPriceVariationErrors = Helpers::validate_zero_base_price_variations(
+            (float)$request->price,
+            $food_variations,
+            $variations,
+            $p->module?->module_type
+        );
+        if ($zeroPriceVariationErrors) {
+            return response()->json(['errors' => $zeroPriceVariationErrors], 422);
         }
 
         $variation_changed = false;
