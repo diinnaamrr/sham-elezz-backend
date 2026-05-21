@@ -615,6 +615,16 @@
                         </div>
                     </div>
                 </div>
+                @php
+                    $sizeRowsForForm = $product->size_options
+                        ? (is_array($product->size_options) ? $product->size_options : json_decode($product->size_options, true))
+                        : \App\CentralLogics\Helpers::size_options_from_food_variations($product->food_variations, $product->price);
+                    $hasSizesForForm = (bool) ($product->has_sizes ?? false) || (is_array($sizeRowsForForm) && count($sizeRowsForForm) > 0);
+                @endphp
+                @include('admin-views.product.partials._product-sizes', [
+                    'hasSizesChecked' => $hasSizesForForm,
+                    'sizeRows' => is_array($sizeRowsForForm) ? $sizeRowsForForm : [],
+                ])
                 <div class="col-lg-12" id="food_variation_section">
                     <div class="card shadow--card-2 border-0">
                         <div class="card-header flex-wrap">

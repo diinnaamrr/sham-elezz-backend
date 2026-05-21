@@ -135,3 +135,54 @@ $('#category_id').on('change', function () {
 $(document).on('change', '.combination_update', function () {
     combination_update();
 });
+
+function reindexSizeOptionRows() {
+    $('#size_options_rows .size-option-row').each(function (index) {
+        $(this).find('input[name^="size_options"]').each(function () {
+            const field = $(this).attr('name').includes('[label]') ? 'label' : 'price';
+            $(this).attr('name', 'size_options[' + index + '][' + field + ']');
+        });
+    });
+}
+
+function toggleSizeOptionsPanel() {
+    if ($('#has_sizes').is(':checked')) {
+        $('#size_options_wrapper').removeClass('d-none');
+        $('#food_variation_section').addClass('d-none');
+    } else {
+        $('#size_options_wrapper').addClass('d-none');
+        $('#food_variation_section').removeClass('d-none');
+    }
+}
+
+$(document).on('change', '#has_sizes', function () {
+    toggleSizeOptionsPanel();
+});
+
+$('#add_size_row').on('click', function () {
+    const index = $('#size_options_rows .size-option-row').length;
+    const row = `
+        <tr class="size-option-row">
+            <td><input type="text" class="form-control" name="size_options[${index}][label]" placeholder="Small" required></td>
+            <td><input type="number" class="form-control" name="size_options[${index}][price]" value="0" min="0" step="0.01" required></td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm remove-size-row"><i class="tio-delete-outlined"></i></button>
+            </td>
+        </tr>`;
+    $('#size_options_rows').append(row);
+});
+
+$(document).on('click', '.remove-size-row', function () {
+    if ($('#size_options_rows .size-option-row').length <= 1) {
+        $(this).closest('tr').find('input').val('');
+        return;
+    }
+    $(this).closest('tr').remove();
+    reindexSizeOptionRows();
+});
+
+$(document).ready(function () {
+    if ($('#has_sizes').length) {
+        toggleSizeOptionsPanel();
+    }
+});

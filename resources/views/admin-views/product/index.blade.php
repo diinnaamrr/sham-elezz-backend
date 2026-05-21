@@ -521,6 +521,10 @@
                         </div>
                     </div>
                 </div>
+                @include('admin-views.product.partials._product-sizes', [
+                    'hasSizesChecked' => false,
+                    'sizeRows' => [],
+                ])
                 <div class="col-lg-12" id="food_variation_section">
                     <div class="card shadow--card-2 border-0">
                         <div class="card-header flex-wrap">

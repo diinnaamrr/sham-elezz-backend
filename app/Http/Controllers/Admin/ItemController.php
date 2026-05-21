@@ -307,9 +307,16 @@ class ItemController extends Controller
                 $images[]=['img'=>$image_name, 'storage'=> Helpers::getDisk()];
             }
         }
+        $sizePayload = Helpers::build_item_sizes_payload($request);
+        if (isset($sizePayload['errors'])) {
+            return response()->json(['errors' => $sizePayload['errors']], 403);
+        }
+
         // food variation
         $food_variations = [];
-        if (isset($request->options)) {
+        if ($sizePayload['has_sizes']) {
+            $food_variations = json_decode($sizePayload['food_variations_json'], true) ?? [];
+        } elseif (isset($request->options)) {
             foreach (array_values($request->options) as $key => $option) {
 
                 $temp_variation['name'] = $option['name'];
@@ -345,7 +352,9 @@ class ItemController extends Controller
 
         $item->food_variations = json_encode($food_variations);
         $item->variations = json_encode($variations);
-        $item->price = $request->price;
+        $item->has_sizes = $sizePayload['has_sizes'] ? 1 : 0;
+        $item->size_options = $sizePayload['has_sizes'] ? $sizePayload['size_options_json'] : null;
+        $item->price = $sizePayload['has_sizes'] ? $sizePayload['base_price'] : $request->price;
 if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) {
     // If image is an external URL, save it directly
     $item->image = $request->image;
@@ -673,8 +682,15 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
 
 
 
+        $sizePayload = Helpers::build_item_sizes_payload($request);
+        if (isset($sizePayload['errors'])) {
+            return response()->json(['errors' => $sizePayload['errors']], 403);
+        }
+
         $food_variations = [];
-        if (isset($request->options)) {
+        if ($sizePayload['has_sizes']) {
+            $food_variations = json_decode($sizePayload['food_variations_json'], true) ?? [];
+        } elseif (isset($request->options)) {
             foreach (array_values($request->options) as $key => $option) {
                 $temp_variation['name'] = $option['name'];
                 $temp_variation['type'] = $option['type'];
@@ -709,7 +725,9 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
         $item->slug = $item->slug ? $item->slug : "{$slug}{$item->id}";
         $item->food_variations = json_encode($food_variations);
         $item->variations = $request->has('attribute_id') ? json_encode($variations) : json_encode([]);
-        $item->price = $request->price;
+        $item->has_sizes = $sizePayload['has_sizes'] ? 1 : 0;
+        $item->size_options = $sizePayload['has_sizes'] ? $sizePayload['size_options_json'] : null;
+        $item->price = $sizePayload['has_sizes'] ? $sizePayload['base_price'] : $request->price;
 if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) {
     $item->image = $request->image;
 } else {
