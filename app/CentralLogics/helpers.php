@@ -178,17 +178,7 @@ class Helpers
                 if (!is_array($selected_item) || !isset($selected_item['name'], $selected_item['values'])) {
                     continue;
                 }
-                $selectedLabels = [];
-                if (isset($selected_item['values']['label'])) {
-                    $lbl = $selected_item['values']['label'];
-                    $selectedLabels = is_array($lbl) ? $lbl : [$lbl];
-                } elseif (is_array($selected_item['values'])) {
-                    foreach ($selected_item['values'] as $sv) {
-                        if (is_array($sv) && array_key_exists('label', $sv)) {
-                            $selectedLabels[] = $sv['label'];
-                        }
-                    }
-                }
+                $selections = self::parse_variation_group_selections($selected_item);
                 foreach ($data_variation as &$all_item) {
                     if (!is_array($all_item) || ($selected_item['name'] ?? null) !== ($all_item['name'] ?? null)) {
                         continue;
@@ -201,7 +191,9 @@ class Helpers
                             continue;
                         }
                         $valueLabel = $value['label'] ?? null;
-                        $value['isSelected'] = $valueLabel !== null && in_array($valueLabel, $selectedLabels);
+                        $qty = $valueLabel !== null ? (int)($selections[$valueLabel] ?? 0) : 0;
+                        $value['isSelected'] = $qty > 0;
+                        $value['selectedQuantity'] = $qty;
                     }
                     unset($value);
                 }
@@ -2855,50 +2847,231 @@ class Helpers
         return $expense->save();
     }
 
+    /**
+     * Parse one food-variation group from API/cart payload into [label => quantity].
+     * Supports legacy { values: { label: ["Small"] } } and new { values: [{ label, quantity }] }.
+     */
+    public static function parse_variation_group_selections(array $variationItem): array
+    {
+        $selections = [];
+        if (!isset($variationItem['values']) || !is_array($variationItem['values'])) {
+            return $selections;
+        }
+
+        $values = $variationItem['values'];
+
+        if (isset($values['label'])) {
+            $labels = is_array($values['label']) ? $values['label'] : [$values['label']];
+            foreach ($labels as $label) {
+                if ($label !== null && $label !== '') {
+                    $selections[$label] = ($selections[$label] ?? 0) + 1;
+                }
+            }
+            return $selections;
+        }
+
+        foreach ($values as $entry) {
+            if (!is_array($entry) || empty($entry['label'])) {
+                continue;
+            }
+            $qty = (int)($entry['quantity'] ?? 1);
+            if ($qty > 0) {
+                $selections[$entry['label']] = ($selections[$entry['label']] ?? 0) + $qty;
+            }
+        }
+
+        return $selections;
+    }
+
+    /**
+     * Canonical storage/API format: each group has values: [{ label, quantity }, ...].
+     */
+    public static function normalize_food_variations_payload($variations): array
+    {
+        if (!is_array($variations)) {
+            return [];
+        }
+
+        $normalized = [];
+        foreach ($variations as $variation) {
+            if (!is_array($variation) || empty($variation['name'])) {
+                continue;
+            }
+            $selections = self::parse_variation_group_selections($variation);
+            $values = [];
+            foreach ($selections as $label => $qty) {
+                $values[] = [
+                    'label' => $label,
+                    'quantity' => (int)$qty,
+                ];
+            }
+            $normalized[] = [
+                'name' => $variation['name'],
+                'values' => $values,
+            ];
+        }
+
+        return $normalized;
+    }
+
+    public static function food_variation_total_quantity(array $normalizedVariations): int
+    {
+        $total = 0;
+        foreach ($normalizedVariations as $group) {
+            foreach ($group['values'] ?? [] as $entry) {
+                $total += (int)($entry['quantity'] ?? 0);
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * @return array{message: string, code: string}|null
+     */
+    public static function validate_food_variations(array $product_variations, $variations): ?array
+    {
+        if (!is_array($variations)) {
+            $variations = [];
+        }
+
+        $normalized = self::normalize_food_variations_payload($variations);
+        $byName = [];
+        foreach ($normalized as $group) {
+            $byName[$group['name']] = $group;
+        }
+
+        foreach ($product_variations as $productGroup) {
+            if (!is_array($productGroup) || empty($productGroup['name'])) {
+                continue;
+            }
+
+            $groupName = $productGroup['name'];
+            $selections = isset($byName[$groupName])
+                ? self::parse_variation_group_selections($byName[$groupName])
+                : [];
+
+            $totalQty = array_sum($selections);
+            $required = ($productGroup['required'] ?? 'off') === 'on';
+
+            if ($required && $totalQty < 1) {
+                return [
+                    'code' => 'variation_required',
+                    'message' => translate('messages.please_add_options_for') . ' ' . $groupName,
+                ];
+            }
+
+            if (($productGroup['type'] ?? 'single') === 'single') {
+                $activeLabels = array_filter($selections, fn ($q) => $q > 0);
+                if (count($activeLabels) > 1) {
+                    return [
+                        'code' => 'variation_single',
+                        'message' => $groupName . ': only one option can be selected',
+                    ];
+                }
+            }
+
+            $min = (int)($productGroup['min'] ?? 0);
+            $max = (int)($productGroup['max'] ?? 0);
+            if ($min > 0 && $totalQty > 0 && $totalQty < $min) {
+                return [
+                    'code' => 'variation_min',
+                    'message' => translate('messages.You_need_to_select_minimum_ ') . $min . ' ' . translate('options') . ' (' . $groupName . ')',
+                ];
+            }
+            if ($max > 0 && $totalQty > $max) {
+                return [
+                    'code' => 'variation_max',
+                    'message' => translate('messages.Max_select') . ' ' . $max . ' ' . translate('options') . ' (' . $groupName . ')',
+                ];
+            }
+
+            $allowedLabels = [];
+            foreach ($productGroup['values'] ?? [] as $option) {
+                if (is_array($option) && !empty($option['label'])) {
+                    $allowedLabels[$option['label']] = true;
+                }
+            }
+
+            foreach ($selections as $label => $qty) {
+                if ($qty <= 0) {
+                    continue;
+                }
+                if (!isset($allowedLabels[$label])) {
+                    return [
+                        'code' => 'variation_invalid',
+                        'message' => translate('messages.invalid') . ' ' . $label,
+                    ];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static function calculate_food_cart_unit_price($item, array $normalizedVariations): float
+    {
+        $base = (float)$item->price;
+        $productVariations = json_decode($item->food_variations ?? '[]', true);
+        if (!is_array($productVariations) || count($productVariations) === 0 || count($normalizedVariations) === 0) {
+            return $base;
+        }
+
+        $variationData = self::get_varient($productVariations, $normalizedVariations);
+
+        return $base + (float)($variationData['price'] ?? 0);
+    }
+
+    public static function variation_payload_for_storage($variations): string
+    {
+        return json_encode(self::normalize_food_variations_payload($variations), JSON_UNESCAPED_UNICODE);
+    }
+
     public static function get_varient(array $product_variations, $variations)
     {
         $result = [];
         $variation_price = 0;
+        $normalized = self::normalize_food_variations_payload($variations);
 
-        foreach($variations as $k=> $variation){
-            foreach($product_variations as  $product_variation){
-                if( isset($variation['values']) && isset($product_variation['values']) && $product_variation['name'] == $variation['name']  ){
-                    $result[$k] = $product_variation;
-                    $result[$k]['values'] = [];
-                    foreach($product_variation['values'] as $key=> $option){
-                        if(in_array($option['label'], $variation['values']['label'])){
-                            $result[$k]['values'][] = $option;
-                            $variation_price += $option['optionPrice'];
-                        }
-                    }
+        foreach ($normalized as $k => $variation) {
+            $selections = self::parse_variation_group_selections($variation);
+            foreach ($product_variations as $product_variation) {
+                if (!is_array($product_variation) || ($product_variation['name'] ?? null) !== ($variation['name'] ?? null)) {
+                    continue;
                 }
+                if (!isset($product_variation['values']) || !is_array($product_variation['values'])) {
+                    continue;
+                }
+
+                $result[$k] = $product_variation;
+                $result[$k]['values'] = [];
+
+                foreach ($product_variation['values'] as $option) {
+                    if (!is_array($option) || empty($option['label'])) {
+                        continue;
+                    }
+                    $label = $option['label'];
+                    $qty = (int)($selections[$label] ?? 0);
+                    if ($qty <= 0) {
+                        continue;
+                    }
+                    $optionEntry = $option;
+                    $optionEntry['quantity'] = $qty;
+                    $result[$k]['values'][] = $optionEntry;
+                    $variation_price += ((float)($option['optionPrice'] ?? 0)) * $qty;
+                }
+                break;
             }
         }
 
-        return ['price'=>$variation_price,'variations'=>$result];
+        return ['price' => $variation_price, 'variations' => $result];
     }
 
     public static function food_variation_price($product, $variations)
     {
-        // $match = json_decode($variations, true)[0];
-        $match = $variations;
-        $result = 0;
-        // foreach (json_decode($product['variations'], true) as $property => $value) {
-        //     if ($value['type'] == $match['type']) {
-        //         $result = $value['price'];
-        //     }
-        // }
-        foreach($product as $product_variation){
-            foreach($product_variation['values'] as $option){
-                foreach($match as $variation){
-                    if($product_variation['name'] == $variation['name'] && isset($variation['values']) && in_array($option['label'], $variation['values']['label'])){
-                        $result += $option['optionPrice'];
-                    }
-                }
-            }
-        }
+        $normalized = self::normalize_food_variations_payload($variations);
+        $data = self::get_varient($product, $normalized);
 
-        return $result;
+        return (float)($data['price'] ?? 0);
     }
 
     public static function gen_mpdf($view, $file_prefix, $file_postfix)

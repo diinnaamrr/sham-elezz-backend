@@ -17,6 +17,60 @@ use Illuminate\Support\Facades\Validator;
 class CartController extends Controller
 {
     /**
+     * Food items: validate variation, normalize payload, compute unit price on server.
+     *
+     * @return array{0: ?array, 1: array, 2: float, 3: int}|null  errors, normalized variation, unit price, units in line
+     */
+    protected function prepareFoodCartLine($item, Request $request): ?array
+    {
+        $productVariations = json_decode($item->food_variations ?? '[]', true);
+        if (!is_array($productVariations) || count($productVariations) === 0) {
+            return null;
+        }
+
+        $variationInput = $request->variation ?? [];
+        $validationError = Helpers::validate_food_variations($productVariations, $variationInput);
+        if ($validationError) {
+            return [
+                ['errors' => [['code' => $validationError['code'], 'message' => $validationError['message']]]],
+                [],
+                0.0,
+                0,
+            ];
+        }
+
+        $normalized = Helpers::normalize_food_variations_payload($variationInput);
+        $unitPrice = Helpers::calculate_food_cart_unit_price($item, $normalized);
+        $variationUnits = Helpers::food_variation_total_quantity($normalized);
+        $lineUnits = max(1, $variationUnits) * (int)$request->quantity;
+
+        return [null, $normalized, $unitPrice, $lineUnits];
+    }
+
+    protected function formatCartLine($data, ?int $contextStoreId = null)
+    {
+        $data->add_on_ids = json_decode($data->add_on_ids, true);
+        $data->add_on_qtys = json_decode($data->add_on_qtys, true);
+        $data->variation = json_decode($data->variation, true);
+        if ($contextStoreId && $data->item && ($data->item->is_shared_menu ?? false) && !$data->item->getAttribute('context_store_id')) {
+            $data->item->setAttribute('context_store_id', $contextStoreId);
+        }
+        $data->item = Helpers::cart_product_data_formatting(
+            $data->item,
+            $data->variation,
+            $data->add_on_ids,
+            $data->add_on_qtys,
+            false,
+            app()->getLocale()
+        );
+        $data->variation_selection_count = Helpers::food_variation_total_quantity(
+            is_array($data->variation) ? $data->variation : []
+        );
+
+        return $data;
+    }
+
+    /**
      * Shared menu: resolve store_id param (id or slug) into numeric id.
      * Used to set context_store_id so formatted response keeps store_id non-null.
      */
@@ -45,17 +99,7 @@ class CartController extends Controller
         $is_guest = $request->user ? 0 : 1;
         $contextStoreId = $this->resolveContextStoreId($request);
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) use ($contextStoreId) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-            if ($contextStoreId && $data->item && ($data->item->is_shared_menu ?? false) && !$data->item->getAttribute('context_store_id')) {
-                $data->item->setAttribute('context_store_id', $contextStoreId);
-            }
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-			return $data;
-		});
+        ->map(fn ($data) => $this->formatCartLine($data, $contextStoreId));
         
         // حساب إجمالي المبلغ
         $total_amount = 0;
@@ -92,8 +136,9 @@ class CartController extends Controller
             'guest_id' => $request->user ? 'nullable' : 'required',
             'item_id' => 'required|integer',
             'model' => 'required|string|in:Item,ItemCampaign',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric|min:0',
             'quantity' => 'required|integer|min:1',
+            'variation' => 'nullable|array',
         ]);
 
         if ($validator->fails()) {
@@ -103,9 +148,31 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
         $model = $request->model === 'Item' ? 'App\Models\Item' : 'App\Models\ItemCampaign';
-        $item = $request->model === 'Item' ? Item::find($request->item_id) : ItemCampaign::find($request->item_id);
+        $item = $request->model === 'Item' ? Item::with('module')->find($request->item_id) : ItemCampaign::with('module')->find($request->item_id);
 
-        $cart = Cart::where('item_id',$request->item_id)->whereIn('item_type', [$model, $request->model])->where('variation',json_encode($request->variation))->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->first();
+        if (!$item) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'item_not_found', 'message' => translate('messages.product_not_found')],
+                ],
+            ], 404);
+        }
+
+        $foodLine = $this->prepareFoodCartLine($item, $request);
+        if ($foodLine !== null) {
+            if ($foodLine[0]) {
+                return response()->json($foodLine[0], 403);
+            }
+            $variationStorage = Helpers::variation_payload_for_storage($foodLine[1]);
+            $unitPrice = $foodLine[2];
+            $lineUnits = $foodLine[3];
+        } else {
+            $variationStorage = Helpers::variation_payload_for_storage($request->variation ?? []);
+            $unitPrice = (float)($request->price ?? $item->price);
+            $lineUnits = (int)$request->quantity;
+        }
+
+        $cart = Cart::where('item_id',$request->item_id)->whereIn('item_type', [$model, $request->model])->where('variation',$variationStorage)->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->first();
 
         if($cart){
             return response()->json([
@@ -115,7 +182,7 @@ class CartController extends Controller
             ], 403);
         }
 
-        if($item->maximum_cart_quantity && ($request->quantity>$item->maximum_cart_quantity)){
+        if($item->maximum_cart_quantity && ($lineUnits > $item->maximum_cart_quantity)){
             return response()->json([
                 'errors' => [
                     ['code' => 'cart_item_limit', 'message' => translate('messages.maximum_cart_quantity_exceeded')]
@@ -143,21 +210,14 @@ class CartController extends Controller
         $cart->is_guest = $is_guest;
         $cart->add_on_ids = isset($request->add_on_ids)?json_encode($request->add_on_ids):json_encode([]);
         $cart->add_on_qtys = isset($request->add_on_qtys)?json_encode($request->add_on_qtys):json_encode([]);
-        $cart->price = $request->price;
-        $cart->quantity = $request->quantity;
-        $cart->variation = isset($request->variation)?json_encode($request->variation):json_encode([]);
+        $cart->price = round($unitPrice, config('round_up_to_digit'));
+        $cart->quantity = (int)$request->quantity;
+        $cart->variation = $variationStorage;
 
         $item->carts()->save($cart);
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        ->map(fn ($data) => $this->formatCartLine($data));
         return response()->json($carts, 200);
     }
 
@@ -166,8 +226,9 @@ class CartController extends Controller
         $validator = Validator::make($request->all(), [
             'cart_id' => 'required',
             'guest_id' => $request->user ? 'nullable' : 'required',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric|min:0',
             'quantity' => 'required|integer|min:1',
+            'variation' => 'nullable|array',
         ]);
 
         if ($validator->fails()) {
@@ -177,10 +238,43 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
         $cart = Cart::find($request->cart_id);
+        if (!$cart) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_not_found', 'message' => translate('messages.Cart_not_found')],
+                ],
+            ], 404);
+        }
+
         $item = $cart->item ?? (in_array($cart->item_type, ['App\Models\Item', 'Item'], true)
-            ? Item::find($cart->item_id)
-            : ItemCampaign::find($cart->item_id));
-        if($item->maximum_cart_quantity && ($request->quantity>$item->maximum_cart_quantity)){
+            ? Item::with('module')->find($cart->item_id)
+            : ItemCampaign::with('module')->find($cart->item_id));
+
+        if (!$item) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'item_not_found', 'message' => translate('messages.product_not_found')],
+                ],
+            ], 404);
+        }
+
+        $foodLine = $this->prepareFoodCartLine($item, $request);
+        if ($foodLine !== null) {
+            if ($foodLine[0]) {
+                return response()->json($foodLine[0], 403);
+            }
+            $cart->variation = Helpers::variation_payload_for_storage($foodLine[1]);
+            $cart->price = round($foodLine[2], config('round_up_to_digit'));
+            $lineUnits = $foodLine[3];
+        } else {
+            if ($request->has('variation')) {
+                $cart->variation = Helpers::variation_payload_for_storage($request->variation ?? []);
+            }
+            $cart->price = round((float)($request->price ?? $cart->price), config('round_up_to_digit'));
+            $lineUnits = (int)$request->quantity;
+        }
+
+        if($item->maximum_cart_quantity && ($lineUnits > $item->maximum_cart_quantity)){
             return response()->json([
                 'errors' => [
                     ['code' => 'cart_item_limit', 'message' => translate('messages.maximum_cart_quantity_exceeded')]
@@ -193,20 +287,11 @@ class CartController extends Controller
         $cart->is_guest = $is_guest;
         $cart->add_on_ids = isset($request->add_on_ids)?json_encode($request->add_on_ids):$cart->add_on_ids;
         $cart->add_on_qtys = isset($request->add_on_qtys)?json_encode($request->add_on_qtys):$cart->add_on_qtys;
-        $cart->price = $request->price;
-        $cart->quantity = $request->quantity;
-        $cart->variation = isset($request->variation)?json_encode($request->variation):$cart->variation;
+        $cart->quantity = (int)$request->quantity;
         $cart->save();
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        ->map(fn ($data) => $this->formatCartLine($data));
         return response()->json($carts, 200);
     }
 
@@ -228,14 +313,7 @@ class CartController extends Controller
         $cart->delete();
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        ->map(fn ($data) => $this->formatCartLine($data));
         return response()->json($carts, 200);
     }
 
@@ -260,14 +338,7 @@ class CartController extends Controller
 
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        ->map(fn ($data) => $this->formatCartLine($data));
         return response()->json($carts, 200);
     }
 
