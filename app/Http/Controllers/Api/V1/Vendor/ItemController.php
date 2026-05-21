@@ -45,7 +45,7 @@ class ItemController extends Controller
                     return ($request['vendor']->stores[0]->module->module_type != 'food')  ;
                 })
             ],
-            'price' => 'required|numeric|min:0.01',
+            'price' => 'required|numeric|min:0',
             'discount' => 'required|numeric|min:0',
             'translations'=>'required',
         ], [
@@ -450,7 +450,7 @@ class ItemController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'category_id' => 'required',
-            'price' => 'required|numeric|min:0.01',
+            'price' => 'required|numeric|min:0',
             'discount' => 'required|numeric|min:0',
 
         ], [

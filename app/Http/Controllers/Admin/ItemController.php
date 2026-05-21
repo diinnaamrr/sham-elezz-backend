@@ -74,7 +74,7 @@ class ItemController extends Controller
 ],
 
 
-            'price' => 'required|numeric|between:.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'discount' => 'required|numeric|min:0',
             'store_id' => 'required_unless:is_shared_menu,1',
             'shared_menu_default_stock' => 'required_if:is_shared_menu,1|nullable|integer|min:0',
@@ -478,7 +478,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'name.0' => 'required',
             'name.*' => 'max:191',
             'category_id' => 'required',
-            'price' => 'required|numeric|between:.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'store_id' => 'required_unless:is_shared_menu,1',
             'shared_menu_default_stock' => 'required_if:is_shared_menu,1|nullable|integer|min:0',
             'description' => 'array',

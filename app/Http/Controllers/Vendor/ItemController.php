@@ -73,7 +73,7 @@ class ItemController extends Controller
                     return (Helpers::get_store_data()->module->module_type != 'food' && $request?->product_gellary == null )  ;
                 })
             ],
-            'price' => 'required|numeric|between:.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'description.*' => 'max:1000',
             'description.0' => 'required',
             'discount' => 'required|numeric|min:0',
@@ -505,7 +505,7 @@ class ItemController extends Controller
             'name.0' => 'required',
             'name.*' => 'max:191',
             'category_id' => 'required',
-            'price' => 'required|numeric|between:0.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'description.*' => 'max:1000',
             'description.0' => 'required',
             'discount' => 'required|numeric|min:0',
