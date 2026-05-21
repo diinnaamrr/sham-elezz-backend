@@ -92,17 +92,21 @@ class ItemController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
+        $discount_exceeds_price = false;
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
 
-        if ($request['price'] <= $dis) {
+            if ($request['price'] <= $dis) {
                 $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
+                $discount_exceeds_price = true;
+            }
         }
 
-        if ($request['price'] <= $dis || $validator->fails()) {
+        if ($discount_exceeds_price || $validator->fails()) {
                 return response()->json(['errors' => Helpers::error_processor($validator)]);
             }
 
@@ -496,17 +500,21 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'description.0.required' => translate('default_description_is_required'),
         ]);
 
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
+        $discount_exceeds_price = false;
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
+
+            if ($request['price'] <= $dis) {
+                $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
+                $discount_exceeds_price = true;
+            }
         }
 
-        if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
-        }
-
-        if ($request['price'] <= $dis || $validator->fails()) {
+        if ($discount_exceeds_price || $validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
