@@ -1112,6 +1112,24 @@
         $('#item_form').on('submit', function(e) {
             $('#submitButton').attr('disabled', true);
             e.preventDefault();
+            if ($('#has_sizes').is(':checked')) {
+                let hasValidSize = false;
+                $('#size_options_rows .size-option-row').each(function () {
+                    const label = $(this).find('input[name*="[label]"]').val();
+                    if (label && String(label).trim() !== '') {
+                        hasValidSize = true;
+                    }
+                });
+                if (!hasValidSize) {
+                    toastr.error('{{ translate('messages.please_add_options_for') }} Size', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                    $('#size_options_wrapper').removeClass('d-none');
+                    $('#submitButton').attr('disabled', false);
+                    return;
+                }
+            }
             let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {

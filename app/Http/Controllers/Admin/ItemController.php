@@ -309,7 +309,7 @@ class ItemController extends Controller
         }
         $sizePayload = Helpers::build_item_sizes_payload($request);
         if (isset($sizePayload['errors'])) {
-            return response()->json(['errors' => $sizePayload['errors']], 403);
+            return response()->json(['errors' => $sizePayload['errors']], 422);
         }
 
         // food variation
@@ -684,7 +684,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
 
         $sizePayload = Helpers::build_item_sizes_payload($request);
         if (isset($sizePayload['errors'])) {
-            return response()->json(['errors' => $sizePayload['errors']], 403);
+            return response()->json(['errors' => $sizePayload['errors']], 422);
         }
 
         $food_variations = [];

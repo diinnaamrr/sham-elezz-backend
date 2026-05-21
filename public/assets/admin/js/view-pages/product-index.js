@@ -159,7 +159,7 @@ $(document).on('change', '#has_sizes', function () {
     toggleSizeOptionsPanel();
 });
 
-$('#add_size_row').on('click', function () {
+$(document).on('click', '#add_size_row', function () {
     const index = $('#size_options_rows .size-option-row').length;
     const row = `
         <tr class="size-option-row">
