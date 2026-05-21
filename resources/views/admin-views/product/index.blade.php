@@ -1121,7 +1121,7 @@
                     }
                 });
                 if (!hasValidSize) {
-                    toastr.error('{{ translate('messages.please_add_options_for') }} Size', {
+                    toastr.error(@json(translate('messages.please_add_options_for') . ' Size'), {
                         CloseButton: true,
                         ProgressBar: true
                     });

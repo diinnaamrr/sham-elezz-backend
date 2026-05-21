@@ -145,13 +145,40 @@ function reindexSizeOptionRows() {
     });
 }
 
+function setFormSectionEnabled(sectionSelector, enabled) {
+    const $section = $(sectionSelector);
+    if (!$section.length) {
+        return;
+    }
+    $section.find('input, select, textarea').each(function () {
+        const $el = $(this);
+        if (!enabled) {
+            if ($el.prop('required')) {
+                $el.attr('data-was-required', '1');
+                $el.prop('required', false);
+            }
+            $el.prop('disabled', true);
+        } else {
+            if ($el.attr('data-was-required')) {
+                $el.prop('required', true);
+                $el.removeAttr('data-was-required');
+            }
+            $el.prop('disabled', false);
+        }
+    });
+}
+
 function toggleSizeOptionsPanel() {
     if ($('#has_sizes').is(':checked')) {
         $('#size_options_wrapper').removeClass('d-none');
         $('#food_variation_section').addClass('d-none');
+        setFormSectionEnabled('#food_variation_section', false);
+        setFormSectionEnabled('#size_options_wrapper', true);
     } else {
         $('#size_options_wrapper').addClass('d-none');
         $('#food_variation_section').removeClass('d-none');
+        setFormSectionEnabled('#food_variation_section', true);
+        setFormSectionEnabled('#size_options_wrapper', false);
     }
 }
 

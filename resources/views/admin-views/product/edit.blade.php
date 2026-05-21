@@ -43,7 +43,7 @@
             </div>
         </div>
         <!-- End Page Header -->
-        <form action="javascript:" method="post" id="product_form" enctype="multipart/form-data">
+        <form action="javascript:" method="post" id="product_form" enctype="multipart/form-data" novalidate>
             @csrf
                 @if (request()->product_gellary  == 1)
                     @php
@@ -795,7 +795,6 @@
 <script>
     "use strict";
      let removedImageKeys = [];
-    let element = "";
 
 
     $(document).on('click','.function_remove_img' ,function(){
@@ -849,7 +848,7 @@
          hide_min_max(data);
      });
 
-    let count =   $('.count_div').length;
+    count = $('.count_div').length;
 
     $(document).ready(function() {
         $("#add_new_option_button").click(function(e) {
@@ -975,7 +974,7 @@
         let e = $(this);
         deleteRow(e);
     });
-    let countRow = 0;
+    countRow = 0;
 
     function add_new_row_button(data) {
         // count = data;
@@ -1092,15 +1091,15 @@
         @endif
     });
 
-    let module_id = {{ $product->module_id }};
-    let module_type = "{{ $product->module->module_type }}";
-    let parent_category_id = {{ $category ? $category->id : 0 }};
+    module_id = {{ $product->module_id }};
+    module_type = "{{ $product->module->module_type }}";
+    parent_category_id = {{ $category ? $category->id : 0 }};
     <?php
     $module_data = config('module.' . $product->module->module_type);
     unset($module_data['description']);
     ?>
-    let module_data = {{ str_replace('"', '', json_encode($module_data)) }};
-    let stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
+    module_data = {{ str_replace('"', '', json_encode($module_data)) }};
+    stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
     input_field_visibility_update();
 
     function modulChange(id) {
@@ -1421,7 +1420,7 @@
                 }
             });
             if (!hasValidSize) {
-                toastr.error('{{ translate('messages.please_add_options_for') }} Size', {
+                toastr.error(@json(translate('messages.please_add_options_for') . ' Size'), {
                     CloseButton: true,
                     ProgressBar: true
                 });
