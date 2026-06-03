@@ -95,9 +95,45 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
+    public function activeChildes(): HasMany
+    {
+        return $this->childes()->where('status', 1)->orderByDesc('priority');
+    }
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public static function nestedActiveChildesRelation(int $depth = 20): array
+    {
+        if ($depth <= 0) {
+            return [];
+        }
+
+        return [
+            'childes' => function ($query) use ($depth) {
+                $query->where('status', 1)
+                    ->orderByDesc('priority')
+                    ->when($depth > 1, function ($q) use ($depth) {
+                        $q->with(self::nestedActiveChildesRelation($depth - 1));
+                    });
+            },
+        ];
+    }
+
+    public function isDescendantOf(int $categoryId): bool
+    {
+        $parent = $this->parent;
+
+        while ($parent) {
+            if ((int) $parent->id === $categoryId) {
+                return true;
+            }
+            $parent = $parent->parent;
+        }
+
+        return false;
     }
     public function storage()
     {

@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
 use App\Http\Requests\Admin\CategoryUpdateRequest;
+use App\Models\Category;
 use App\Traits\FileManagerTrait;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -37,11 +39,76 @@ class CategoryService
     public function getUpdateData(CategoryUpdateRequest $request, object $object): array
     {
         $slug = Str::slug($request->name[array_search('default', $request->lang)]);
-        return [
+        $data = [
             'slug' => $object->slug ?? "{$slug}{$object->id}",
             'name' => $request->name[array_search('default', $request->lang)],
             'image' => $request->has('image') ? $this->updateAndUpload('category/', $object->image, 'png', $request->file('image')) : $object->image,
         ];
+
+        if ($object->position == 1 && $request->filled('parent_id')) {
+            $data['parent_id'] = (int) $request->parent_id;
+        }
+
+        return $data;
+    }
+
+    public function getParentCategoryOptions(?int $excludeCategoryId = null): Collection
+    {
+        $categories = Category::query()
+            ->withoutGlobalScope('translate')
+            ->with(['translations', 'module'])
+            ->where('module_id', Config::get('module.current_module_id'))
+            ->orderBy('parent_id')
+            ->orderBy('priority', 'desc')
+            ->get();
+
+        return collect($this->buildParentCategoryOptions($categories, 0, 0, $excludeCategoryId));
+    }
+
+    private function buildParentCategoryOptions(Collection $categories, int $parentId, int $depth, ?int $excludeCategoryId): array
+    {
+        $options = [];
+
+        foreach ($categories->where('parent_id', $parentId) as $category) {
+            if ($excludeCategoryId && ((int) $category->id === $excludeCategoryId || $category->isDescendantOf($excludeCategoryId))) {
+                continue;
+            }
+
+            $options[] = [
+                'id' => $category->id,
+                'name' => str_repeat('— ', $depth) . $category->name,
+                'module_name' => $category->module?->module_name,
+                'position' => $category->position,
+            ];
+
+            $options = array_merge(
+                $options,
+                $this->buildParentCategoryOptions($categories, (int) $category->id, $depth + 1, $excludeCategoryId)
+            );
+        }
+
+        return $options;
+    }
+
+    public function isValidParentId(?int $parentId, ?int $categoryId = null): bool
+    {
+        if (!$parentId) {
+            return false;
+        }
+
+        $parent = Category::query()
+            ->withoutGlobalScope('translate')
+            ->find($parentId);
+
+        if (!$parent || $parent->module_id != Config::get('module.current_module_id')) {
+            return false;
+        }
+
+        if ($categoryId && ((int) $parentId === $categoryId || $parent->isDescendantOf($categoryId))) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getImportData(Request $request, bool $toAdd = true): array

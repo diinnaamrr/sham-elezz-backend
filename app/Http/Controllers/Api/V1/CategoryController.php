@@ -23,15 +23,9 @@ class CategoryController extends Controller
             $zone_id=  $request->header('zoneId') ? json_decode($request->header('zoneId'), true) : [];
             $key = explode(' ', $search);
             $featured = $request->query('featured');
-            // Commented out: Sub-category support disabled - only main categories allowed
-            // $categories = Category::withCount(['products','childes'=> function($query){
-            //     $query->where('status',1);
-            // } ])->with(['childes' => function($query)  {
-            //     $query->where('status',1)->withCount(['products','childes'=> function($query){
-            //         $query->where('status',1);
-            //     }]);
-            // }])
-            $categories = Category::withCount(['products'])
+            $categories = Category::withCount(['products', 'childes' => function ($query) {
+                $query->where('status', 1);
+            }])->with(Category::nestedActiveChildesRelation())
             ->where(['position'=>0,'status'=>1])
             ->when(config('module.current_module_data'), function($query){
                 $query->module(config('module.current_module_data')['id']);
@@ -71,10 +65,7 @@ class CategoryController extends Controller
                         ->whereHas('store', function ($query) use ($zone_id) {
                             $query->whereIn('zone_id', $zone_id);
                         })
-                        // Commented out: Sub-category support disabled - only main categories
-                        ->whereHas('category',function($q)use($category){
-                            return $q->whereId($category->id); // Removed: ->orWhere('parent_id', $category->id)
-                        })
+                        ->whereIn('category_id', $category->getAllSubcategoryIds()->unique()->values()->all())
                         ->withCount('orders');
 
                     $productCount = $productCountQuery->count();
@@ -97,7 +88,11 @@ class CategoryController extends Controller
     public function get_childes($id)
     {
         try {
-            $categories = Category::with('parent')->where(['parent_id' => $id,'status'=>1])->orderBy('priority','desc')->get();
+            $categories = Category::with(array_merge(['parent'], Category::nestedActiveChildesRelation()))
+                ->where(['parent_id' => $id, 'status' => 1])
+                ->orderBy('priority', 'desc')
+                ->get();
+
             return response()->json($categories, 200);
         } catch (\Exception $e) {
             return response()->json([], 200);
@@ -132,8 +127,7 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json([], 200);
         }
-        // $categoryIds = $category->getAllSubcategoryIds(); // Fetch all subcategories recursively
-        $categoryIds = [$category->id]; // Only use main category ID
+        $categoryIds = $category->getAllSubcategoryIds()->unique()->values()->all();
 
         // Step 2: Get all unique product SKUs first (before pagination)
         $allUniqueSkus = Item::whereIn('category_id', $categoryIds)

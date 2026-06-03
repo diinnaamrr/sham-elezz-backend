@@ -62,14 +62,25 @@ class CategoryController extends BaseController
             filters: ['position' => 0],
             relations: ['module'],
         );
+        $parentCategoryOptions = $request['position'] == 1
+            ? $this->categoryService->getParentCategoryOptions()
+            : collect();
 
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view($this->categoryService->getViewByPosition($request['position']), compact('categories','language','defaultLang','mainCategories'));
+        return view(
+            $this->categoryService->getViewByPosition($request['position']),
+            compact('categories', 'language', 'defaultLang', 'mainCategories', 'parentCategoryOptions')
+        );
     }
 
     public function add(CategoryAddRequest $request): RedirectResponse
     {
+        if ($request['position'] == 1 && !$this->categoryService->isValidParentId((int) $request['parent_id'])) {
+            Toastr::error(translate('messages.invalid_parent_category'));
+            return back();
+        }
+
         $parentCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $request['parent_id']]);
         $category = $this->categoryRepo->add(
             data: $this->categoryService->getAddData(
@@ -85,9 +96,15 @@ class CategoryController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $category = $this->categoryRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
+        $parentCategoryOptions = $category->position == 1
+            ? $this->categoryService->getParentCategoryOptions((int) $category->id)
+            : collect();
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view(CategoryViewPath::UPDATE['view'], compact('category','language','defaultLang'));
+        return view(
+            CategoryViewPath::UPDATE['view'],
+            compact('category', 'language', 'defaultLang', 'parentCategoryOptions')
+        );
     }
 
     public function updateStatus(Request $request): RedirectResponse
@@ -107,6 +124,13 @@ class CategoryController extends BaseController
     public function update(CategoryUpdateRequest $request, string|int $id): RedirectResponse
     {
         $mainCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $id]);
+
+        if ($mainCategory->position == 1 && $request->filled('parent_id')
+            && !$this->categoryService->isValidParentId((int) $request->parent_id, (int) $id)) {
+            Toastr::error(translate('messages.invalid_parent_category'));
+            return back();
+        }
+
         $category = $this->categoryRepo->update(id: $id, data: $this->categoryService->getUpdateData(request: $request, object: $mainCategory));
         $this->translationRepo->updateByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
         Toastr::success( $category['position'] == 0 ?    translate('messages.category_updated_successfully') : translate('messages.Sub_category_updated_successfully'));

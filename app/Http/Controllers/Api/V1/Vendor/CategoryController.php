@@ -11,7 +11,8 @@ class CategoryController extends Controller
     public function get_categories()
     {
         try {
-            $categories = Category::where(['position'=>0,'status'=>1])
+            $categories = Category::with(Category::nestedActiveChildesRelation())
+            ->where(['position'=>0,'status'=>1])
             ->when(config('module.current_module_data'), function($query){
                 $query->module(config('module.current_module_data')['id']);
             })
@@ -34,7 +35,10 @@ class CategoryController extends Controller
                     $query->where('slug',$id);
                 });
             }
-            $categories = $categories->where('status',1)->orderBy('priority','desc')->get();
+            $categories = $categories->where('status', 1)
+                ->orderBy('priority', 'desc')
+                ->with(Category::nestedActiveChildesRelation())
+                ->get();
             return response()->json($categories, 200);
             // return response()->json(Helpers::category_data_formatting($categories, true), 200);
         } catch (\Exception $e) {

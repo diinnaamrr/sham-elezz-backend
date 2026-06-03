@@ -89,6 +89,20 @@ active
 
                         </div>
                         <div class="col-md-6">
+                            @if ($category->position == 1 && isset($parentCategoryOptions) && count($parentCategoryOptions) > 0)
+                            <div class="form-group">
+                                <label class="input-label" for="parent_id">{{translate('messages.parent_category')}}
+                                    <span class="input-label-secondary">*</span>
+                                </label>
+                                <select id="parent_id" name="parent_id" class="form-control js-select2-custom" required>
+                                    @foreach($parentCategoryOptions as $option)
+                                        <option value="{{$option['id']}}" {{$category->parent_id == $option['id'] ? 'selected' : ''}}>
+                                            {{$option['name']}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @endif
                             @if ($category->position == 0)
                             <div class="h-100 d-flex align-items-center flex-column">
                                 <label class="mb-4">{{translate('messages.image')}}

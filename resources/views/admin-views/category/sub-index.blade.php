@@ -68,12 +68,17 @@
                     @endif
                         <div class="form-group col-sm-6">
                             <label class="input-label"
-                                for="exampleFormControlSelect1">{{translate('messages.main_category')}}
+                                for="exampleFormControlSelect1">{{translate('messages.parent_category')}}
                                 <span class="input-label-secondary">*</span></label>
                             <select id="exampleFormControlSelect1" name="parent_id" class="form-control js-select2-custom" required>
-                                <option value="" selected disabled>{{translate('Select Main Category')}}</option>
-                                @foreach($mainCategories as $category)
-                                    <option value="{{$category['id']}}" >{{$category['name']}} ({{Str::limit($category->module->module_name, 15, '...')}})</option>
+                                <option value="" selected disabled>{{translate('messages.select_parent_category')}}</option>
+                                @foreach($parentCategoryOptions as $option)
+                                    <option value="{{$option['id']}}">
+                                        {{$option['name']}}
+                                        @if(!empty($option['module_name']))
+                                            ({{Str::limit($option['module_name'], 15, '...')}})
+                                        @endif
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -153,7 +158,7 @@
                             <tr>
                                 <th class="border-0">{{translate('sl')}}</th>
                                 <th class="border-0">{{translate('messages.id')}}</th>
-                                <th class="border-0 w--1">{{translate('messages.main_category')}}</th>
+                                <th class="border-0 w--1">{{translate('messages.parent_category')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.sub_category')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.status')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.featured')}}</th>

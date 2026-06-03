@@ -404,14 +404,10 @@ class CategoryLogic
 
     public static function all_products($id, $zone_id)
     {
-        $cate_ids=[];
-        array_push($cate_ids,(int)$id);
-        foreach (CategoryLogic::child($id) as $ch1){
-            array_push($cate_ids,$ch1['id']);
-            foreach (CategoryLogic::child($ch1['id']) as $ch2){
-                array_push($cate_ids,$ch2['id']);
-            }
-        }
+        $category = Category::find($id);
+        $cate_ids = $category
+            ? $category->getAllSubcategoryIds()->unique()->values()->all()
+            : [(int) $id];
 
         return Item::whereIn('category_id', $cate_ids)
             ->whereHas('module.zones', function($query)use($zone_id){
