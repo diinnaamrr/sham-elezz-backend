@@ -466,8 +466,8 @@
                                 </a>
                             </li>
 
-                            <li class="nav-item @yield('sub_category') {{ Request::is('admin/category/add-sub-category') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.category.add-sub-category') }}" title="{{ translate('messages.sub_category') }}">
+                            <li class="nav-item @yield('sub_category') {{ (request()->input('position') == 1 && Request::is('admin/category/add')) ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('admin.category.add', ['position' => 1]) }}" title="{{ translate('messages.sub_category') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">{{ translate('messages.sub_category') }}</span>
                                 </a>

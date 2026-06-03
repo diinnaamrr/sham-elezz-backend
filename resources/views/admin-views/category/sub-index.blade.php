@@ -81,6 +81,7 @@
                                     </option>
                                 @endforeach
                             </select>
+                            <small class="text-muted d-block mt-1">{{translate('messages.nested_sub_category_hint')}}</small>
                         </div>
                         <input name="position" value="1" hidden>
 
@@ -176,9 +177,15 @@
                                     <span class="d-block font-size-sm text-body">
                                         {{ $category?->parent?->name ? Str::limit($category->parent['name'],20,'...') : translate('Invalid_Category') }}
                                     </span>
+                                    @if($category?->parent && $category->getNestingDepth() > 1)
+                                        <small class="d-block text-muted">{{ Str::limit($category->getAncestorPath(), 45, '...') }}</small>
+                                    @endif
                                 </td>
                                 <td class="text-center">
-                                    <span class="d-block font-size-sm text-body">
+                                    <span class="d-block font-size-sm text-body" style="padding-inline-start: {{ $category->getNestingDepth() * 12 }}px">
+                                        @if($category->getNestingDepth() > 0)
+                                            <span class="text-muted">{{ str_repeat('└ ', $category->getNestingDepth()) }}</span>
+                                        @endif
                                         {{Str::limit($category?->name,20,'...')}}
                                     </span>
                                 </td>

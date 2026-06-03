@@ -218,17 +218,43 @@ class Category extends Model
         });
         return null;
     }
-  public function getAllSubcategoryIds()
-{
-    $subcategories = $this->childes()->with('childes')->get();
+    public function getAllSubcategoryIds()
+    {
+        $subcategories = $this->childes()->with('childes')->get();
 
-    $ids = collect([$this->id]); // Include main category
+        $ids = collect([$this->id]);
 
-    foreach ($subcategories as $sub) {
-        $ids = $ids->merge($sub->getAllSubcategoryIds()); // Recursively get subcategories
+        foreach ($subcategories as $sub) {
+            $ids = $ids->merge($sub->getAllSubcategoryIds());
+        }
+
+        return $ids;
     }
 
-    return $ids;
-}
+    public function getNestingDepth(): int
+    {
+        $depth = 0;
+        $parent = $this->parent;
+
+        while ($parent) {
+            $depth++;
+            $parent = $parent->parent;
+        }
+
+        return $depth;
+    }
+
+    public function getAncestorPath(string $separator = ' › '): string
+    {
+        $names = [];
+        $parent = $this->parent;
+
+        while ($parent) {
+            array_unshift($names, $parent->name);
+            $parent = $parent->parent;
+        }
+
+        return implode($separator, $names);
+    }
 
 }

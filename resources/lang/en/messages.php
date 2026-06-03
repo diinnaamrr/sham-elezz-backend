@@ -886,6 +886,7 @@
   'parent_category' => 'Parent category',
   'select_parent_category' => 'Select parent category',
   'invalid_parent_category' => 'Invalid parent category selected',
+  'nested_sub_category_hint' => 'Choose any category or sub-category as parent to create deeper levels (sub under sub).',
   'Select Main Category' => 'Select Main Category',
   'sub_category_list' => 'Sub category list',
   'ex_:_search_sub_categories' => 'Ex : search sub categories',

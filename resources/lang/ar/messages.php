@@ -886,6 +886,7 @@
   'parent_category' => 'الفئة الأب',
   'select_parent_category' => 'اختر الفئة الأب',
   'invalid_parent_category' => 'الفئة الأب المختارة غير صالحة',
+  'nested_sub_category_hint' => 'اختاري أي فئة أو صاب كاتيجوري كأب لإنشاء مستويات أعمق (صاب تحت صاب).',
   'Select Main Category' => 'حدد الفئة الرئيسية',
   'sub_category_list' => 'قائمة الفئة الفرعية',
   'ex_:_search_sub_categories' => 'على سبيل المثال: البحث عن الفئات الفرعية',

@@ -51,10 +51,17 @@ class CategoryController extends BaseController
 
     private function getCategoryView(Request $request): View
     {
+        $position = (int) $request->input('position', 0);
+        $relations = ['module'];
+
+        if ($position === 1) {
+            $relations[] = implode('.', array_fill(0, 15, 'parent'));
+        }
+
         $categories = $this->categoryRepo->getListWhere(
             searchValue: $request['search'],
-            filters: ['position' => $request['position']],
-            relations: ['module'],
+            filters: ['position' => $position],
+            relations: $relations,
             dataLimit: config('default_pagination')
         );
 
@@ -62,15 +69,15 @@ class CategoryController extends BaseController
             filters: ['position' => 0],
             relations: ['module'],
         );
-        $parentCategoryOptions = $request['position'] == 1
+        $parentCategoryOptions = $position === 1
             ? $this->categoryService->getParentCategoryOptions()
             : collect();
 
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
         return view(
-            $this->categoryService->getViewByPosition($request['position']),
-            compact('categories', 'language', 'defaultLang', 'mainCategories', 'parentCategoryOptions')
+            $this->categoryService->getViewByPosition($position),
+            compact('categories', 'language', 'defaultLang', 'mainCategories', 'parentCategoryOptions', 'position')
         );
     }
 
