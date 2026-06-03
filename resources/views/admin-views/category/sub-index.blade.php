@@ -26,7 +26,6 @@
                 @csrf
                     <div class="row">
                     @if($language)
-                        @php($defaultLang = $language[0])
                         <div class="col-sm-12">
                             <ul class="nav nav-tabs mb-4">
                                 <li class="nav-item">
@@ -66,10 +65,6 @@
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                     @endif
-                        @php
-                            $selectedMain = old('main_category_id', request('main_category_id'));
-                            $selectedParentSub = old('parent_sub_category_id', request('parent_sub_category_id'));
-                        @endphp
                         <div class="form-group col-sm-6">
                             <label class="input-label" for="main_category_id">
                                 {{translate('messages.main_category')}}
@@ -181,15 +176,13 @@
                         </thead>
 
                         <tbody id="table-div">
-                        @php($mainCategoryMap = $mainCategories->keyBy('id'))
                         @foreach($categories as $key=>$category)
-                            @php($rootId = $category->getRootCategoryId())
                             <tr>
                                 <td>{{$key+$categories->firstItem()}}</td>
                                 <td>{{$category->id}}</td>
                                 <td>
                                     <span class="d-block font-size-sm text-body">
-                                        {{ Str::limit($mainCategoryMap[$rootId]->name ?? translate('Invalid_Category'), 25, '...') }}
+                                        {{ Str::limit(optional($mainCategoryMap->get($category->getRootCategoryId()))->name ?? translate('Invalid_Category'), 25, '...') }}
                                     </span>
                                 </td>
                                 <td>
@@ -237,7 +230,7 @@
                                 <td>
                                     <div class="btn--container justify-content-center">
                                         <a class="btn action-btn btn--secondary btn-outline-secondary"
-                                            href="{{ route('admin.category.add', ['position' => 1, 'main_category_id' => $rootId, 'parent_sub_category_id' => $category->id]) }}"
+                                            href="{{ route('admin.category.add', ['position' => 1, 'main_category_id' => $category->getRootCategoryId(), 'parent_sub_category_id' => $category->id]) }}"
                                             title="{{translate('messages.add_child_sub_category')}}"><i class="tio-add"></i>
                                         </a>
                                         <a class="btn action-btn btn--primary btn-outline-primary"

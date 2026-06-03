@@ -73,11 +73,25 @@ class CategoryController extends BaseController
             ? $this->categoryService->getSubCategoriesByMainJson()
             : '{}';
 
+        $selectedMain = old('main_category_id', $request->input('main_category_id'));
+        $selectedParentSub = old('parent_sub_category_id', $request->input('parent_sub_category_id'));
+        $mainCategoryMap = $mainCategories->keyBy('id');
+
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
         return view(
             $this->categoryService->getViewByPosition($position),
-            compact('categories', 'language', 'defaultLang', 'mainCategories', 'subCategoriesByMain', 'position')
+            compact(
+                'categories',
+                'language',
+                'defaultLang',
+                'mainCategories',
+                'subCategoriesByMain',
+                'position',
+                'selectedMain',
+                'selectedParentSub',
+                'mainCategoryMap'
+            )
         );
     }
 
