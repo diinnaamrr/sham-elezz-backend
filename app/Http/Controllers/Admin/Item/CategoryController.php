@@ -69,26 +69,37 @@ class CategoryController extends BaseController
             filters: ['position' => 0],
             relations: ['module'],
         );
-        $parentCategoryOptions = $position === 1
-            ? $this->categoryService->getParentCategoryOptions()
-            : collect();
+        $subCategoriesByMain = $position === 1
+            ? $this->categoryService->getSubCategoriesByMainJson()
+            : '{}';
 
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
         return view(
             $this->categoryService->getViewByPosition($position),
-            compact('categories', 'language', 'defaultLang', 'mainCategories', 'parentCategoryOptions', 'position')
+            compact('categories', 'language', 'defaultLang', 'mainCategories', 'subCategoriesByMain', 'position')
         );
     }
 
     public function add(CategoryAddRequest $request): RedirectResponse
     {
-        if ($request['position'] == 1 && !$this->categoryService->isValidParentId((int) $request['parent_id'])) {
-            Toastr::error(translate('messages.invalid_parent_category'));
-            return back();
+        if ($request['position'] == 1) {
+            $parentSubId = $request->filled('parent_sub_category_id') ? (int) $request->parent_sub_category_id : null;
+
+            if (!$this->categoryService->isValidSubCategoryAssignment((int) $request->main_category_id, $parentSubId)) {
+                Toastr::error(translate('messages.invalid_parent_category'));
+                return back();
+            }
         }
 
-        $parentCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $request['parent_id']]);
+        $resolvedParentId = $request['position'] == 1
+            ? $this->categoryService->resolveSubParentId(
+                (int) $request->main_category_id,
+                $request->filled('parent_sub_category_id') ? (int) $request->parent_sub_category_id : null
+            )
+            : (int) $request->parent_id;
+
+        $parentCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $resolvedParentId]);
         $category = $this->categoryRepo->add(
             data: $this->categoryService->getAddData(
                 request: $request,
@@ -103,14 +114,26 @@ class CategoryController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $category = $this->categoryRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        $parentCategoryOptions = $category->position == 1
-            ? $this->categoryService->getParentCategoryOptions((int) $category->id)
-            : collect();
+        $mainCategories = $this->categoryRepo->getMainList(
+            filters: ['position' => 0],
+            relations: ['module'],
+        );
+        $subCategoriesByMain = $category->position == 1
+            ? $this->categoryService->getSubCategoriesByMainJson((int) $category->id)
+            : '{}';
+        $subCategoryFormDefaults = $this->categoryService->getSubCategoryFormDefaults($category);
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
         return view(
             CategoryViewPath::UPDATE['view'],
-            compact('category', 'language', 'defaultLang', 'parentCategoryOptions')
+            compact(
+                'category',
+                'language',
+                'defaultLang',
+                'mainCategories',
+                'subCategoriesByMain',
+                'subCategoryFormDefaults'
+            )
         );
     }
 
@@ -132,10 +155,13 @@ class CategoryController extends BaseController
     {
         $mainCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $id]);
 
-        if ($mainCategory->position == 1 && $request->filled('parent_id')
-            && !$this->categoryService->isValidParentId((int) $request->parent_id, (int) $id)) {
-            Toastr::error(translate('messages.invalid_parent_category'));
-            return back();
+        if ($mainCategory->position == 1 && $request->filled('main_category_id')) {
+            $parentSubId = $request->filled('parent_sub_category_id') ? (int) $request->parent_sub_category_id : null;
+
+            if (!$this->categoryService->isValidSubCategoryAssignment((int) $request->main_category_id, $parentSubId, (int) $id)) {
+                Toastr::error(translate('messages.invalid_parent_category'));
+                return back();
+            }
         }
 
         $category = $this->categoryRepo->update(id: $id, data: $this->categoryService->getUpdateData(request: $request, object: $mainCategory));
@@ -159,6 +185,15 @@ class CategoryController extends BaseController
         $data = $this->categoryRepo->getNameList(request: $request, dataLimit: 8);
         $data[] = (object)['id' => 'all', 'text' => 'All'];
         return response()->json($data);
+    }
+
+    public function getSubParentOptions(Request $request, int $mainCategoryId): JsonResponse
+    {
+        $excludeId = $request->integer('exclude') ?: null;
+
+        return response()->json(
+            $this->categoryService->getSubCategoryOptionsForMain($mainCategoryId, $excludeId)
+        );
     }
 
     public function updatePriority(Request $request): RedirectResponse

@@ -66,22 +66,33 @@
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                     @endif
+                        @php
+                            $selectedMain = old('main_category_id', request('main_category_id'));
+                            $selectedParentSub = old('parent_sub_category_id', request('parent_sub_category_id'));
+                        @endphp
                         <div class="form-group col-sm-6">
-                            <label class="input-label"
-                                for="exampleFormControlSelect1">{{translate('messages.parent_category')}}
-                                <span class="input-label-secondary">*</span></label>
-                            <select id="exampleFormControlSelect1" name="parent_id" class="form-control js-select2-custom" required>
-                                <option value="" selected disabled>{{translate('messages.select_parent_category')}}</option>
-                                @foreach($parentCategoryOptions as $option)
-                                    <option value="{{$option['id']}}">
-                                        {{$option['name']}}
-                                        @if(!empty($option['module_name']))
-                                            ({{Str::limit($option['module_name'], 15, '...')}})
-                                        @endif
+                            <label class="input-label" for="main_category_id">
+                                {{translate('messages.main_category')}}
+                                <span class="input-label-secondary">*</span>
+                            </label>
+                            <select id="main_category_id" name="main_category_id" class="form-control js-select2-custom" required>
+                                <option value="" disabled {{ $selectedMain ? '' : 'selected' }}>{{translate('Select Main Category')}}</option>
+                                @foreach($mainCategories as $category)
+                                    <option value="{{$category['id']}}" {{ (string)$selectedMain === (string)$category['id'] ? 'selected' : '' }}>
+                                        {{$category['name']}}
                                     </option>
                                 @endforeach
                             </select>
-                            <small class="text-muted d-block mt-1">{{translate('messages.nested_sub_category_hint')}}</small>
+                            <small class="text-muted d-block mt-1">{{translate('messages.sub_main_category_hint')}}</small>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="input-label" for="parent_sub_category_id">
+                                {{translate('messages.parent_sub_category')}}
+                            </label>
+                            <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom" {{ $selectedMain ? '' : 'disabled' }}>
+                                <option value="">{{translate('messages.direct_under_main_category')}}</option>
+                            </select>
+                            <small class="text-muted d-block mt-1">{{translate('messages.parent_sub_category_hint')}}</small>
                         </div>
                         <input name="position" value="1" hidden>
 
@@ -159,7 +170,8 @@
                             <tr>
                                 <th class="border-0">{{translate('sl')}}</th>
                                 <th class="border-0">{{translate('messages.id')}}</th>
-                                <th class="border-0 w--1">{{translate('messages.parent_category')}}</th>
+                                <th class="border-0 w--1">{{translate('messages.main_category')}}</th>
+                                <th class="border-0 w--1">{{translate('messages.parent_sub_category')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.sub_category')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.status')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.featured')}}</th>
@@ -169,17 +181,25 @@
                         </thead>
 
                         <tbody id="table-div">
+                        @php($mainCategoryMap = $mainCategories->keyBy('id'))
                         @foreach($categories as $key=>$category)
+                            @php($rootId = $category->getRootCategoryId())
                             <tr>
                                 <td>{{$key+$categories->firstItem()}}</td>
                                 <td>{{$category->id}}</td>
                                 <td>
                                     <span class="d-block font-size-sm text-body">
-                                        {{ $category?->parent?->name ? Str::limit($category->parent['name'],20,'...') : translate('Invalid_Category') }}
+                                        {{ Str::limit($mainCategoryMap[$rootId]->name ?? translate('Invalid_Category'), 25, '...') }}
                                     </span>
-                                    @if($category?->parent && $category->getNestingDepth() > 1)
-                                        <small class="d-block text-muted">{{ Str::limit($category->getAncestorPath(), 45, '...') }}</small>
-                                    @endif
+                                </td>
+                                <td>
+                                    <span class="d-block font-size-sm text-body">
+                                        @if($category->isDirectChildOfMain())
+                                            <span class="text-muted">{{ translate('messages.direct_under_main_category') }}</span>
+                                        @else
+                                            {{ Str::limit($category?->parent?->name, 25, '...') }}
+                                        @endif
+                                    </span>
                                 </td>
                                 <td class="text-center">
                                     <span class="d-block font-size-sm text-body" style="padding-inline-start: {{ $category->getNestingDepth() * 12 }}px">
@@ -216,6 +236,10 @@
                                 </td>
                                 <td>
                                     <div class="btn--container justify-content-center">
+                                        <a class="btn action-btn btn--secondary btn-outline-secondary"
+                                            href="{{ route('admin.category.add', ['position' => 1, 'main_category_id' => $rootId, 'parent_sub_category_id' => $category->id]) }}"
+                                            title="{{translate('messages.add_child_sub_category')}}"><i class="tio-add"></i>
+                                        </a>
                                         <a class="btn action-btn btn--primary btn-outline-primary"
                                             href="{{route('admin.category.edit',[$category['id']])}}" title="{{translate('messages.edit_category')}}"><i class="tio-edit"></i>
                                         </a>
@@ -255,15 +279,22 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
     <script>
         "use strict";
-            $('.location-reload-to-category').on('click', function() {
-                const url = $(this).data('url');
-                let nurl = new URL(url);
-                nurl.searchParams.delete('search');
-                location.href = nurl;
-            });
+        window.subCategoriesByMain = {!! $subCategoriesByMain !!};
+        window.subCategoryFormDefaults = {
+            main_category_id: "{{ $selectedMain ?? '' }}",
+            parent_sub_category_id: "{{ $selectedParentSub ?? '' }}",
+        };
 
-            $('#reset_btn').click(function(){
-            $('#exampleFormControlSelect1').val(null).trigger('change');
-            })
-            </script>
+        $('.location-reload-to-category').on('click', function() {
+            const url = $(this).data('url');
+            let nurl = new URL(url);
+            nurl.searchParams.delete('search');
+            location.href = nurl;
+        });
+
+        $('#reset_btn').click(function(){
+            $('#main_category_id').val(null).trigger('change');
+            $('#parent_sub_category_id').val('').prop('disabled', true).trigger('change');
+        });
+    </script>
 @endpush

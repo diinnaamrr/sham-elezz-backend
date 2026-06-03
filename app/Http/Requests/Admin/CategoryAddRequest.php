@@ -32,6 +32,8 @@ class CategoryAddRequest extends FormRequest
             'name' => 'required|max:100',
             'name.0' => 'required',
             'image' => 'required_if:position,==,0',
+            'main_category_id' => 'required_if:position,1',
+            'parent_sub_category_id' => 'nullable|integer',
         ];
     }
 

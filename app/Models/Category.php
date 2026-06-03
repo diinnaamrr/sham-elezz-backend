@@ -257,4 +257,48 @@ class Category extends Model
         return implode($separator, $names);
     }
 
+    public function getRootCategoryId(): int
+    {
+        if ($this->position === 0) {
+            return (int) $this->id;
+        }
+
+        $current = $this;
+
+        while ($current->parent_id) {
+            $parent = $current->parent;
+
+            if (!$parent) {
+                $parent = static::withoutGlobalScopes()->find($current->parent_id);
+            }
+
+            if (!$parent) {
+                break;
+            }
+
+            if ($parent->position === 0) {
+                return (int) $parent->id;
+            }
+
+            $current = $parent;
+        }
+
+        return (int) $this->parent_id;
+    }
+
+    public function isDirectChildOfMain(): bool
+    {
+        if ($this->position !== 1) {
+            return false;
+        }
+
+        $parent = $this->parent;
+
+        if (!$parent && $this->parent_id) {
+            $parent = static::withoutGlobalScopes()->find($this->parent_id);
+        }
+
+        return $parent && $parent->position === 0;
+    }
+
 }

@@ -25,14 +25,26 @@ class CategoryService
         };
     }
 
+    public function resolveSubParentId(int $mainCategoryId, ?int $parentSubCategoryId = null): int
+    {
+        return $parentSubCategoryId ?: $mainCategoryId;
+    }
+
     public function getAddData($request, string|null|Object $parentCategory): array
     {
+        $parentId = $request->position == 1
+            ? $this->resolveSubParentId(
+                (int) $request->main_category_id,
+                $request->filled('parent_sub_category_id') ? (int) $request->parent_sub_category_id : null
+            )
+            : ($request->parent_id == null ? 0 : $request->parent_id);
+
         return [
             'name' => $request->name[array_search('default', $request->lang)],
             'image' => $this->upload('category/', 'png', $request->file('image')),
-            'parent_id' => $request->parent_id == null ? 0 : $request->parent_id,
+            'parent_id' => $parentId,
             'position' => $request->position,
-            'module_id' => isset($request->parent_id) ? $parentCategory['module_id'] : Config::get('module.current_module_id')
+            'module_id' => $parentCategory['module_id'] ?? Config::get('module.current_module_id'),
         ];
     }
 
@@ -45,70 +57,134 @@ class CategoryService
             'image' => $request->has('image') ? $this->updateAndUpload('category/', $object->image, 'png', $request->file('image')) : $object->image,
         ];
 
-        if ($object->position == 1 && $request->filled('parent_id')) {
-            $data['parent_id'] = (int) $request->parent_id;
+        if ($object->position == 1 && $request->filled('main_category_id')) {
+            $data['parent_id'] = $this->resolveSubParentId(
+                (int) $request->main_category_id,
+                $request->filled('parent_sub_category_id') ? (int) $request->parent_sub_category_id : null
+            );
         }
 
         return $data;
     }
 
-    public function getParentCategoryOptions(?int $excludeCategoryId = null): Collection
+    public function isValidSubCategoryAssignment(int $mainCategoryId, ?int $parentSubCategoryId = null, ?int $categoryId = null): bool
     {
-        $categories = Category::query()
+        $main = Category::query()
             ->withoutGlobalScope('translate')
-            ->with(['translations', 'module'])
-            ->where('module_id', Config::get('module.current_module_id'))
-            ->orderBy('parent_id')
+            ->where([
+                'id' => $mainCategoryId,
+                'position' => 0,
+                'module_id' => Config::get('module.current_module_id'),
+            ])
+            ->first();
+
+        if (!$main) {
+            return false;
+        }
+
+        if (!$parentSubCategoryId) {
+            return true;
+        }
+
+        if ($categoryId && (int) $parentSubCategoryId === $categoryId) {
+            return false;
+        }
+
+        $parentSub = Category::query()
+            ->withoutGlobalScope('translate')
+            ->where([
+                'id' => $parentSubCategoryId,
+                'position' => 1,
+                'module_id' => Config::get('module.current_module_id'),
+            ])
+            ->first();
+
+        if (!$parentSub) {
+            return false;
+        }
+
+        if ($categoryId && $parentSub->isDescendantOf($categoryId)) {
+            return false;
+        }
+
+        return $parentSub->getRootCategoryId() === $mainCategoryId;
+    }
+
+    public function getSubCategoryOptionsForMain(int $mainCategoryId, ?int $excludeCategoryId = null): array
+    {
+        $subs = Category::query()
+            ->withoutGlobalScope('translate')
+            ->with('parent')
+            ->where([
+                'position' => 1,
+                'module_id' => Config::get('module.current_module_id'),
+            ])
+            ->orderBy('priority', 'desc')
+            ->get()
+            ->filter(fn (Category $category) => $category->getRootCategoryId() === $mainCategoryId);
+
+        return $this->buildSubTreeOptions($subs, $mainCategoryId, 0, $excludeCategoryId);
+    }
+
+    public function getSubCategoriesByMainJson(?int $excludeCategoryId = null): string
+    {
+        $mainCategories = Category::query()
+            ->withoutGlobalScope('translate')
+            ->where([
+                'position' => 0,
+                'module_id' => Config::get('module.current_module_id'),
+            ])
             ->orderBy('priority', 'desc')
             ->get();
 
-        return collect($this->buildParentCategoryOptions($categories, 0, 0, $excludeCategoryId));
+        $payload = [];
+
+        foreach ($mainCategories as $main) {
+            $payload[$main->id] = $this->getSubCategoryOptionsForMain((int) $main->id, $excludeCategoryId);
+        }
+
+        return json_encode($payload);
     }
 
-    private function buildParentCategoryOptions(Collection $categories, int $parentId, int $depth, ?int $excludeCategoryId): array
+    private function buildSubTreeOptions(Collection $subs, int $parentId, int $depth, ?int $excludeCategoryId): array
     {
         $options = [];
 
-        foreach ($categories->where('parent_id', $parentId) as $category) {
-            if ($excludeCategoryId && ((int) $category->id === $excludeCategoryId || $category->isDescendantOf($excludeCategoryId))) {
+        foreach ($subs->where('parent_id', $parentId) as $sub) {
+            if ($excludeCategoryId && ((int) $sub->id === $excludeCategoryId || $sub->isDescendantOf($excludeCategoryId))) {
                 continue;
             }
 
             $options[] = [
-                'id' => $category->id,
-                'name' => str_repeat('— ', $depth) . $category->name,
-                'module_name' => $category->module?->module_name,
-                'position' => $category->position,
+                'id' => $sub->id,
+                'name' => str_repeat('— ', $depth) . $sub->name,
             ];
 
             $options = array_merge(
                 $options,
-                $this->buildParentCategoryOptions($categories, (int) $category->id, $depth + 1, $excludeCategoryId)
+                $this->buildSubTreeOptions($subs, (int) $sub->id, $depth + 1, $excludeCategoryId)
             );
         }
 
         return $options;
     }
 
-    public function isValidParentId(?int $parentId, ?int $categoryId = null): bool
+    public function getSubCategoryFormDefaults(?Category $category = null): array
     {
-        if (!$parentId) {
-            return false;
+        if (!$category || $category->position !== 1) {
+            return [
+                'main_category_id' => null,
+                'parent_sub_category_id' => null,
+            ];
         }
 
-        $parent = Category::query()
-            ->withoutGlobalScope('translate')
-            ->find($parentId);
+        $mainCategoryId = $category->getRootCategoryId();
+        $parentSubCategoryId = $category->isDirectChildOfMain() ? null : (int) $category->parent_id;
 
-        if (!$parent || $parent->module_id != Config::get('module.current_module_id')) {
-            return false;
-        }
-
-        if ($categoryId && ((int) $parentId === $categoryId || $parent->isDescendantOf($categoryId))) {
-            return false;
-        }
-
-        return true;
+        return [
+            'main_category_id' => $mainCategoryId,
+            'parent_sub_category_id' => $parentSubCategoryId,
+        ];
     }
 
     public function getImportData(Request $request, bool $toAdd = true): array

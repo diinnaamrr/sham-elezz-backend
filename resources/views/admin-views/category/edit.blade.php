@@ -89,17 +89,23 @@ active
 
                         </div>
                         <div class="col-md-6">
-                            @if ($category->position == 1 && isset($parentCategoryOptions) && count($parentCategoryOptions) > 0)
+                            @if ($category->position == 1 && isset($mainCategories))
                             <div class="form-group">
-                                <label class="input-label" for="parent_id">{{translate('messages.parent_category')}}
+                                <label class="input-label" for="main_category_id">{{translate('messages.main_category')}}
                                     <span class="input-label-secondary">*</span>
                                 </label>
-                                <select id="parent_id" name="parent_id" class="form-control js-select2-custom" required>
-                                    @foreach($parentCategoryOptions as $option)
-                                        <option value="{{$option['id']}}" {{$category->parent_id == $option['id'] ? 'selected' : ''}}>
-                                            {{$option['name']}}
+                                <select id="main_category_id" name="main_category_id" class="form-control js-select2-custom" required>
+                                    @foreach($mainCategories as $mainCategory)
+                                        <option value="{{$mainCategory['id']}}" {{ ($subCategoryFormDefaults['main_category_id'] ?? null) == $mainCategory['id'] ? 'selected' : '' }}>
+                                            {{$mainCategory['name']}}
                                         </option>
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="input-label" for="parent_sub_category_id">{{translate('messages.parent_sub_category')}}</label>
+                                <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom">
+                                    <option value="">{{translate('messages.direct_under_main_category')}}</option>
                                 </select>
                             </div>
                             @endif
@@ -139,6 +145,17 @@ active
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
+    @if ($category->position == 1)
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
+    <script>
+        "use strict";
+        window.subCategoriesByMain = {!! $subCategoriesByMain !!};
+        window.subCategoryFormDefaults = {
+            main_category_id: "{{ $subCategoryFormDefaults['main_category_id'] ?? '' }}",
+            parent_sub_category_id: "{{ $subCategoryFormDefaults['parent_sub_category_id'] ?? '' }}",
+        };
+    </script>
+    @endif
     <script>
         "use strict";
         $('#reset_btn').click(function(){

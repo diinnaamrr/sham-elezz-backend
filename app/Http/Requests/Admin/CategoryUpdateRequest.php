@@ -31,6 +31,8 @@ class CategoryUpdateRequest extends FormRequest
         return [
             'name' => 'required|max:100',
             'name.0' => 'required',
+            'main_category_id' => 'nullable|integer',
+            'parent_sub_category_id' => 'nullable|integer',
         ];
     }
 
