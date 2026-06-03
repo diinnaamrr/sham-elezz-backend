@@ -76,6 +76,9 @@ class CategoryController extends BaseController
         $selectedMain = old('main_category_id', $request->input('main_category_id'));
         $selectedParentSub = old('parent_sub_category_id', $request->input('parent_sub_category_id'));
         $mainCategoryMap = $mainCategories->keyBy('id');
+        $parentSubOptions = $selectedMain
+            ? $this->categoryService->getSubCategoryOptionsForMain((int) $selectedMain)
+            : [];
 
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
@@ -90,7 +93,8 @@ class CategoryController extends BaseController
                 'position',
                 'selectedMain',
                 'selectedParentSub',
-                'mainCategoryMap'
+                'mainCategoryMap',
+                'parentSubOptions'
             )
         );
     }
@@ -136,6 +140,12 @@ class CategoryController extends BaseController
             ? $this->categoryService->getSubCategoriesByMainJson((int) $category->id)
             : '{}';
         $subCategoryFormDefaults = $this->categoryService->getSubCategoryFormDefaults($category);
+        $parentSubOptions = $category->position == 1 && !empty($subCategoryFormDefaults['main_category_id'])
+            ? $this->categoryService->getSubCategoryOptionsForMain(
+                (int) $subCategoryFormDefaults['main_category_id'],
+                (int) $category->id
+            )
+            : [];
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
         return view(
@@ -146,7 +156,8 @@ class CategoryController extends BaseController
                 'defaultLang',
                 'mainCategories',
                 'subCategoriesByMain',
-                'subCategoryFormDefaults'
+                'subCategoryFormDefaults',
+                'parentSubOptions'
             )
         );
     }

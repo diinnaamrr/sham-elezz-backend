@@ -892,6 +892,7 @@
   'parent_sub_category_hint' => 'Optional: place this sub under another sub. Leave empty to attach directly to the main category.',
   'direct_under_main_category' => 'Direct under main category',
   'add_child_sub_category' => 'Add child sub category',
+  'nested_sub_category_steps' => 'Example: (1) Main = Chicken + Parent sub = Direct → name test. (2) Main = Chicken + Parent sub = test → name test2. (3) Main = Chicken + Parent sub = test2 → name test3. Or click + next to any sub in the list.',
   'Select Main Category' => 'Select Main Category',
   'sub_category_list' => 'Sub category list',
   'ex_:_search_sub_categories' => 'Ex : search sub categories',

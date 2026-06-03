@@ -106,6 +106,11 @@ active
                                 <label class="input-label" for="parent_sub_category_id">{{translate('messages.parent_sub_category')}}</label>
                                 <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom">
                                     <option value="">{{translate('messages.direct_under_main_category')}}</option>
+                                    @foreach($parentSubOptions ?? [] as $option)
+                                        <option value="{{ $option['id'] }}" {{ (string) ($subCategoryFormDefaults['parent_sub_category_id'] ?? '') === (string) $option['id'] ? 'selected' : '' }}>
+                                            {{ $option['name'] }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                             @endif
@@ -148,7 +153,7 @@ active
     @if ($category->position == 1)
     <script>
         "use strict";
-        window.subCategoriesByMain = {!! $subCategoriesByMain !!};
+        window.subCategoriesByMain = @json(json_decode($subCategoriesByMain, true) ?? []);
         window.subCategoryFormDefaults = {
             main_category_id: "{{ $subCategoryFormDefaults['main_category_id'] ?? '' }}",
             parent_sub_category_id: "{{ $subCategoryFormDefaults['parent_sub_category_id'] ?? '' }}",
