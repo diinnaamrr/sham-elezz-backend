@@ -87,17 +87,15 @@
                             <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom">
                                 <option value="">{{translate('messages.direct_under_main_category')}}</option>
                                 @foreach($parentSubOptions as $option)
-                                    <option value="{{ $option['id'] }}" {{ (string) $selectedParentSub === (string) $option['id'] ? 'selected' : '' }}>
+                                    <option value="{{ $option['id'] }}"
+                                        title="{{ $option['breadcrumb'] }}"
+                                        data-breadcrumb="{{ $option['breadcrumb'] }}"
+                                        {{ (string) $selectedParentSub === (string) $option['id'] ? 'selected' : '' }}>
                                         {{ $option['name'] }}
                                     </option>
                                 @endforeach
                             </select>
                             <small class="text-muted d-block mt-1">{{translate('messages.parent_sub_category_hint')}}</small>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="alert alert-soft-info mb-0">
-                                {{translate('messages.nested_sub_category_steps')}}
-                            </div>
                         </div>
                         <input name="position" value="1" hidden>
 

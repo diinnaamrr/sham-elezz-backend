@@ -14,6 +14,54 @@ function refreshSelect2($element) {
     }
 }
 
+function formatParentSubOption(state) {
+    if (!state.id) {
+        return state.text;
+    }
+
+    const breadcrumb = $(state.element).data('breadcrumb');
+
+    if (!breadcrumb) {
+        return state.text;
+    }
+
+    return (
+        '<div class="parent-sub-option">' +
+            '<div class="font-weight-bold">' + state.text + '</div>' +
+            '<small class="text-muted d-block">' + breadcrumb + '</small>' +
+        '</div>'
+    );
+}
+
+function refreshParentSubSelect2($element) {
+    if (!$element.length || typeof $element.select2 !== 'function') {
+        refreshSelect2($element);
+        return;
+    }
+
+    if ($element.hasClass('select2-hidden-accessible')) {
+        $element.select2('destroy');
+    }
+
+    $element.select2({
+        placeholder: $element.data('direct-label') || '',
+        allowClear: true,
+        width: '100%',
+        templateResult: formatParentSubOption,
+        templateSelection: function (state) {
+            if (!state.id) {
+                return state.text;
+            }
+
+            const breadcrumb = $(state.element).data('breadcrumb');
+            return breadcrumb || state.text;
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+    });
+}
+
 function populateParentSubOptions(mainCategoryId, selectedParentSubId) {
     const $parentSub = $('#parent_sub_category_id');
 
@@ -33,11 +81,14 @@ function populateParentSubOptions(mainCategoryId, selectedParentSubId) {
     $parentSub.append($('<option>', { value: '', text: directLabel }));
 
     options.forEach(function (option) {
+        const displayName = option.label || option.name.replace(/^—+\s*/g, '').trim();
+
         $parentSub.append(
             $('<option>', {
                 value: option.id,
-                text: option.name,
-            })
+                text: displayName,
+                title: option.breadcrumb || displayName,
+            }).attr('data-breadcrumb', option.breadcrumb || displayName)
         );
     });
 
@@ -49,7 +100,7 @@ function populateParentSubOptions(mainCategoryId, selectedParentSubId) {
         $parentSub.val('');
     }
 
-    refreshSelect2($parentSub);
+    refreshParentSubSelect2($parentSub);
 }
 
 function initSubCategoryParentPicker() {
@@ -76,7 +127,7 @@ function initSubCategoryParentPicker() {
         populateParentSubOptions(currentMain, defaults.parent_sub_category_id || '');
     } else {
         $parentSub.prop('disabled', true);
-        refreshSelect2($parentSub);
+        refreshParentSubSelect2($parentSub);
     }
 }
 
@@ -87,7 +138,7 @@ $(document).on('ready', function () {
         }
     });
 
-    $('.js-select2-custom').each(function () {
+    $('#main_category_id').each(function () {
         refreshSelect2($(this));
     });
 

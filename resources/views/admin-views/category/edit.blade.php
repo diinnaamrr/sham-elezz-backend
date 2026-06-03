@@ -107,7 +107,10 @@ active
                                 <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom">
                                     <option value="">{{translate('messages.direct_under_main_category')}}</option>
                                     @foreach($parentSubOptions ?? [] as $option)
-                                        <option value="{{ $option['id'] }}" {{ (string) ($subCategoryFormDefaults['parent_sub_category_id'] ?? '') === (string) $option['id'] ? 'selected' : '' }}>
+                                        <option value="{{ $option['id'] }}"
+                                            title="{{ $option['breadcrumb'] }}"
+                                            data-breadcrumb="{{ $option['breadcrumb'] }}"
+                                            {{ (string) ($subCategoryFormDefaults['parent_sub_category_id'] ?? '') === (string) $option['id'] ? 'selected' : '' }}>
                                             {{ $option['name'] }}
                                         </option>
                                     @endforeach

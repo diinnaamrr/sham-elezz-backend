@@ -889,7 +889,7 @@
   'nested_sub_category_hint' => 'Choose any category or sub-category as parent to create deeper levels (sub under sub).',
   'sub_main_category_hint' => 'Select the main category this sub belongs to.',
   'parent_sub_category' => 'Parent sub category',
-  'parent_sub_category_hint' => 'Optional: place this sub under another sub. Leave empty to attach directly to the main category.',
+  'parent_sub_category_hint' => 'Choose the direct parent sub. Hover an option to see its full path (Chicken › test › ...).',
   'direct_under_main_category' => 'Direct under main category',
   'add_child_sub_category' => 'Add child sub category',
   'nested_sub_category_steps' => 'Example: (1) Main = Chicken + Parent sub = Direct → name test. (2) Main = Chicken + Parent sub = test → name test2. (3) Main = Chicken + Parent sub = test2 → name test3. Or click + next to any sub in the list.',

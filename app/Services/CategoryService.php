@@ -123,7 +123,12 @@ class CategoryService
             ->get()
             ->filter(fn (Category $category) => $category->getRootCategoryId() === $mainCategoryId);
 
-        return $this->buildSubTreeOptions($subs, $mainCategoryId, 0, $excludeCategoryId);
+        $mainName = Category::query()
+            ->withoutGlobalScope('translate')
+            ->where('id', $mainCategoryId)
+            ->value('name') ?? '';
+
+        return $this->buildSubTreeOptions($subs, $mainCategoryId, $mainCategoryId, 0, $excludeCategoryId, $mainName);
     }
 
     public function getSubCategoriesByMainJson(?int $excludeCategoryId = null): string
@@ -146,8 +151,14 @@ class CategoryService
         return json_encode($payload);
     }
 
-    private function buildSubTreeOptions(Collection $subs, int $parentId, int $depth, ?int $excludeCategoryId): array
-    {
+    private function buildSubTreeOptions(
+        Collection $subs,
+        int $parentId,
+        int $mainCategoryId,
+        int $depth,
+        ?int $excludeCategoryId,
+        string $mainName
+    ): array {
         $options = [];
 
         foreach ($subs->where('parent_id', $parentId) as $sub) {
@@ -155,18 +166,48 @@ class CategoryService
                 continue;
             }
 
+            $breadcrumb = $this->buildSubBreadcrumb($sub, $subs, $mainCategoryId, $mainName);
+
             $options[] = [
                 'id' => $sub->id,
                 'name' => str_repeat('— ', $depth) . $sub->name,
+                'label' => $sub->name,
+                'breadcrumb' => $breadcrumb,
+                'depth' => $depth,
             ];
 
             $options = array_merge(
                 $options,
-                $this->buildSubTreeOptions($subs, (int) $sub->id, $depth + 1, $excludeCategoryId)
+                $this->buildSubTreeOptions($subs, (int) $sub->id, $mainCategoryId, $depth + 1, $excludeCategoryId, $mainName)
             );
         }
 
         return $options;
+    }
+
+    private function buildSubBreadcrumb(Category $sub, Collection $subs, int $mainCategoryId, string $mainName): string
+    {
+        $chain = [$sub->name];
+        $current = $sub;
+
+        while ($current->parent_id && (int) $current->parent_id !== $mainCategoryId) {
+            $parent = $subs->firstWhere('id', $current->parent_id);
+
+            if (!$parent) {
+                $parent = Category::query()->withoutGlobalScope('translate')->find($current->parent_id);
+            }
+
+            if (!$parent) {
+                break;
+            }
+
+            array_unshift($chain, $parent->name);
+            $current = $parent;
+        }
+
+        array_unshift($chain, $mainName);
+
+        return implode(' › ', $chain);
     }
 
     public function getSubCategoryFormDefaults(?Category $category = null): array

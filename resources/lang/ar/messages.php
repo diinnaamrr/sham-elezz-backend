@@ -889,7 +889,7 @@
   'nested_sub_category_hint' => 'اختاري أي فئة أو صاب كاتيجوري كأب لإنشاء مستويات أعمق (صاب تحت صاب).',
   'sub_main_category_hint' => 'اختاري الكاتيجوري الرئيسية اللي الصاب تابع لها.',
   'parent_sub_category' => 'الصاب الأب',
-  'parent_sub_category_hint' => 'اختياري: حطي الصاب تحت صاب تاني. سيبيه فاضي لو عايزاه مباشرة تحت الكاتيجوري الرئيسية.',
+  'parent_sub_category_hint' => 'اختاري الصاب الأب المباشر. مرري على الاسم لرؤية المسار الكامل (فراخ › test › ...).',
   'direct_under_main_category' => 'مباشرة تحت الكاتيجوري الرئيسية',
   'add_child_sub_category' => 'إضافة صاب فرعي تحته',
   'nested_sub_category_steps' => 'مثال: (1) Main = فراخ + Parent sub = مباشرة → اسم test. (2) Main = فراخ + Parent sub = test → اسم test2. (3) Main = فراخ + Parent sub = test2 → اسم test3. أو اضغطي + جنب أي صاب في الجدول.',
