@@ -146,7 +146,6 @@ active
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
     @if ($category->position == 1)
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
     <script>
         "use strict";
         window.subCategoriesByMain = {!! $subCategoriesByMain !!};
@@ -155,6 +154,7 @@ active
             parent_sub_category_id: "{{ $subCategoryFormDefaults['parent_sub_category_id'] ?? '' }}",
         };
     </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
     @endif
     <script>
         "use strict";

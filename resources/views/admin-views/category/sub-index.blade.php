@@ -84,7 +84,7 @@
                             <label class="input-label" for="parent_sub_category_id">
                                 {{translate('messages.parent_sub_category')}}
                             </label>
-                            <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom" {{ $selectedMain ? '' : 'disabled' }}>
+                            <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom">
                                 <option value="">{{translate('messages.direct_under_main_category')}}</option>
                             </select>
                             <small class="text-muted d-block mt-1">{{translate('messages.parent_sub_category_hint')}}</small>
@@ -269,7 +269,6 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
     <script>
         "use strict";
         window.subCategoriesByMain = {!! $subCategoriesByMain !!};
@@ -277,7 +276,10 @@
             main_category_id: "{{ $selectedMain ?? '' }}",
             parent_sub_category_id: "{{ $selectedParentSub ?? '' }}",
         };
-
+    </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
+    <script>
+        "use strict";
         $('.location-reload-to-category').on('click', function() {
             const url = $(this).data('url');
             let nurl = new URL(url);
@@ -287,7 +289,9 @@
 
         $('#reset_btn').click(function(){
             $('#main_category_id').val(null).trigger('change');
-            $('#parent_sub_category_id').val('').prop('disabled', true).trigger('change');
+            if (typeof populateParentSubOptions === 'function') {
+                populateParentSubOptions('', '');
+            }
         });
     </script>
 @endpush

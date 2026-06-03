@@ -1,106 +1,127 @@
 "use strict";
 
+function refreshSelect2($element) {
+    if (!$element.length) {
+        return;
+    }
+
+    if ($element.hasClass('select2-hidden-accessible') && typeof $element.select2 === 'function') {
+        $element.select2('destroy');
+    }
+
+    if (typeof $.HSCore !== 'undefined' && $.HSCore.components && $.HSCore.components.HSSelect2) {
+        $.HSCore.components.HSSelect2.init($element);
+    }
+}
+
 function populateParentSubOptions(mainCategoryId, selectedParentSubId) {
     const $parentSub = $('#parent_sub_category_id');
-    const options = (window.subCategoriesByMain && window.subCategoriesByMain[mainCategoryId]) || [];
+
+    if (!$parentSub.length) {
+        return;
+    }
+
+    const map = window.subCategoriesByMain || {};
+    const key = String(mainCategoryId);
+    const options = map[key] || map[mainCategoryId] || [];
+
+    const directLabel = $parentSub.data('direct-label')
+        || $parentSub.find('option:first').text()
+        || 'Direct under main category';
 
     $parentSub.empty();
-    $parentSub.append(
-        $('<option>', { value: '', text: $parentSub.data('direct-label') || 'Direct under main category' })
-    );
+    $parentSub.append($('<option>', { value: '', text: directLabel }));
 
     options.forEach(function (option) {
         $parentSub.append(
             $('<option>', {
                 value: option.id,
                 text: option.name,
-                selected: String(selectedParentSubId) === String(option.id),
             })
         );
     });
 
-    $parentSub.prop('disabled', !mainCategoryId).trigger('change');
+    if (mainCategoryId) {
+        $parentSub.prop('disabled', false);
+        $parentSub.val(selectedParentSubId ? String(selectedParentSubId) : '');
+    } else {
+        $parentSub.prop('disabled', true);
+        $parentSub.val('');
+    }
+
+    refreshSelect2($parentSub);
+}
+
+function initSubCategoryParentPicker() {
+    const $mainCategory = $('#main_category_id');
+    const $parentSub = $('#parent_sub_category_id');
+
+    if (!$mainCategory.length || !$parentSub.length) {
+        return;
+    }
+
+    $parentSub.data(
+        'direct-label',
+        $parentSub.find('option:first').text() || 'Direct under main category'
+    );
+
+    $mainCategory.on('change', function () {
+        populateParentSubOptions($(this).val(), '');
+    });
+
+    const defaults = window.subCategoryFormDefaults || {};
+    const currentMain = $mainCategory.val() || defaults.main_category_id;
+
+    if (currentMain) {
+        populateParentSubOptions(currentMain, defaults.parent_sub_category_id || '');
+    } else {
+        $parentSub.prop('disabled', true);
+        refreshSelect2($parentSub);
+    }
 }
 
 $(document).on('ready', function () {
     $('.js-nav-scroller').each(function () {
-        new HsNavScroller($(this)).init();
+        if (typeof HsNavScroller !== 'undefined') {
+            new HsNavScroller($(this)).init();
+        }
     });
 
     $('.js-select2-custom').each(function () {
-        $.HSCore.components.HSSelect2.init($(this));
+        refreshSelect2($(this));
     });
 
-    var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
-        dom: 'Bfrtip',
-        buttons: [
-            { extend: 'copy', className: 'd-none' },
-            { extend: 'print', className: 'd-none' },
-        ],
-        select: {
-            style: 'multi',
-            selector: 'td:first-child input[type="checkbox"]',
-            classMap: {
-                checkAll: '#datatableCheckAll',
-                counter: '#datatableCounter',
-                counterInfo: '#datatableCounterInfo',
-            },
-        },
-    });
+    const $datatable = $('#datatable').length ? $('#datatable') : $('#columnSearchDatatable');
 
-    $('#export-copy').click(function () {
-        datatable.button('.buttons-copy').trigger();
-    });
-    $('#export-excel').click(function () {
-        datatable.button('.buttons-excel').trigger();
-    });
-    $('#export-csv').click(function () {
-        datatable.button('.buttons-csv').trigger();
-    });
-    $('#export-pdf').click(function () {
-        datatable.button('.buttons-pdf').trigger();
-    });
-    $('#export-print').click(function () {
-        datatable.button('.buttons-print').trigger();
-    });
+    if ($datatable.length && typeof $.HSCore !== 'undefined' && $.HSCore.components && $.HSCore.components.HSDatatables) {
+        try {
+            var datatable = $.HSCore.components.HSDatatables.init($datatable, {
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'copy', className: 'd-none' },
+                    { extend: 'print', className: 'd-none' },
+                ],
+            });
 
-    $('#datatableSearch').on('mouseup', function () {
-        var $input = $(this),
-            oldValue = $input.val();
-        if (oldValue == "") return;
-        setTimeout(function () {
-            if ($input.val() == "") {
-                datatable.search('').draw();
-            }
-        }, 1);
-    });
-
-    const $mainCategory = $('#main_category_id');
-    const $parentSub = $('#parent_sub_category_id');
-
-    if ($mainCategory.length && $parentSub.length) {
-        $parentSub.data(
-            'direct-label',
-            $parentSub.find('option:first').text() || 'Direct under main category'
-        );
-
-        $mainCategory.on('change', function () {
-            populateParentSubOptions($(this).val(), '');
-        });
-
-        const defaults = window.subCategoryFormDefaults || {};
-        if (defaults.main_category_id) {
-            $mainCategory.val(defaults.main_category_id).trigger('change');
-            populateParentSubOptions(
-                defaults.main_category_id,
-                defaults.parent_sub_category_id || ''
-            );
+            $('#export-excel').on('click', function () {
+                if (datatable) {
+                    datatable.button('.buttons-excel').trigger();
+                }
+            });
+            $('#export-csv').on('click', function () {
+                if (datatable) {
+                    datatable.button('.buttons-csv').trigger();
+                }
+            });
+        } catch (e) {
+            console.warn('Datatable init skipped:', e);
         }
     }
+
+    initSubCategoryParentPicker();
 });
 
-var forms = document.querySelectorAll('.priority-form');
-forms.forEach(function (form) {
+document.querySelectorAll('.priority-form').forEach(function (form) {
     var select = form.querySelector('.priority-select');
     if (select) {
         select.addEventListener('change', function () {
