@@ -400,6 +400,14 @@
                                         <span class="text-truncate">{{ translate('messages.sub_category') }}</span>
                                     </a>
                                 </li>
+                                @for($i = 2; $i <= 9; $i++)
+                                <li class="nav-item {{ request()->input('position') == $i && Request::is('admin/category/add') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.category.add',['position'=>$i]) }}" title="{{ translate('messages.sub_category_'.$i) }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.sub_category_'.$i) }}</span>
+                                    </a>
+                                </li>
+                                @endfor
 
                                 <li class="nav-item {{ Request::is('admin/category/bulk-import') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('admin.category.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
