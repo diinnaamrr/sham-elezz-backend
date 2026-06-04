@@ -131,7 +131,45 @@ $("#customFileEg1").change(function() {
 $('#category_id').on('change', function () {
     parent_category_id = $(this).val();
     console.log(parent_category_id);
+    fetchDynamicCategories(parent_category_id, 0);
 });
+
+$(document).on('change', '.dynamic-category-select', function() {
+    let parent_id = $(this).val();
+    let depth = $(this).data('depth');
+    fetchDynamicCategories(parent_id, depth);
+});
+
+function fetchDynamicCategories(parent_id, depth) {
+    // Remove any deeper category selects
+    $('.dynamic-category-wrapper').each(function() {
+        if ($(this).data('depth') > depth) {
+            $(this).remove();
+        }
+    });
+
+    if (parent_id) {
+        $.get({
+            url: window.location.origin + '/admin/item/get-categories?parent_id=' + parent_id + '&sub_category=true',
+            success: function(data) {
+                if (data && data.length > 0) {
+                    let newDepth = depth + 1;
+                    let html = `<div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="${newDepth}">
+                        <div class="form-group mb-0">
+                            <label class="input-label">Sub Category</label>
+                            <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="${newDepth}">
+                                <option value="" disabled selected>---Select---</option>`;
+                    data.forEach(item => {
+                        html += `<option value="${item.id}">${item.text}</option>`;
+                    });
+                    html += `</select></div></div>`;
+                    
+                    $('#dynamic-category-container').append(html);
+                }
+            }
+        });
+    }
+}
 $(document).on('change', '.combination_update', function () {
     combination_update();
 });

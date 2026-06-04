@@ -283,28 +283,33 @@
                                             </span></label>
                                         <select name="category_id" class="js-data-example-ajax form-control"
                                             id="category_id">
-                                            @if ($category)
-                                                <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                                            @php($main_cat = json_decode($product->category_ids, true))
+                                            @if ($main_cat && count($main_cat) > 0)
+                                                @php($cat = \App\Models\Category::find($main_cat[0]['id']))
+                                                @if($cat)
+                                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                                @endif
                                             @endif
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="exampleFormControlSelect1">{{ translate('messages.sub_category') }}<span
-                                                class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.category_required_warning') }}"><img
-                                                    src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.category_required_warning') }}"></span></label>
-                                        <select name="sub_category_id" class="js-data-example-ajax form-control"
-                                            id="sub-categories">
-                                            @if (isset($sub_category))
-                                                <option value="{{ $sub_category['id'] }}">{{ $sub_category['name'] }}
-                                                </option>
+                                <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;">
+                                    @php($sub_cats = json_decode($product->category_ids, true))
+                                    @if ($sub_cats && count($sub_cats) > 1)
+                                        @foreach(array_slice($sub_cats, 1) as $key => $sub)
+                                            @php($sub_cat = \App\Models\Category::find($sub['id']))
+                                            @if($sub_cat)
+                                            <div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="{{ $key }}">
+                                                <div class="form-group mb-0">
+                                                    <label class="input-label">{{ translate('messages.sub_category') }}</label>
+                                                    <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="{{ $key }}">
+                                                        <option value="{{ $sub_cat->id }}" selected>{{ $sub_cat->name }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             @endif
-                                        </select>
-                                    </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                                 <div class="col-sm-6 col-lg-3" id="condition_input">
                                     <div class="form-group mb-0">
@@ -1182,10 +1187,42 @@
 
      $('#category_id').on('change', function () {
          parent_category_id = $(this).val();
-        let subCategoriesSelect = $('#sub-categories');
-            subCategoriesSelect.empty();
-            subCategoriesSelect.append('<option value="" selected>{{ translate("messages.select_sub_category") }}</option>');
+         fetchDynamicCategories(parent_category_id, 0);
      });
+
+     $(document).on('change', '.dynamic-category-select', function() {
+         let parent_id = $(this).val();
+         let depth = $(this).data('depth');
+         fetchDynamicCategories(parent_id, depth);
+     });
+
+     function fetchDynamicCategories(parent_id, depth) {
+         $('.dynamic-category-wrapper').each(function() {
+             if ($(this).data('depth') > depth) {
+                 $(this).remove();
+             }
+         });
+         if (parent_id) {
+             $.get({
+                 url: '{{ url('/') }}/admin/item/get-categories?parent_id=' + parent_id + '&sub_category=true',
+                 success: function(data) {
+                     if (data && data.length > 0) {
+                         let newDepth = depth + 1;
+                         let html = `<div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="${newDepth}">
+                             <div class="form-group mb-0">
+                                 <label class="input-label">Sub Category</label>
+                                 <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="${newDepth}">
+                                     <option value="" disabled selected>---Select---</option>`;
+                         data.forEach(item => {
+                             html += `<option value="${item.id}">${item.text}</option>`;
+                         });
+                         html += `</select></div></div>`;
+                         $('#dynamic-category-container').append(html);
+                     }
+                 }
+             });
+         }
+     }
 
      $('.foodModalClose').on('click',function (){
          $('#food-modal').hide();
@@ -1311,33 +1348,7 @@
         }
     });
 
-    $('#sub-categories').select2({
-        ajax: {
-            url: '{{ url('/') }}/admin/item/get-categories',
-            data: function(params) {
-                return {
-                    q: params.term, // search term
-                    page: params.page,
-                    module_id: module_id,
-                    parent_id: parent_category_id,
-                    sub_category: true
-                };
-            },
-            processResults: function(data) {
-                return {
-                    results: data
-                };
-            },
-            __port: function(params, success, failure) {
-                let $request = $.ajax(params);
 
-                $request.then(success);
-                $request.fail(failure);
-
-                return $request;
-            }
-        }
-    });
 
     $('#choice_attributes').on('change', function() {
         $('#customer_choice_options').html(null);
@@ -1522,7 +1533,7 @@
         $('#module_id').val(null).trigger('change');
         $('#store_id').val(null).trigger('change');
         $('#category_id').val(null).trigger('change');
-        $('#sub-categories').val(null).trigger('change');
+        $('#dynamic-category-container').empty();
         $('#unit').val(null).trigger('change');
         $('#veg').val(0).trigger('change');
         $('#add_on').val(null).trigger('change');

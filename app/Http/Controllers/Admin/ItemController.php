@@ -230,21 +230,35 @@ class ItemController extends Controller
                 'position' => 1,
             ]);
         }
-        if ($request->sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
-            ]);
-        }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
+        if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
+            $position = 2;
+            foreach ($request->sub_category_ids as $id) {
+                if ($id != null) {
+                    array_push($category, [
+                        'id' => $id,
+                        'position' => $position,
+                    ]);
+                    $position++;
+                }
+            }
+            $item->category_id = end($request->sub_category_ids) ?: $request->category_id;
+        } else {
+            if ($request->sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_category_id,
+                    'position' => 2,
+                ]);
+            }
+            if ($request->sub_sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_sub_category_id,
+                    'position' => 3,
+                ]);
+            }
+            $item->category_id = $request->sub_sub_category_id
+                ?: ($request->sub_category_id ?: $request->category_id);
         }
         $item->category_ids = json_encode($category);
-        $item->category_id = $request->sub_sub_category_id
-            ?: ($request->sub_category_id ?: $request->category_id);
         $item->description =  $request->description[array_search('default', $request->lang)];
 
         $choice_options = [];
@@ -593,17 +607,30 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
                 'position' => 1,
             ]);
         }
-        if ($request->sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
-            ]);
-        }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
+        if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
+            $position = 2;
+            foreach ($request->sub_category_ids as $id) {
+                if ($id != null) {
+                    array_push($category, [
+                        'id' => $id,
+                        'position' => $position,
+                    ]);
+                    $position++;
+                }
+            }
+        } else {
+            if ($request->sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_category_id,
+                    'position' => 2,
+                ]);
+            }
+            if ($request->sub_sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_sub_category_id,
+                    'position' => 3,
+                ]);
+            }
         }
 
         $images = $item['images'];
@@ -625,8 +652,12 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
         }
 
 
-        $item->category_id = $request->sub_sub_category_id
-            ?: ($request->sub_category_id ?: $request->category_id);
+        if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
+            $item->category_id = end($request->sub_category_ids) ?: $request->category_id;
+        } else {
+            $item->category_id = $request->sub_sub_category_id
+                ?: ($request->sub_category_id ?: $request->category_id);
+        }
         $item->category_ids = json_encode($category);
         $item->description =  $request->description[array_search('default', $request->lang)];
 

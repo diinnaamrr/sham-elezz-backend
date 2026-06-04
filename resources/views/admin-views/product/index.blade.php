@@ -225,20 +225,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="sub-categories">{{ translate('messages.sub_category') }}<span
-                                                class="input-label-secondary"
-                                                title="{{ translate('messages.category_required_warning') }}"><img
-                                                    src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.category_required_warning') }}"></span></label>
-                                        <select name="sub_category_id" class="js-data-example-ajax form-control" data-placeholder="{{ translate('messages.select_sub_category') }}"
-                                            id="sub-categories">
-
-                                        </select>
-                                    </div>
-                                </div>
+                                <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;"></div>
                                 <div class="col-sm-6 col-lg-3" id="condition_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="condition_id">{{ translate('messages.Suitable_For') }}<span
@@ -1019,33 +1006,7 @@
             }
         });
 
-        $('#sub-categories').select2({
-            ajax: {
-                url: '{{ url('/') }}/admin/item/get-categories',
-                data: function(params) {
-                    return {
-                        q: params.term, // search term
-                        page: params.page,
-                        module_id:{{Config::get('module.current_module_id')}},
-                        parent_id: parent_category_id,
-                        sub_category: true
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data
-                    };
-                },
-                __port: function(params, success, failure) {
-                    let $request = $.ajax(params);
 
-                    $request.then(success);
-                    $request.fail(failure);
-
-                    return $request;
-                }
-            }
-        });
 
         $('#choice_attributes').on('change', function() {
             if (module_id == 0) {
@@ -1216,7 +1177,7 @@
             $('#module_id').val(null).trigger('change');
             $('#store_id').val(null).trigger('change');
             $('#category_id').val(null).trigger('change');
-            $('#sub-categories').val(null).trigger('change');
+            $('#dynamic-category-container').empty();
             $('#unit').val(null).trigger('change');
             $('#veg').val(0).trigger('change');
             $('#add_on').val(null).trigger('change');
