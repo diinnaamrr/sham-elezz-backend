@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Add new sub category'))
+@section('title',translate('messages.Add new sub category') . ' - ' . translate('messages.level') . ' ' . $position)
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,20 @@
                     <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.add_new_sub_category')}}
+                    @php
+                        $levelNames = [
+                            1 => translate('messages.add_new_sub_category'),
+                            2 => translate('messages.add_new_sub_category') . ' 2',
+                            3 => translate('messages.add_new_sub_category') . ' 3',
+                            4 => translate('messages.add_new_sub_category') . ' 4',
+                            5 => translate('messages.add_new_sub_category') . ' 5',
+                            6 => translate('messages.add_new_sub_category') . ' 6',
+                            7 => translate('messages.add_new_sub_category') . ' 7',
+                            8 => translate('messages.add_new_sub_category') . ' 8',
+                            9 => translate('messages.add_new_sub_category') . ' 9',
+                        ];
+                    @endphp
+                    {{ $levelNames[$position] ?? translate('messages.add_new_sub_category') }}
                 </span>
             </h1>
         </div>
@@ -66,38 +79,31 @@
                         <input type="hidden" name="lang[]" value="default">
                     @endif
                         <div class="form-group col-sm-6">
-                            <label class="input-label" for="main_category_id">
-                                {{translate('messages.main_category')}}
+                            <label class="input-label" for="parent_id">
+                                @if($position == 1)
+                                    {{translate('messages.main_category')}}
+                                @else
+                                    {{translate('messages.sub_category')}} {{ $position - 1 > 1 ? $position - 1 : '' }}
+                                @endif
                                 <span class="input-label-secondary">*</span>
                             </label>
-                            <select id="main_category_id" name="main_category_id" class="form-control js-select2-custom" required>
-                                <option value="" disabled {{ $selectedMain ? '' : 'selected' }}>{{translate('Select Main Category')}}</option>
-                                @foreach($mainCategories as $category)
-                                    <option value="{{$category['id']}}" {{ (string)$selectedMain === (string)$category['id'] ? 'selected' : '' }}>
-                                        {{$category['name']}}
+                            <select id="parent_id" name="parent_id" class="form-control js-select2-custom" required>
+                                <option value="" disabled selected>
+                                    @if($position == 1)
+                                        {{translate('Select Main Category')}}
+                                    @else
+                                        {{translate('Select Parent Category')}}
+                                    @endif
+                                </option>
+                                @foreach($parentCategories as $parentCat)
+                                    <option value="{{$parentCat['id']}}" {{ old('parent_id') == $parentCat['id'] ? 'selected' : '' }}>
+                                        {{$parentCat['name']}}
                                     </option>
                                 @endforeach
                             </select>
-                            <small class="text-muted d-block mt-1">{{translate('messages.sub_main_category_hint')}}</small>
                         </div>
-                        <div class="form-group col-sm-6">
-                            <label class="input-label" for="parent_sub_category_id">
-                                {{translate('messages.parent_sub_category')}}
-                            </label>
-                            <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom">
-                                <option value="">{{translate('messages.direct_under_main_category')}}</option>
-                                @foreach($parentSubOptions as $option)
-                                    <option value="{{ $option['id'] }}"
-                                        title="{{ $option['breadcrumb'] }}"
-                                        data-breadcrumb="{{ $option['breadcrumb'] }}"
-                                        {{ (string) $selectedParentSub === (string) $option['id'] ? 'selected' : '' }}>
-                                        {{ $option['name'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <small class="text-muted d-block mt-1">{{translate('messages.parent_sub_category_hint')}}</small>
-                        </div>
-                        <input name="position" value="1" hidden>
+
+                        <input name="position" value="{{ $position }}" hidden>
 
                         <div class="col-sm-12">
                             <div class="btn--container justify-content-end">
@@ -112,14 +118,13 @@
         <div class="card mt-2">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.sub_category_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
+                    <h5 class="card-title">{{translate('messages.sub_category_list')}} {{ $position > 1 ? $position : '' }}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
 
                     <form   class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{translate('messages.ex_:_search_sub_categories')}}" aria-label="{{translate('messages.ex_:_sub_categories')}}">
-                            <input type="hidden" name="position" value="1">
-                            <input type="hidden" name="sub_category" value="1">
+                            <input type="hidden" name="position" value="{{ $position }}">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
@@ -173,9 +178,14 @@
                             <tr>
                                 <th class="border-0">{{translate('sl')}}</th>
                                 <th class="border-0">{{translate('messages.id')}}</th>
-                                <th class="border-0 w--1">{{translate('messages.main_category')}}</th>
-                                <th class="border-0 w--1">{{translate('messages.parent_sub_category')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.sub_category')}}</th>
+                                <th class="border-0 w--1">
+                                    @if($position == 1)
+                                        {{translate('messages.main_category')}}
+                                    @else
+                                        {{translate('messages.parent_category')}}
+                                    @endif
+                                </th>
+                                <th class="border-0 text-center">{{translate('messages.sub_category')}} {{ $position > 1 ? $position : '' }}</th>
                                 <th class="border-0 text-center">{{translate('messages.status')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.featured')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.priority')}}</th>
@@ -190,23 +200,11 @@
                                 <td>{{$category->id}}</td>
                                 <td>
                                     <span class="d-block font-size-sm text-body">
-                                        {{ Str::limit(optional($mainCategoryMap->get($category->getRootCategoryId()))->name ?? translate('Invalid_Category'), 25, '...') }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="d-block font-size-sm text-body">
-                                        @if($category->isDirectChildOfMain())
-                                            <span class="text-muted">{{ translate('messages.direct_under_main_category') }}</span>
-                                        @else
-                                            {{ Str::limit($category?->parent?->name, 25, '...') }}
-                                        @endif
+                                        {{ Str::limit(optional($category->parent)->name ?? translate('Invalid_Category'), 25, '...') }}
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="d-block font-size-sm text-body" style="padding-inline-start: {{ $category->getNestingDepth() * 12 }}px">
-                                        @if($category->getNestingDepth() > 0)
-                                            <span class="text-muted">{{ str_repeat('└ ', $category->getNestingDepth()) }}</span>
-                                        @endif
+                                    <span class="d-block font-size-sm text-body">
                                         {{Str::limit($category?->name,20,'...')}}
                                     </span>
                                 </td>
@@ -237,10 +235,12 @@
                                 </td>
                                 <td>
                                     <div class="btn--container justify-content-center">
+                                        @if($position < 9)
                                         <a class="btn action-btn btn--secondary btn-outline-secondary"
-                                            href="{{ route('admin.category.add', ['position' => 1, 'main_category_id' => $category->getRootCategoryId(), 'parent_sub_category_id' => $category->id]) }}"
+                                            href="{{ route('admin.category.add', ['position' => $position + 1, 'parent_id_preset' => $category->id]) }}"
                                             title="{{translate('messages.add_child_sub_category')}}"><i class="tio-add"></i>
                                         </a>
+                                        @endif
                                         <a class="btn action-btn btn--primary btn-outline-primary"
                                             href="{{route('admin.category.edit',[$category['id']])}}" title="{{translate('messages.edit_category')}}"><i class="tio-edit"></i>
                                         </a>
@@ -277,15 +277,7 @@
 @endsection
 
 @push('script_2')
-    <script>
-        "use strict";
-        window.subCategoriesByMain = @json(json_decode($subCategoriesByMain, true) ?? []);
-        window.subCategoryFormDefaults = {
-            main_category_id: "{{ $selectedMain ?? '' }}",
-            parent_sub_category_id: "{{ $selectedParentSub ?? '' }}",
-        };
-    </script>
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
     <script>
         "use strict";
         $('.location-reload-to-category').on('click', function() {
@@ -296,10 +288,14 @@
         });
 
         $('#reset_btn').click(function(){
-            $('#main_category_id').val(null).trigger('change');
-            if (typeof populateParentSubOptions === 'function') {
-                populateParentSubOptions('', '');
-            }
+            $('#parent_id').val(null).trigger('change');
         });
+
+        // Pre-select parent if coming from "add child" button
+        @if(request()->input('parent_id_preset'))
+            $(document).ready(function() {
+                $('#parent_id').val('{{ request()->input('parent_id_preset') }}').trigger('change');
+            });
+        @endif
     </script>
 @endpush

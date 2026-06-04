@@ -2,7 +2,7 @@
 
 @section('title',translate('messages.Update category'))
 
-@if($category->position ==  1)
+@if($category->position >=  1)
 @section('sub_category')
 @else
 @section('main_category')
@@ -89,29 +89,20 @@ active
 
                         </div>
                         <div class="col-md-6">
-                            @if ($category->position == 1 && isset($mainCategories))
+                            @if ($category->position >= 1 && isset($parentCategories))
                             <div class="form-group">
-                                <label class="input-label" for="main_category_id">{{translate('messages.main_category')}}
+                                <label class="input-label" for="parent_id">
+                                    @if($category->position == 1)
+                                        {{translate('messages.main_category')}}
+                                    @else
+                                        {{translate('messages.parent_category')}}
+                                    @endif
                                     <span class="input-label-secondary">*</span>
                                 </label>
-                                <select id="main_category_id" name="main_category_id" class="form-control js-select2-custom" required>
-                                    @foreach($mainCategories as $mainCategory)
-                                        <option value="{{$mainCategory['id']}}" {{ ($subCategoryFormDefaults['main_category_id'] ?? null) == $mainCategory['id'] ? 'selected' : '' }}>
-                                            {{$mainCategory['name']}}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="input-label" for="parent_sub_category_id">{{translate('messages.parent_sub_category')}}</label>
-                                <select id="parent_sub_category_id" name="parent_sub_category_id" class="form-control js-select2-custom">
-                                    <option value="">{{translate('messages.direct_under_main_category')}}</option>
-                                    @foreach($parentSubOptions ?? [] as $option)
-                                        <option value="{{ $option['id'] }}"
-                                            title="{{ $option['breadcrumb'] }}"
-                                            data-breadcrumb="{{ $option['breadcrumb'] }}"
-                                            {{ (string) ($subCategoryFormDefaults['parent_sub_category_id'] ?? '') === (string) $option['id'] ? 'selected' : '' }}>
-                                            {{ $option['name'] }}
+                                <select id="parent_id" name="parent_id" class="form-control js-select2-custom" required>
+                                    @foreach($parentCategories as $parentCat)
+                                        <option value="{{$parentCat['id']}}" {{ $category->parent_id == $parentCat['id'] ? 'selected' : '' }}>
+                                            {{$parentCat['name']}}
                                         </option>
                                     @endforeach
                                 </select>
@@ -153,17 +144,6 @@ active
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
-    @if ($category->position == 1)
-    <script>
-        "use strict";
-        window.subCategoriesByMain = @json(json_decode($subCategoriesByMain, true) ?? []);
-        window.subCategoryFormDefaults = {
-            main_category_id: "{{ $subCategoryFormDefaults['main_category_id'] ?? '' }}",
-            parent_sub_category_id: "{{ $subCategoryFormDefaults['parent_sub_category_id'] ?? '' }}",
-        };
-    </script>
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
-    @endif
     <script>
         "use strict";
         $('#reset_btn').click(function(){
@@ -174,8 +154,5 @@ active
             readURL(this);
             $('#viewer').show(1000)
         });
-
-
-
     </script>
 @endpush

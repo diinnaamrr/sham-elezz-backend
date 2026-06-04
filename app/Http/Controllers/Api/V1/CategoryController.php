@@ -79,10 +79,32 @@ class CategoryController extends Controller
                     $categories = $categories->sortByDesc('order_count')->values()->all();
                 }
             }
-            return response()->json($categories, 200);
+            
+            $formattedCategories = $this->formatCategoryTree($categories);
+            return response()->json($formattedCategories, 200);
         } catch (\Exception $e) {
             return response()->json([], 200);
         }
+    }
+
+    private function formatCategoryTree($categories)
+    {
+        $formatted = [];
+        foreach ($categories as $category) {
+            // Get category as array
+            $catData = $category->toArray();
+            
+            // Handle sub categories
+            if (isset($catData['childes'])) {
+                $catData['sub_categories'] = $this->formatCategoryTree($category->childes);
+                unset($catData['childes']);
+            } else {
+                $catData['sub_categories'] = [];
+            }
+            
+            $formatted[] = $catData;
+        }
+        return $formatted;
     }
 
     public function get_childes($id)
@@ -93,7 +115,8 @@ class CategoryController extends Controller
                 ->orderBy('priority', 'desc')
                 ->get();
 
-            return response()->json($categories, 200);
+            $formattedCategories = $this->formatCategoryTree($categories);
+            return response()->json($formattedCategories, 200);
         } catch (\Exception $e) {
             return response()->json([], 200);
         }

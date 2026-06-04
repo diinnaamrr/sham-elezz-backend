@@ -19,10 +19,10 @@ class CategoryService
 
     public function getViewByPosition(int $position): string
     {
-        return match ($position) {
-            1 => CategoryViewPath::SUB_CATEGORY_INDEX['view'],
-            default => CategoryViewPath::INDEX['view'],
-        };
+        if ($position >= 1 && $position <= 9) {
+            return CategoryViewPath::SUB_CATEGORY_INDEX['view'];
+        }
+        return CategoryViewPath::INDEX['view'];
     }
 
     public function resolveSubParentId(int $mainCategoryId, ?int $parentSubCategoryId = null): int
@@ -32,11 +32,8 @@ class CategoryService
 
     public function getAddData($request, string|null|Object $parentCategory): array
     {
-        $parentId = $request->position == 1
-            ? $this->resolveSubParentId(
-                (int) $request->main_category_id,
-                $request->filled('parent_sub_category_id') ? (int) $request->parent_sub_category_id : null
-            )
+        $parentId = $request->position >= 1
+            ? (int) $request->parent_id
             : ($request->parent_id == null ? 0 : $request->parent_id);
 
         return [
@@ -57,11 +54,8 @@ class CategoryService
             'image' => $request->has('image') ? $this->updateAndUpload('category/', $object->image, 'png', $request->file('image')) : $object->image,
         ];
 
-        if ($object->position == 1 && $request->filled('main_category_id')) {
-            $data['parent_id'] = $this->resolveSubParentId(
-                (int) $request->main_category_id,
-                $request->filled('parent_sub_category_id') ? (int) $request->parent_sub_category_id : null
-            );
+        if ($object->position >= 1 && $request->filled('parent_id')) {
+            $data['parent_id'] = (int) $request->parent_id;
         }
 
         return $data;
