@@ -259,7 +259,8 @@ class ItemController extends Controller
                     $position++;
                 }
             }
-            $food->category_id = end($request->sub_category_ids) ?: $request->category_id;
+            $sub_cat_ids = $request->sub_category_ids;
+            $food->category_id = end($sub_cat_ids) ?: $request->category_id;
         } else {
             if ($request->sub_category_id != null) {
                 array_push($category, [
@@ -633,7 +634,8 @@ class ItemController extends Controller
                     $position++;
                 }
             }
-            $p->category_id = end($request->sub_category_ids) ?: $request->category_id;
+            $sub_cat_ids = $request->sub_category_ids;
+            $p->category_id = end($sub_cat_ids) ?: $request->category_id;
         } else {
             if ($request->sub_category_id != null) {
                 array_push($category, [
