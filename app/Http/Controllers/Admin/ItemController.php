@@ -241,7 +241,8 @@ class ItemController extends Controller
                     $position++;
                 }
             }
-            $item->category_id = end($request->sub_category_ids) ?: $request->category_id;
+            $sub_cat_ids = $request->sub_category_ids;
+            $item->category_id = end($sub_cat_ids) ?: $request->category_id;
         } else {
             if ($request->sub_category_id != null) {
                 array_push($category, [
@@ -653,7 +654,8 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
 
 
         if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
-            $item->category_id = end($request->sub_category_ids) ?: $request->category_id;
+            $sub_cat_ids = $request->sub_category_ids;
+            $item->category_id = end($sub_cat_ids) ?: $request->category_id;
         } else {
             $item->category_id = $request->sub_sub_category_id
                 ?: ($request->sub_category_id ?: $request->category_id);
