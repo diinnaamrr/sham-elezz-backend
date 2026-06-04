@@ -57,10 +57,9 @@ class CategoryController extends Controller
             
             // Handle sub categories
             if (isset($catData['childes'])) {
-                $catData['sub_categories'] = $this->formatCategoryTree($category->childes);
-                unset($catData['childes']);
+                $catData['childes'] = $this->formatCategoryTree($category->childes);
             } else {
-                $catData['sub_categories'] = [];
+                $catData['childes'] = [];
             }
             
             $formatted[] = $catData;
