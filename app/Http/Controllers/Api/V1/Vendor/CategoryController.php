@@ -17,8 +17,9 @@ class CategoryController extends Controller
                 $query->module(config('module.current_module_data')['id']);
             })
             ->orderBy('priority','desc')->get();
-            return response()->json($categories, 200);
-            // return response()->json(Helpers::category_data_formatting($categories, true), 200);
+            
+            $formattedCategories = $this->formatCategoryTree($categories);
+            return response()->json($formattedCategories, 200);
         } catch (\Exception $e) {
             return response()->json([], 200);
         }
@@ -39,10 +40,31 @@ class CategoryController extends Controller
                 ->orderBy('priority', 'desc')
                 ->with(Category::nestedActiveChildesRelation())
                 ->get();
-            return response()->json($categories, 200);
-            // return response()->json(Helpers::category_data_formatting($categories, true), 200);
+                
+            $formattedCategories = $this->formatCategoryTree($categories);
+            return response()->json($formattedCategories, 200);
         } catch (\Exception $e) {
             return response()->json([], 200);
         }
+    }
+    
+    private function formatCategoryTree($categories)
+    {
+        $formatted = [];
+        foreach ($categories as $category) {
+            // Get category as array
+            $catData = $category->toArray();
+            
+            // Handle sub categories
+            if (isset($catData['childes'])) {
+                $catData['sub_categories'] = $this->formatCategoryTree($category->childes);
+                unset($catData['childes']);
+            } else {
+                $catData['sub_categories'] = [];
+            }
+            
+            $formatted[] = $catData;
+        }
+        return $formatted;
     }
 }

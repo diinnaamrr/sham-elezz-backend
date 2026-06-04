@@ -31,9 +31,9 @@ class CategoryAddRequest extends FormRequest
         return [
             'name' => 'required|max:100',
             'name.0' => 'required',
-            'image' => 'required_if:position,==,0',
-            'main_category_id' => 'required_if:position,1',
-            'parent_sub_category_id' => 'nullable|integer',
+            'image' => 'required_if:position,0',
+            'parent_id' => 'required_if:position,1,2,3,4,5,6,7,8,9|nullable|integer',
+            'position' => 'required|integer|between:0,9',
         ];
     }
 
