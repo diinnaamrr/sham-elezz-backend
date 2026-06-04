@@ -248,19 +248,33 @@ class ItemController extends Controller
                 'position' => 1,
             ]);
         }
-        if ($request->sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
-            ]);
+        if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
+            $position = 2;
+            foreach ($request->sub_category_ids as $id) {
+                if ($id != null) {
+                    array_push($category, [
+                        'id' => $id,
+                        'position' => $position,
+                    ]);
+                    $position++;
+                }
+            }
+            $food->category_id = end($request->sub_category_ids) ?: $request->category_id;
+        } else {
+            if ($request->sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_category_id,
+                    'position' => 2,
+                ]);
+            }
+            if ($request->sub_sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_sub_category_id,
+                    'position' => 3,
+                ]);
+            }
+            $food->category_id = $request->sub_sub_category_id ?: ($request->sub_category_id ?: $request->category_id);
         }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
-        }
-        $food->category_id = $request->sub_category_id?$request->sub_category_id:$request->category_id;
         $food->category_ids = json_encode($category);
         $food->description = $request->description[array_search('default', $request->lang)];
 
@@ -608,20 +622,33 @@ class ItemController extends Controller
                 'position' => 1,
             ]);
         }
-        if ($request->sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
-            ]);
+        if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
+            $position = 2;
+            foreach ($request->sub_category_ids as $id) {
+                if ($id != null) {
+                    array_push($category, [
+                        'id' => $id,
+                        'position' => $position,
+                    ]);
+                    $position++;
+                }
+            }
+            $p->category_id = end($request->sub_category_ids) ?: $request->category_id;
+        } else {
+            if ($request->sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_category_id,
+                    'position' => 2,
+                ]);
+            }
+            if ($request->sub_sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_sub_category_id,
+                    'position' => 3,
+                ]);
+            }
+            $p->category_id = $request->sub_sub_category_id ?: ($request->sub_category_id ?: $request->category_id);
         }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
-        }
-
-        $p->category_id = $request->sub_category_id?$request->sub_category_id:$request->category_id;
         $p->category_ids = json_encode($category);
         $p->description = $request->description[array_search('default', $request->lang)];
 

@@ -175,14 +175,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-4">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.sub_category')}}<span
-                                                class="input-label-secondary"></span></label>
-                                        <select name="sub_category_id" id="sub-categories" class="form-control js-select2-custom get-request" data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-sub-categories">
-                                        </select>
-                                    </div>
-                                </div>
+                                <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;"></div>
                                 @if ($module_data['unit'])
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
@@ -824,7 +817,7 @@
 
     $('#reset_btn').click(function(){
             $('#category_id').val(null).trigger('change');
-            $('#sub-categories').val(null).trigger('change');
+            $('#dynamic-category-container').empty();
             $('#unit').val(null).trigger('change');
             $('#veg').val(0).trigger('change');
             $('#addons').val(null).trigger('change');

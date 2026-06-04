@@ -202,28 +202,37 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.category')}}<span
                                                 class="input-label-secondary">*</span></label>
-                                        <select name="category_id" id="category-id" class="form-control js-select2-custom get-request"
+                                        <select name="category_id" id="category_id" class="form-control js-select2-custom get-request"
                                         data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-categories"
                                                >
-                                            @foreach($categories as $category)
-                                                <option
-                                                    value="{{$category['id']}}" {{ $category->id==$product_category[0]->id ? 'selected' : ''}} >{{$category['name']}}</option>
-                                            @endforeach
+                                            @php($main_cat = json_decode($product->category_ids, true))
+                                            @if ($main_cat && count($main_cat) > 0)
+                                                @php($cat = \App\Models\Category::find($main_cat[0]['id']))
+                                                @if($cat)
+                                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                                @endif
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6 col-lg-4">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.sub_category')}}<span
-                                                class="input-label-secondary"></span></label>
-                                        <select name="sub_category_id" id="sub-categories"
-                                                data-id="{{count($product_category)>=2?$product_category[1]->id:''}}"
-                                                class="form-control js-select2-custom get-request"
-                                                data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-sub-categories">
-
-                                        </select>
-                                    </div>
+                                <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;">
+                                    @php($sub_cats = json_decode($product->category_ids, true))
+                                    @if ($sub_cats && count($sub_cats) > 1)
+                                        @foreach(array_slice($sub_cats, 1) as $key => $sub)
+                                            @php($sub_cat = \App\Models\Category::find($sub['id']))
+                                            @if($sub_cat)
+                                            <div class="col-sm-6 col-lg-4 dynamic-category-wrapper" data-depth="{{ $key }}">
+                                                <div class="form-group mb-0">
+                                                    <label class="input-label">{{ translate('messages.sub_category') }}</label>
+                                                    <select name="sub_category_ids[]" class="form-control js-select2-custom dynamic-category-select" data-depth="{{ $key }}">
+                                                        <option value="{{ $sub_cat->id }}" selected>{{ $sub_cat->name }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </div>
                                 @if ($module_data['common_condition'])
                                 <div class="col-sm-6 col-lg-4">
@@ -756,13 +765,7 @@
 
 
         $(document).ready(function () {
-            setTimeout(function () {
-                let category = $("#category-id").val();
-                let sub_category = '{{count($product_category)>=2?$product_category[1]->id:''}}';
-                let sub_sub_category ='{{count($product_category)>=3?$product_category[2]->id:''}}';
-                getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id=' + category + '&&sub_category=' + sub_category, 'sub-categories');
-                getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id=' + sub_category + '&&sub_category=' + sub_sub_category, 'sub-sub-categories');
-            }, 1000)
+            // Dynamic categories are pre-rendered from server-side
         });
 
 
