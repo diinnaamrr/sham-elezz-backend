@@ -283,21 +283,19 @@
                                             </span></label>
                                         <select name="category_id" class="js-data-example-ajax form-control"
                                             id="category_id">
-                                            @php($main_cat = json_decode($product->category_ids, true))
-                                            @if ($main_cat && count($main_cat) > 0)
-                                                @php($cat = \App\Models\Category::find($main_cat[0]['id']))
-                                                @if($cat)
-                                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                                @endif
+                                            @if($category)
+                                                <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
                                             @endif
                                         </select>
                                     </div>
                                 </div>
                                 <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;">
-                                    @php($sub_cats = json_decode($product->category_ids, true))
+                                    @php
+                                        $sub_cats = json_decode($product->category_ids, true);
+                                    @endphp
                                     @if ($sub_cats && count($sub_cats) > 1)
                                         @foreach(array_slice($sub_cats, 1) as $key => $sub)
-                                            @php($sub_cat = \App\Models\Category::find($sub['id']))
+                                            <?php $sub_cat = \App\Models\Category::find($sub['id'] ?? null); ?>
                                             @if($sub_cat)
                                             <div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="{{ $key }}">
                                                 <div class="form-group mb-0">
