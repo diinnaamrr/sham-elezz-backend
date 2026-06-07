@@ -141,7 +141,8 @@
 @endsection
 
 @push('script_2')
-<script src="https://maps.googleapis.com/maps/api/js?v=3.45.8&key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=drawing,places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.45.8&key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places"></script>
+<script src="{{asset('public/assets/admin/js/zone-polygon-drawer.js')}}"></script>
 <script>
     "use strict";
     auto_grow();
@@ -224,12 +225,12 @@
         });
 
 
-        drawingManager = new google.maps.drawing.DrawingManager({
-            drawingMode: google.maps.drawing.OverlayType.POLYGON,
+        drawingManager = new ZonePolygonDrawer({
+            drawingMode: 'polygon',
             drawingControl: true,
             drawingControlOptions: {
             position: google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+            drawingModes: ['polygon']
             },
             polygonOptions: {
             editable: true
@@ -237,12 +238,7 @@
         });
         drawingManager.setMap(map);
 
-        google.maps.event.addListener(drawingManager, "overlaycomplete", function(event) {
-            let newShape = event.overlay;
-            newShape.type = event.type;
-        });
-
-        google.maps.event.addListener(drawingManager, "overlaycomplete", function(event) {
+        drawingManager.addListener("overlaycomplete", function(event) {
             if(lastpolygon)
                 {
                     lastpolygon.setMap(null);
