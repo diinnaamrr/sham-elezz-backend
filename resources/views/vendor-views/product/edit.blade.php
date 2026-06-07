@@ -202,20 +202,23 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.category')}}<span
                                                 class="input-label-secondary">*</span></label>
+                                        @php
+                                            $selected_main_cat_id = null;
+                                            if (isset($product_category[0])) {
+                                                $selected_main_cat_id = is_array($product_category[0])
+                                                    ? ($product_category[0]['id'] ?? null)
+                                                    : ($product_category[0]->id ?? null);
+                                            }
+                                        @endphp
                                         <select name="category_id" id="category_id" class="form-control js-select2-custom get-request"
                                         data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-categories"
                                                >
-                                            @if(isset($product_category[0]))
-                                                <?php
-                                                    $main_cat_id = is_array($product_category[0])
-                                                        ? ($product_category[0]['id'] ?? null)
-                                                        : ($product_category[0]->id ?? null);
-                                                    $cat = $main_cat_id ? \App\Models\Category::find($main_cat_id) : null;
-                                                ?>
-                                                @if($cat)
-                                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                                @endif
-                                            @endif
+                                            <option value="">{{ translate('messages.select') }}</option>
+                                            @foreach($categories as $catOption)
+                                                <option value="{{ $catOption->id }}" {{ $selected_main_cat_id == $catOption->id ? 'selected' : '' }}>
+                                                    {{ $catOption->name }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -815,7 +818,8 @@
             });
         }
 
-        $('#product_form').on('submit', function () {
+        $('#product_form').on('submit', function (e) {
+            e.preventDefault();
             let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
@@ -860,8 +864,16 @@
                             location.href = '{{route('vendor.item.list')}}';
                         }, 2000);
                     }
+                },
+                error: function (xhr) {
+                    $('#loading').hide();
+                    toastr.error(xhr.responseJSON?.message || '{{ translate('messages.something_went_wrong') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
                 }
             });
+            return false;
         });
 
         $(function () {

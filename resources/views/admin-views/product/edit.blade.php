@@ -282,9 +282,17 @@
                                             data-original-title="{{ translate('messages.Required.')}}"> *
                                             </span></label>
                                         <select name="category_id" class="js-data-example-ajax form-control"
-                                            id="category_id">
+                                            id="category_id" required>
                                             @if($category)
                                                 <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
+                                            @else
+                                                @php $main_cat_ids = json_decode($product->category_ids, true); @endphp
+                                                @if(!empty($main_cat_ids[0]['id']))
+                                                    <?php $fallback_cat = \App\Models\Category::find($main_cat_ids[0]['id']); ?>
+                                                    @if($fallback_cat)
+                                                        <option value="{{ $fallback_cat->id }}" selected>{{ $fallback_cat->name }}</option>
+                                                    @endif
+                                                @endif
                                             @endif
                                         </select>
                                     </div>
@@ -792,9 +800,7 @@
 <script src="{{ asset('public/assets/admin') }}/js/view-pages/product-index.js"></script>
 <script>
     "use strict";
-     let removedImageKeys = [];
-    let element = "";
-
+    let removedImageKeys = [];
 
     $(document).on('click','.function_remove_img' ,function(){
     let key = $(this).data('key');
@@ -847,7 +853,7 @@
          hide_min_max(data);
      });
 
-    let count =   $('.count_div').length;
+    count = $('.count_div').length || count;
 
     $(document).ready(function() {
         $("#add_new_option_button").click(function(e) {
@@ -973,8 +979,6 @@
         let e = $(this);
         deleteRow(e);
     });
-    let countRow = 0;
-
     function add_new_row_button(data) {
         // count = data;
         countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
@@ -1090,15 +1094,15 @@
         @endif
     });
 
-    let module_id = {{ $product->module_id }};
-    let module_type = "{{ $product->module->module_type }}";
-    let parent_category_id = {{ $category ? $category->id : 0 }};
-    <?php
-    $module_data = config('module.' . $product->module->module_type);
-    unset($module_data['description']);
-    ?>
-    let module_data = {{ str_replace('"', '', json_encode($module_data)) }};
-    let stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
+    module_id = {{ $product->module_id }};
+    module_type = "{{ $product->module->module_type }}";
+    parent_category_id = {{ $category ? $category->id : 0 }};
+    @php
+        $edit_module_data = config('module.' . $product->module->module_type);
+        unset($edit_module_data['description']);
+    @endphp
+    module_data = @json($edit_module_data);
+    stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
     input_field_visibility_update();
 
     function modulChange(id) {
@@ -1412,8 +1416,8 @@
      //        }
      //    });
 
-    $('#product_form').on('submit', function() {
-        console.log('working');
+    $('#product_form').on('submit', function(e) {
+        e.preventDefault();
         let formData = new FormData(this);
         $.ajaxSetup({
             headers: {
@@ -1457,8 +1461,16 @@
                             '{{ route('admin.item.list') }}';
                     }, 2000);
                 }
+            },
+            error: function(xhr) {
+                $('#loading').hide();
+                toastr.error(xhr.responseJSON?.message || '{{ translate('messages.something_went_wrong') }}', {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
             }
         });
+        return false;
     });
 
     $('#reset_btn').click(function() {
