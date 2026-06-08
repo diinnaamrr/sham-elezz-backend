@@ -297,35 +297,33 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div id="dynamic-category-container" class="d-contents">
+                                @php
+                                    $category_chain = json_decode($product->category_ids, true) ?? [];
+                                @endphp
+                                @for ($i = 1; $i < count($category_chain); $i++)
                                     @php
-                                        $category_chain = json_decode($product->category_ids, true) ?? [];
+                                        $parent_id = $category_chain[$i - 1]['id'] ?? null;
+                                        $selected_id = $category_chain[$i]['id'] ?? null;
+                                        $depth = $i;
+                                        $sibling_categories = $parent_id
+                                            ? \App\Models\Category::where('parent_id', $parent_id)->orderBy('name')->get()
+                                            : collect();
                                     @endphp
-                                    @for ($i = 1; $i < count($category_chain); $i++)
-                                        @php
-                                            $parent_id = $category_chain[$i - 1]['id'] ?? null;
-                                            $selected_id = $category_chain[$i]['id'] ?? null;
-                                            $depth = $i;
-                                            $sibling_categories = $parent_id
-                                                ? \App\Models\Category::where('parent_id', $parent_id)->orderBy('name')->get()
-                                                : collect();
-                                        @endphp
-                                        @if($sibling_categories->isNotEmpty())
-                                            <div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="{{ $depth }}">
-                                                <div class="form-group mb-0">
-                                                    <label class="input-label">{{ translate('messages.sub_category') }}</label>
-                                                    <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="{{ $depth }}">
-                                                        @foreach($sibling_categories as $option)
-                                                            <option value="{{ $option->id }}" {{ (int) $selected_id === (int) $option->id ? 'selected' : '' }}>
-                                                                {{ $option->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                    @if($sibling_categories->isNotEmpty())
+                                        <div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="{{ $depth }}">
+                                            <div class="form-group mb-0">
+                                                <label class="input-label">{{ translate('messages.sub_category') }}</label>
+                                                <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="{{ $depth }}">
+                                                    @foreach($sibling_categories as $option)
+                                                        <option value="{{ $option->id }}" {{ (int) $selected_id === (int) $option->id ? 'selected' : '' }}>
+                                                            {{ $option->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                        @endif
-                                    @endfor
-                                </div>
+                                        </div>
+                                    @endif
+                                @endfor
                                 <div class="col-sm-6 col-lg-3" id="condition_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="condition_id">{{ translate('messages.Suitable_For') }}<span
@@ -1320,7 +1318,7 @@
         }
     });
 
-    let ignoreNextCategoryChange = $('#dynamic-category-container .dynamic-category-wrapper').length > 0;
+    let ignoreNextCategoryChange = $('.dynamic-category-wrapper').length > 0;
     $('#category_id').off('change').on('change', function () {
         if (ignoreNextCategoryChange) {
             ignoreNextCategoryChange = false;
@@ -1527,7 +1525,7 @@
         $('#module_id').val(null).trigger('change');
         $('#store_id').val(null).trigger('change');
         $('#category_id').val(null).trigger('change');
-        $('#dynamic-category-container').empty();
+        $('.dynamic-category-wrapper').remove();
         $('#unit').val(null).trigger('change');
         $('#veg').val(0).trigger('change');
         $('#add_on').val(null).trigger('change');

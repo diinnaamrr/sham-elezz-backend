@@ -125,6 +125,15 @@ $(document).on('change', '.dynamic-category-select', function() {
     fetchDynamicCategories(parent_id, depth);
 });
 
+function appendDynamicCategory(html) {
+    let $html = $(html);
+    if ($('.dynamic-category-wrapper').length) {
+        $('.dynamic-category-wrapper').last().after($html);
+    } else {
+        $('#category_id').closest('[class*="col-"]').after($html);
+    }
+}
+
 function fetchDynamicCategories(parent_id, depth) {
     // Remove any deeper category selects
     $('.dynamic-category-wrapper').each(function() {
@@ -146,11 +155,10 @@ function fetchDynamicCategories(parent_id, depth) {
                             <select name="sub_category_ids[]" class="form-control js-select2-custom dynamic-category-select" data-depth="${newDepth}">
                                 ${data.options}
                             </select></div></div>`;
-                    
-                    $('#dynamic-category-container').append(html);
-                    // Reinitialize select2 for the new elements
-                    $('.js-select2-custom').each(function () {
-                        let select2 = $.HSCore.components.HSSelect2.init($(this));
+
+                    appendDynamicCategory(html);
+                    $('.dynamic-category-wrapper').last().find('.js-select2-custom').each(function () {
+                        $.HSCore.components.HSSelect2.init($(this));
                     });
                 }
             }

@@ -140,6 +140,15 @@ $(document).on('change', '.dynamic-category-select', function() {
     fetchDynamicCategories(parent_id, depth);
 });
 
+function appendDynamicCategory(html) {
+    let $html = $(html);
+    if ($('.dynamic-category-wrapper').length) {
+        $('.dynamic-category-wrapper').last().after($html);
+    } else {
+        $('#category_id').closest('[class*="col-"]').after($html);
+    }
+}
+
 function fetchDynamicCategories(parent_id, depth) {
     // Remove any deeper category selects
     $('.dynamic-category-wrapper').each(function() {
@@ -163,8 +172,8 @@ function fetchDynamicCategories(parent_id, depth) {
                         html += `<option value="${item.id}">${item.text}</option>`;
                     });
                     html += `</select></div></div>`;
-                    
-                    $('#dynamic-category-container').append(html);
+
+                    appendDynamicCategory(html);
                 }
             }
         });

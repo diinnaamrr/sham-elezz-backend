@@ -175,7 +175,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;"></div>
                                 @if ($module_data['unit'])
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
@@ -817,7 +816,7 @@
 
     $('#reset_btn').click(function(){
             $('#category_id').val(null).trigger('change');
-            $('#dynamic-category-container').empty();
+            $('.dynamic-category-wrapper').remove();
             $('#unit').val(null).trigger('change');
             $('#veg').val(0).trigger('change');
             $('#addons').val(null).trigger('change');

@@ -225,7 +225,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;"></div>
                                 <div class="col-sm-6 col-lg-3" id="condition_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="condition_id">{{ translate('messages.Suitable_For') }}<span
@@ -1177,7 +1176,7 @@
             $('#module_id').val(null).trigger('change');
             $('#store_id').val(null).trigger('change');
             $('#category_id').val(null).trigger('change');
-            $('#dynamic-category-container').empty();
+            $('.dynamic-category-wrapper').remove();
             $('#unit').val(null).trigger('change');
             $('#veg').val(0).trigger('change');
             $('#add_on').val(null).trigger('change');
