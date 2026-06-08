@@ -223,25 +223,34 @@
                                     </div>
                                 </div>
 
-                                <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;">
+                                <div id="dynamic-category-container" class="d-contents">
                                     @php
-                                        $sub_cats = json_decode($product->category_ids, true);
+                                        $category_chain = json_decode($product->category_ids, true) ?? [];
                                     @endphp
-                                    @if ($sub_cats && count($sub_cats) > 1)
-                                        @foreach(array_slice($sub_cats, 1) as $key => $sub)
-                                            <?php $sub_cat = \App\Models\Category::find($sub['id'] ?? null); ?>
-                                            @if($sub_cat)
-                                            <div class="col-sm-6 col-lg-4 dynamic-category-wrapper" data-depth="{{ $key }}">
+                                    @for ($i = 1; $i < count($category_chain); $i++)
+                                        @php
+                                            $parent_id = $category_chain[$i - 1]['id'] ?? null;
+                                            $selected_id = $category_chain[$i]['id'] ?? null;
+                                            $depth = $i;
+                                            $sibling_categories = $parent_id
+                                                ? \App\Models\Category::where('parent_id', $parent_id)->orderBy('name')->get()
+                                                : collect();
+                                        @endphp
+                                        @if($sibling_categories->isNotEmpty())
+                                            <div class="col-sm-6 col-lg-4 dynamic-category-wrapper" data-depth="{{ $depth }}">
                                                 <div class="form-group mb-0">
                                                     <label class="input-label">{{ translate('messages.sub_category') }}</label>
-                                                    <select name="sub_category_ids[]" class="form-control js-select2-custom dynamic-category-select" data-depth="{{ $key }}">
-                                                        <option value="{{ $sub_cat->id }}" selected>{{ $sub_cat->name }}</option>
+                                                    <select name="sub_category_ids[]" class="form-control js-select2-custom dynamic-category-select" data-depth="{{ $depth }}">
+                                                        @foreach($sibling_categories as $option)
+                                                            <option value="{{ $option->id }}" {{ (int) $selected_id === (int) $option->id ? 'selected' : '' }}>
+                                                                {{ $option->name }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                        @endif
+                                    @endfor
                                 </div>
                                 @if ($module_data['common_condition'])
                                 <div class="col-sm-6 col-lg-4">
@@ -643,6 +652,20 @@
         "use strict";
 
     mod_type="{{ $module_type }}";
+
+    $(function () {
+        let ignoreNextCategoryChange = $('#dynamic-category-container .dynamic-category-wrapper').length > 0;
+        $('#category_id').off('change').on('change', function () {
+            if (ignoreNextCategoryChange) {
+                ignoreNextCategoryChange = false;
+                return;
+            }
+            fetchDynamicCategories($(this).val(), 0);
+        });
+        $(document).off('change', '.dynamic-category-select').on('change', '.dynamic-category-select', function () {
+            fetchDynamicCategories($(this).val(), parseInt($(this).data('depth'), 10));
+        });
+    });
 
     $(document).ready(function() {
         $("#add_new_option_button").click(function(e) {

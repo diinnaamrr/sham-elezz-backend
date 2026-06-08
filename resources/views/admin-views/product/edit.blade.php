@@ -297,25 +297,34 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div id="dynamic-category-container" class="w-100 d-flex flex-wrap" style="gap: 15px;">
+                                <div id="dynamic-category-container" class="d-contents">
                                     @php
-                                        $sub_cats = json_decode($product->category_ids, true);
+                                        $category_chain = json_decode($product->category_ids, true) ?? [];
                                     @endphp
-                                    @if ($sub_cats && count($sub_cats) > 1)
-                                        @foreach(array_slice($sub_cats, 1) as $key => $sub)
-                                            <?php $sub_cat = \App\Models\Category::find($sub['id'] ?? null); ?>
-                                            @if($sub_cat)
-                                            <div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="{{ $key }}">
+                                    @for ($i = 1; $i < count($category_chain); $i++)
+                                        @php
+                                            $parent_id = $category_chain[$i - 1]['id'] ?? null;
+                                            $selected_id = $category_chain[$i]['id'] ?? null;
+                                            $depth = $i;
+                                            $sibling_categories = $parent_id
+                                                ? \App\Models\Category::where('parent_id', $parent_id)->orderBy('name')->get()
+                                                : collect();
+                                        @endphp
+                                        @if($sibling_categories->isNotEmpty())
+                                            <div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="{{ $depth }}">
                                                 <div class="form-group mb-0">
                                                     <label class="input-label">{{ translate('messages.sub_category') }}</label>
-                                                    <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="{{ $key }}">
-                                                        <option value="{{ $sub_cat->id }}" selected>{{ $sub_cat->name }}</option>
+                                                    <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="{{ $depth }}">
+                                                        @foreach($sibling_categories as $option)
+                                                            <option value="{{ $option->id }}" {{ (int) $selected_id === (int) $option->id ? 'selected' : '' }}>
+                                                                {{ $option->name }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                        @endif
+                                    @endfor
                                 </div>
                                 <div class="col-sm-6 col-lg-3" id="condition_input">
                                     <div class="form-group mb-0">
@@ -1187,45 +1196,6 @@
         }
     }
 
-     $('#category_id').on('change', function () {
-         parent_category_id = $(this).val();
-         fetchDynamicCategories(parent_category_id, 0);
-     });
-
-     $(document).on('change', '.dynamic-category-select', function() {
-         let parent_id = $(this).val();
-         let depth = $(this).data('depth');
-         fetchDynamicCategories(parent_id, depth);
-     });
-
-     function fetchDynamicCategories(parent_id, depth) {
-         $('.dynamic-category-wrapper').each(function() {
-             if ($(this).data('depth') > depth) {
-                 $(this).remove();
-             }
-         });
-         if (parent_id) {
-             $.get({
-                 url: '{{ url('/') }}/admin/item/get-categories?parent_id=' + parent_id + '&sub_category=true',
-                 success: function(data) {
-                     if (data && data.length > 0) {
-                         let newDepth = depth + 1;
-                         let html = `<div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="${newDepth}">
-                             <div class="form-group mb-0">
-                                 <label class="input-label">Sub Category</label>
-                                 <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="${newDepth}">
-                                     <option value="" disabled selected>---Select---</option>`;
-                         data.forEach(item => {
-                             html += `<option value="${item.id}">${item.text}</option>`;
-                         });
-                         html += `</select></div></div>`;
-                         $('#dynamic-category-container').append(html);
-                     }
-                 }
-             });
-         }
-     }
-
      $('.foodModalClose').on('click',function (){
          $('#food-modal').hide();
      })
@@ -1350,7 +1320,21 @@
         }
     });
 
+    let ignoreNextCategoryChange = $('#dynamic-category-container .dynamic-category-wrapper').length > 0;
+    $('#category_id').off('change').on('change', function () {
+        if (ignoreNextCategoryChange) {
+            ignoreNextCategoryChange = false;
+            return;
+        }
+        parent_category_id = $(this).val();
+        fetchDynamicCategories(parent_category_id, 0);
+    });
 
+    $(document).off('change', '.dynamic-category-select').on('change', '.dynamic-category-select', function() {
+        let parent_id = $(this).val();
+        let depth = parseInt($(this).data('depth'), 10);
+        fetchDynamicCategories(parent_id, depth);
+    });
 
     $('#choice_attributes').on('change', function() {
         $('#customer_choice_options').html(null);
