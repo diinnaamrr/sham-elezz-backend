@@ -153,7 +153,9 @@ class StoreLogic
                 CAST(categories.id AS UNSIGNED) as id,
                 categories.parent_id
             ')
-                ->where('items.store_id', $store->id)
+                ->where(function ($q) use ($store) {
+                    \App\Models\Item::applyStoreMenuFilter($q, (int) $store->id);
+                })
                 ->where('categories.status', 1)
                 ->groupBy('id', 'categories.parent_id')
                 ->get();
@@ -429,7 +431,9 @@ class StoreLogic
                 CAST(categories.id AS UNSIGNED) as id,
                 categories.parent_id
             ')
-                ->where('items.store_id', $store->id)
+                ->where(function ($q) use ($store) {
+                    \App\Models\Item::applyStoreMenuFilter($q, (int) $store->id);
+                })
                 ->where('categories.status', 1)
                 ->groupBy('id', 'categories.parent_id')
                 ->get();
@@ -626,7 +630,9 @@ class StoreLogic
                 CAST(categories.id AS UNSIGNED) as id,
                 categories.parent_id
             ')
-                ->where('items.store_id', $store->id)
+                ->where(function ($q) use ($store) {
+                    \App\Models\Item::applyStoreMenuFilter($q, (int) $store->id);
+                })
                 ->where('categories.status', 1)
                 ->groupBy('id', 'categories.parent_id')
                 ->get();

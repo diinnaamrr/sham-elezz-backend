@@ -122,16 +122,28 @@ class StoreController extends Controller
 
     public function get_popular_store_items($id)
     {
-        $items = Item::
-        when(is_numeric($id),function ($qurey) use($id){
-            $qurey->where('store_id', $id);
+        $storeId = is_numeric($id)
+            ? (int) $id
+            : Store::where('slug', $id)->value('id');
+
+        $items = Item::when($storeId, function ($query) use ($storeId) {
+            $query->forStore($storeId);
         })
-        ->when(!is_numeric($id), function ($query) use ($id) {
+        ->when(!$storeId && !is_numeric($id), function ($query) use ($id) {
             $query->whereHas('store', function ($q) use ($id) {
                 $q->where('slug', $id);
             });
         })
         ->active()->popular()->limit(10)->get();
+
+        if ($storeId) {
+            foreach ($items as $item) {
+                if (($item->is_shared_menu ?? false) && !$item->getAttribute('context_store_id')) {
+                    $item->setAttribute('context_store_id', $storeId);
+                }
+            }
+        }
+
         $items = Helpers::product_data_formatting($items, true, true, app()->getLocale());
 
         return response()->json($items, 200);
@@ -147,7 +159,9 @@ class StoreController extends Controller
             $category_ids = DB::table('items')
             ->join('categories', 'items.category_id', '=', 'categories.id')
             ->selectRaw('categories.position as positions, IF((categories.position = "0"), categories.id, categories.parent_id) as categories')
-            ->where('items.store_id', $store->id)
+            ->where(function ($q) use ($store) {
+                Item::applyStoreMenuFilter($q, (int) $store->id);
+            })
             ->where('categories.status',1)
             ->groupBy('categories','positions')
             ->get();
@@ -155,7 +169,10 @@ class StoreController extends Controller
             $store = Helpers::store_data_formatting($store);
             $store['category_ids'] = array_map('intval', $category_ids->pluck('categories')->toArray());
             $store['category_details'] = Category::whereIn('id',$store['category_ids'])->get();
-            $store['price_range']  = Item::withoutGlobalScopes()->where('store_id', $store->id)
+            $store['price_range']  = Item::withoutGlobalScopes()
+            ->where(function ($q) use ($store) {
+                Item::applyStoreMenuFilter($q, (int) $store->id);
+            })
             ->select(DB::raw('MIN(price) AS min_price, MAX(price) AS max_price'))
             ->get(['min_price','max_price'])->toArray();
         }

@@ -1243,17 +1243,27 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
     }
     public function get_categories(Request $request)
     {
-        $key = explode(' ', $request['q']);
         $cat = Category::when(isset($request->module_id), function ($query) use ($request) {
             $query->where('module_id', $request->module_id);
         })
             ->when($request->sub_category, function ($query) {
                 $query->where('position', '>', '0');
             })
-            ->where(['parent_id' => $request->parent_id])
-            ->when(isset($key), function ($q) use ($key) {
+            ->when(
+                $request->sub_category && (!$request->has('parent_id') || $request->parent_id === '' || $request->parent_id === null),
+                function ($query) {
+                    $query->whereRaw('1 = 0');
+                },
+                function ($query) use ($request) {
+                    $query->where('parent_id', (int) $request->parent_id);
+                }
+            )
+            ->when($request->filled('q'), function ($q) use ($request) {
+                $key = explode(' ', $request->q);
                 foreach ($key as $value) {
-                    $q->where('name', 'like', "%{$value}%");
+                    if (trim($value) !== '') {
+                        $q->where('name', 'like', "%{$value}%");
+                    }
                 }
             })
             ->get()

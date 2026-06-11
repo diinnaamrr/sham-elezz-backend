@@ -150,16 +150,22 @@ function appendDynamicCategory(html) {
 }
 
 function fetchDynamicCategories(parent_id, depth) {
-    // Remove any deeper category selects
-    $('.dynamic-category-wrapper').each(function() {
-        if ($(this).data('depth') > depth) {
-            $(this).remove();
-        }
-    });
+    depth = parseInt(depth, 10) || 0;
+
+    if (depth === 0) {
+        $('.dynamic-category-wrapper').remove();
+    } else {
+        $('.dynamic-category-wrapper').each(function() {
+            if (parseInt($(this).data('depth'), 10) > depth) {
+                $(this).remove();
+            }
+        });
+    }
 
     if (parent_id) {
+        let moduleParam = (typeof module_id !== 'undefined' && module_id) ? '&module_id=' + module_id : '';
         $.get({
-            url: window.location.origin + '/admin/item/get-categories?parent_id=' + parent_id + '&sub_category=true',
+            url: window.location.origin + '/admin/item/get-categories?parent_id=' + parent_id + '&sub_category=true' + moduleParam,
             success: function(data) {
                 if (data && data.length > 0) {
                     let newDepth = depth + 1;

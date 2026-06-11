@@ -418,9 +418,9 @@ class CategoryController extends Controller
 
             // Build stores with their categories and items
             $storesWithData = $stores->map(function($store) use ($zone_id, $module_id, $categories) {
-                // Get all items for this store
+                // Get all items for this store (including shared menu)
                 $storeItems = Item::active()
-                    ->where('store_id', $store->id)
+                    ->forStore($store->id)
                     ->module($module_id)
                     ->get();
 
@@ -428,6 +428,10 @@ class CategoryController extends Controller
                 $categoriesWithItemsArray = [];
                 
                 foreach ($storeItems as $item) {
+                    if (($item->is_shared_menu ?? false) && !$item->getAttribute('context_store_id')) {
+                        $item->setAttribute('context_store_id', $store->id);
+                    }
+
                     $categoryId = $item->category_id;
                     
                     // Only include main categories (position = 0)
