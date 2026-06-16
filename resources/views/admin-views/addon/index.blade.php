@@ -78,7 +78,14 @@
                                 <label class="input-label"
                                        for="exampleFormControlSelect1">{{translate('messages.store')}}<span
                                         class="input-label-secondary"></span></label>
-                                <select name="store_id" id="store_id" class="js-data-example-ajax form-control"
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="check_all_stores">
+                                    <label class="form-check-label" for="check_all_stores">
+                                        {{translate('messages.check_all')}}
+                                    </label>
+                                </div>
+                                <select name="store_ids[]" id="store_id" class="js-data-example-ajax form-control"
+                                        multiple="multiple"
                                         data-placeholder="{{translate('messages.select_store')}}">
 
                                 </select>
@@ -393,6 +400,52 @@
                     return $request;
                 }
             }
+        });
+
+        // Check All stores logic
+        var totalStoresCount = 0;
+        $('#check_all_stores').on('change', function() {
+            if ($(this).is(':checked')) {
+                $.ajax({
+                    url: '{{url('/')}}/admin/store/get-stores',
+                    data: {
+                        q: '',
+                        all: true,
+                        module_type: 'food',
+                        module_id: {{Config::get('module.current_module_id')}}
+                    },
+                    success: function(data) {
+                        totalStoresCount = data.length;
+                        // Clear current selections
+                        $('#store_id').empty();
+                        // Add all stores as selected options
+                        $.each(data, function(index, store) {
+                            var option = new Option(store.text, store.id, true, true);
+                            $('#store_id').append(option);
+                        });
+                        $('#store_id').trigger('change');
+                    }
+                });
+            } else {
+                // Uncheck all - clear selections
+                $('#store_id').val(null).trigger('change');
+                totalStoresCount = 0;
+            }
+        });
+
+        // Auto-uncheck "Check All" when user manually deselects a store
+        $('#store_id').on('change', function() {
+            var selectedCount = $(this).val() ? $(this).val().length : 0;
+            if (totalStoresCount > 0 && selectedCount < totalStoresCount) {
+                $('#check_all_stores').prop('checked', false);
+            }
+        });
+
+        // Reset button handler
+        $('#reset_btn').on('click', function() {
+            $('#store_id').val(null).trigger('change');
+            $('#check_all_stores').prop('checked', false);
+            totalStoresCount = 0;
         });
     </script>
 @endpush

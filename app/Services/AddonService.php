@@ -12,6 +12,19 @@ class AddonService
 
     public function getAddData(Object $request): array
     {
+        $items = [];
+        foreach ($request->store_ids as $storeId) {
+            $items[] = [
+                'name' => $request->name[array_search('default', $request->lang)],
+                'price' => $request->price,
+                'store_id' => $storeId,
+            ];
+        }
+        return $items;
+    }
+
+    public function getUpdateData(Object $request): array
+    {
         return [
             'name' => $request->name[array_search('default', $request->lang)],
             'price' => $request->price,
