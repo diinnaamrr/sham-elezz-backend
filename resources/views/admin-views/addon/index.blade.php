@@ -438,10 +438,27 @@
                     return data.text;
                 }
                 var fakeCheckbox = '<div class="fake-checkbox"></div>';
-                return $('<span class="custom-checkbox-wrap">' + fakeCheckbox + data.text + '</span>');
+                return '<span class="custom-checkbox-wrap">' + fakeCheckbox + data.text + '</span>';
             },
             escapeMarkup: function (markup) {
                 return markup;
+            }
+        });
+
+        // Fix for Select2 Ajax unselect bug
+        $('#store_id').on('select2:unselect', function (e) {
+            var id = e.params.data.id;
+            $(this).find('option[value="' + id + '"]').remove();
+        });
+
+        // Fix for Select2 duplicate selecting bug
+        $('#store_id').on('select2:selecting', function (e) {
+            var id = e.params.args.data.id.toString();
+            var selected = $(this).val() || [];
+            if (selected.includes(id)) {
+                e.preventDefault();
+                $(this).find('option[value="' + id + '"]').remove();
+                $(this).trigger('change');
             }
         });
 
