@@ -3,7 +3,12 @@
 @section('title',translate('messages.add_new_addon'))
 
 @push('css_or_js')
-
+<style>
+    .select2-container--default .select2-selection--multiple {
+        max-height: 120px;
+        overflow-y: auto;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -81,7 +86,7 @@
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="checkbox" id="check_all_stores">
                                     <label class="form-check-label" for="check_all_stores">
-                                        {{translate('messages.check_all')}}
+                                        {{translate('messages.select_all')}}
                                     </label>
                                 </div>
                                 <select name="store_ids[]" id="store_id" class="js-data-example-ajax form-control"
@@ -399,6 +404,17 @@
 
                     return $request;
                 }
+            },
+            closeOnSelect: false,
+            templateResult: function (data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var checkbox = '<input type="checkbox" ' + (data.selected ? 'checked' : '') + ' style="margin-inline-end: 8px;">';
+                return $('<span>' + checkbox + data.text + '</span>');
+            },
+            escapeMarkup: function (markup) {
+                return markup;
             }
         });
 
