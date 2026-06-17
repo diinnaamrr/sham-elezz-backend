@@ -22,12 +22,30 @@ class CategoryLogic
     }
 
     public static function products($category_id, $zone_id, int $limit,int $offset, $type)
-    {
+    { 
 
         $category_sub_category_item_default_status = BusinessSetting::where('key', 'category_sub_category_item_default_status')->first()?->value ?? 1;
         $category_sub_category_item_sort_by_general = PriorityList::where('name', 'category_sub_category_item_sort_by_general')->where('type','general')->first()?->value ?? '';
         $category_sub_category_item_sort_by_unavailable = PriorityList::where('name', 'category_sub_category_item_sort_by_unavailable')->where('type','unavailable')->first()?->value ?? '';
         $category_sub_category_item_sort_by_temp_closed = PriorityList::where('name', 'category_sub_category_item_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
+
+        $all_category_ids = collect([]);
+        if(is_numeric($category_id)) {
+            $category = \App\Models\Category::find($category_id);
+            if($category) {
+                $all_category_ids = $category->getAllSubcategoryIds();
+            } else {
+                $all_category_ids->push($category_id);
+            }
+        } else {
+            $category = \App\Models\Category::where('slug', $category_id)->first();
+            if($category) {
+                $all_category_ids = $category->getAllSubcategoryIds();
+            } else {
+                $all_category_ids->push($category_id);
+            }
+        }
+        $category_ids = $all_category_ids->unique()->values()->all();
 
         $query = Item::
         whereHas('module.zones', function($query)use($zone_id){
@@ -40,14 +58,7 @@ class CategoryLogic
                     });
                 });
             })
-            ->whereHas('category',function($q)use($category_id){
-                return $q->when(is_numeric($category_id),function ($qurey) use($category_id){
-                    return $qurey->whereId($category_id)->orWhere('parent_id', $category_id);
-                })
-                    ->when(!is_numeric($category_id),function ($qurey) use($category_id){
-                        $qurey->where('slug', $category_id);
-                    });
-            })
+            ->whereIn('category_id', $category_ids)
 
             ->select(['items.*'])
             ->selectSub(function ($subQuery) {
@@ -112,6 +123,14 @@ class CategoryLogic
         $brand_ids = isset($brand_ids)?(is_array($brand_ids)?$brand_ids:json_decode($brand_ids)):[];
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
 
+        if (isset($category_ids) && count($category_ids) > 0) {
+            $all_category_ids = collect([]);
+            foreach (\App\Models\Category::whereIn('id', $category_ids)->get() as $category) {
+                $all_category_ids = $all_category_ids->merge($category->getAllSubcategoryIds());
+            }
+            $category_ids = $all_category_ids->unique()->values()->all();
+        }
+
         $query = Item::
             whereHas('module.zones', function($query)use($zone_id){
                 $query->whereIn('zones.id', json_decode($zone_id, true));
@@ -133,9 +152,7 @@ class CategoryLogic
 
             })
             ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
-                return $query->whereHas('category',function($q)use($category_ids){
-                    return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
-                });
+                return $query->whereIn('category_id', $category_ids);
             })
             ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
                 return $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
@@ -235,11 +252,21 @@ class CategoryLogic
     public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
         $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):[];
+        if (isset($category_ids) && count($category_ids) > 0) {
+            $all_category_ids = collect([]);
+            foreach (\App\Models\Category::whereIn('id', $category_ids)->get() as $category) {
+                $all_category_ids = $all_category_ids->merge($category->getAllSubcategoryIds());
+            }
+            $category_ids = $all_category_ids->unique()->values()->all();
+        }
+
         $paginator = Store::
         WithOpenWithDeliveryTime($longitude??0,$latitude??0)
             ->withCount(['items','campaigns'])
-            ->whereHas('items.category',function($q)use($category_ids){
-                return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+            ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
+                return $query->whereHas('items', function($q) use($category_ids){
+                    return $q->whereIn('category_id', $category_ids);
+                });
             })
             ->when(config('module.current_module_data'), function($query)use($zone_id){
                 return  $query->whereHas('zone.modules', function($query){
@@ -340,16 +367,29 @@ class CategoryLogic
 
     public static function stores($category_id, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0)
     {
+        $all_category_ids = collect([]);
+        if(is_numeric($category_id)) {
+            $category = \App\Models\Category::find($category_id);
+            if($category) {
+                $all_category_ids = $category->getAllSubcategoryIds();
+            } else {
+                $all_category_ids->push($category_id);
+            }
+        } else {
+            $category = \App\Models\Category::where('slug', $category_id)->first();
+            if($category) {
+                $all_category_ids = $category->getAllSubcategoryIds();
+            } else {
+                $all_category_ids->push($category_id);
+            }
+        }
+        $category_ids = $all_category_ids->unique()->values()->all();
+
         $paginator = Store::
         withOpen($longitude??0,$latitude??0)
             ->withCount(['items','campaigns'])
-            ->whereHas('items.category',function($q)use($category_id){
-                return $q->when(is_numeric($category_id),function ($qurey) use($category_id){
-                    return $qurey->whereId($category_id)->orWhere('parent_id', $category_id);
-                })
-                    ->when(!is_numeric($category_id),function ($qurey) use($category_id){
-                        $qurey->where('slug', $category_id);
-                    });
+            ->whereHas('items',function($q)use($category_ids){
+                return $q->whereIn('category_id', $category_ids);
             })
             ->when(config('module.current_module_data'), function($query)use($zone_id){
                 $query->whereHas('zone.modules', function($query){
