@@ -12,6 +12,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        pointer-events: none;
     }
     .fake-checkbox {
         width: 16px;
