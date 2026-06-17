@@ -8,6 +8,32 @@
         max-height: 120px;
         overflow-y: auto;
     }
+    .custom-checkbox-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .fake-checkbox {
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        margin-inline-end: 8px;
+    }
+    .select2-results__option[aria-selected="true"] .fake-checkbox::after {
+        content: '✔';
+        color: #000;
+        font-size: 12px;
+    }
+    /* Hide native checkmarks */
+    .select2-container--default .select2-results__option[aria-selected=true]::before,
+    .select2-container--default .select2-results__option[aria-selected=true]::after {
+        display: none !important;
+    }
 </style>
 @endpush
 
@@ -410,8 +436,8 @@
                 if (!data.id) {
                     return data.text;
                 }
-                var checkbox = '<input type="checkbox" ' + (data.selected ? 'checked' : '') + ' style="margin-inline-end: 8px;">';
-                return $('<span>' + checkbox + data.text + '</span>');
+                var fakeCheckbox = '<div class="fake-checkbox"></div>';
+                return $('<span class="custom-checkbox-wrap">' + fakeCheckbox + data.text + '</span>');
             },
             escapeMarkup: function (markup) {
                 return markup;
