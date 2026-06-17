@@ -21,6 +21,22 @@ class ProductLogic
         }
         return Store::where('slug', $store_id)->value('id');
     }
+
+    /** الكاتيجوري + كل السابكاتيجوريز (كل المستويات) */
+    protected static function resolveCategoryIdsWithSubcategories($category_id): array
+    {
+        $ids = is_array($category_id) ? $category_id : explode(',', (string) $category_id);
+        $all = collect([]);
+        foreach ($ids as $cid) {
+            $category = Category::find($cid);
+            if ($category) {
+                $all = $all->merge($category->getAllSubcategoryIds());
+            } else {
+                $all->push($cid);
+            }
+        }
+        return $all->unique()->values()->all();
+    }
     public static function get_product($id)
     {
         return Item::active()
@@ -46,14 +62,12 @@ class ProductLogic
         $latest_items_sort_by_temp_closed =PriorityList::where('name', 'latest_items_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
 
 
-        if($category_id != 0){
-            $category_id = explode(',', $category_id);
-        }
+        $category_ids = $category_id != 0
+            ? self::resolveCategoryIdsWithSubcategories($category_id)
+            : null;
         $query = Item::
-        when($category_id != 0, function($q)use($category_id){
-            $q->whereHas('category',function($q)use($category_id){
-                return $q->whereIn('id',$category_id)->orWhereIn('parent_id', $category_id);
-            });
+        when($category_ids, function($q) use ($category_ids) {
+            $q->whereIn('category_id', $category_ids);
         })
         ->when(isset($product_id), function($q)use($product_id){
             $q->where('id', '!=', $product_id);
@@ -141,10 +155,8 @@ class ProductLogic
 
 
         $query = Item::
-        when($category_id != 0, function($q)use($category_id){
-            $q->whereHas('category',function($q)use($category_id){
-                return $q->whereId($category_id)->orWhere('parent_id', $category_id);
-            });
+        when($category_ids, function($q) use ($category_ids) {
+            $q->whereIn('category_id', $category_ids);
         })
         ->when(isset($product_id), function($q)use($product_id){
             $q->where('id', '!=', $product_id);
