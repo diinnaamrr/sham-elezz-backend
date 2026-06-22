@@ -32,6 +32,122 @@ class CartController extends Controller
         return Store::where('slug', $storeId)->value('id');
     }
 
+    /**
+     * Resolve store context when adding a cart line (shared menu items have no store_id on the item).
+     */
+    protected function resolveStoreIdWhenAdding(Request $request, $item, $existingCarts): ?int
+    {
+        if ($fromRequest = $this->resolveContextStoreId($request)) {
+            return $fromRequest;
+        }
+
+        if (!($item->is_shared_menu ?? false) && $item->store_id) {
+            return (int) $item->store_id;
+        }
+
+        foreach ($existingCarts as $cart) {
+            if ($cart->store_id) {
+                return (int) $cart->store_id;
+            }
+            if ($cart->item?->store_id && !($cart->item->is_shared_menu ?? false)) {
+                return (int) $cart->item->store_id;
+            }
+        }
+
+        return null;
+    }
+
+    protected function resolveCartItemContextStoreId($cartRow, ?int $requestContextStoreId = null): ?int
+    {
+        if ($cartRow->store_id) {
+            return (int) $cartRow->store_id;
+        }
+        if ($requestContextStoreId) {
+            return $requestContextStoreId;
+        }
+        if ($cartRow->item && !($cartRow->item->is_shared_menu ?? false) && $cartRow->item->store_id) {
+            return (int) $cartRow->item->store_id;
+        }
+
+        return null;
+    }
+
+    protected function applyContextStoreIdToCartItem($cartRow, ?int $requestContextStoreId = null): void
+    {
+        if (!$cartRow->item) {
+            return;
+        }
+
+        $storeId = $this->resolveCartItemContextStoreId($cartRow, $requestContextStoreId);
+        if ($storeId && ($cartRow->item->is_shared_menu ?? false) && !$cartRow->item->getAttribute('context_store_id')) {
+            $cartRow->item->setAttribute('context_store_id', $storeId);
+        }
+    }
+
+    protected function formatCartRows($carts, ?int $requestContextStoreId = null)
+    {
+        return $carts->map(function ($data) use ($requestContextStoreId) {
+            $data->add_on_ids = json_decode($data->add_on_ids, true);
+            $data->add_on_qtys = json_decode($data->add_on_qtys, true);
+            $data->variation = json_decode($data->variation, true);
+            $this->applyContextStoreIdToCartItem($data, $requestContextStoreId);
+            $data->item = Helpers::cart_product_data_formatting(
+                $data->item,
+                $data->variation,
+                $data->add_on_ids,
+                $data->add_on_qtys,
+                false,
+                app()->getLocale()
+            );
+
+            return $data;
+        });
+    }
+
+    protected function resolveStoreIdFromCarts($carts, ?int $requestContextStoreId = null): ?int
+    {
+        foreach ($carts as $cart) {
+            $storeId = $this->resolveCartItemContextStoreId($cart, $requestContextStoreId);
+            if ($storeId) {
+                return $storeId;
+            }
+        }
+
+        return $requestContextStoreId;
+    }
+
+    /**
+     * Backfill store_id on legacy cart rows (shared menu items added before this fix).
+     */
+    protected function backfillCartStoreIds($carts, ?int $requestContextStoreId = null): void
+    {
+        $knownStoreId = $this->resolveStoreIdFromCarts($carts, $requestContextStoreId);
+        if (!$knownStoreId) {
+            return;
+        }
+
+        foreach ($carts as $cart) {
+            if (!$cart->store_id) {
+                $cart->store_id = $knownStoreId;
+                $cart->save();
+            }
+        }
+    }
+
+    protected function loadAndFormatCarts(int $user_id, int $is_guest, Request $request)
+    {
+        $contextStoreId = $this->resolveContextStoreId($request);
+        $carts = Cart::where('user_id', $user_id)
+            ->where('is_guest', $is_guest)
+            ->where('module_id', $request->header('moduleId'))
+            ->with('item')
+            ->get();
+
+        $this->backfillCartStoreIds($carts, $contextStoreId);
+
+        return $this->formatCartRows($carts, $contextStoreId);
+    }
+
     public function get_carts(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -43,19 +159,7 @@ class CartController extends Controller
         }
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
-        $contextStoreId = $this->resolveContextStoreId($request);
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) use ($contextStoreId) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-            if ($contextStoreId && $data->item && ($data->item->is_shared_menu ?? false) && !$data->item->getAttribute('context_store_id')) {
-                $data->item->setAttribute('context_store_id', $contextStoreId);
-            }
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-			return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         
         // حساب إجمالي المبلغ
         $total_amount = 0;
@@ -133,21 +237,12 @@ class CartController extends Controller
         }
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('item')->get();
-
-//        foreach($carts as $cart){
-//                if($cart?->item?->store_id  && $cart?->item?->store_id != $item->store_id){
-//                    return response()->json([
-//                        'errors' => [
-//                            ['code' => 'different_stores', 'message' => translate('messages.Please_select_items_from_the_same_store')]
-//                        ]
-//                    ], 403);
-//                }
-//            }
-
+        $storeIdForCart = $this->resolveStoreIdWhenAdding($request, $item, $carts);
 
         $cart = new Cart();
         $cart->user_id = $user_id;
         $cart->module_id = $request->header('moduleId');
+        $cart->store_id = $storeIdForCart;
         $cart->item_id = $request->item_id;
         $cart->is_guest = $is_guest;
         $cart->add_on_ids = isset($request->add_on_ids)?json_encode($request->add_on_ids):json_encode([]);
@@ -160,15 +255,7 @@ class CartController extends Controller
 
         $item->carts()->save($cart);
 
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         return response()->json($carts, 200);
     }
 
@@ -219,15 +306,7 @@ class CartController extends Controller
         $cart->variation = isset($request->variation)?json_encode($request->variation):$cart->variation;
         $cart->save();
 
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         return response()->json($carts, 200);
     }
 
@@ -248,15 +327,7 @@ class CartController extends Controller
         $cart = Cart::find($request->cart_id);
         $cart->delete();
 
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         return response()->json($carts, 200);
     }
 
@@ -280,15 +351,7 @@ class CartController extends Controller
         }
 
 
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         return response()->json($carts, 200);
     }
 
@@ -321,6 +384,9 @@ class CartController extends Controller
             ->with('item')
             ->get();
 
+        $requestContextStoreId = $this->resolveContextStoreId($request);
+        $this->backfillCartStoreIds($carts, $requestContextStoreId);
+
         // التحقق من أن الكارت غير فارغ
         if ($carts->isEmpty()) {
             return response()->json([
@@ -333,11 +399,9 @@ class CartController extends Controller
         // التأكد من أن كل المنتجات من نفس المتجر
         $store_ids = [];
         foreach ($carts as $cart) {
-            if ($cart->item) {
-                $store_id = $cart->item->store_id ?? null;
-                if ($store_id) {
-                    $store_ids[] = $store_id;
-                }
+            $store_id = $this->resolveCartItemContextStoreId($cart, $requestContextStoreId);
+            if ($store_id) {
+                $store_ids[] = $store_id;
             }
         }
 
@@ -378,6 +442,11 @@ class CartController extends Controller
             $item = $cart->item;
             if (!$item) {
                 continue;
+            }
+
+            $cartStoreId = $this->resolveCartItemContextStoreId($cart, $requestContextStoreId);
+            if ($cartStoreId && ($item->is_shared_menu ?? false) && !$item->getAttribute('context_store_id')) {
+                $item->setAttribute('context_store_id', $cartStoreId);
             }
 
             // حساب سعر المنتج
