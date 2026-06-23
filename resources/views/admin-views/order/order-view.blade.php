@@ -525,7 +525,7 @@
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
                                                                             class="tio-edit"></i></span>
                                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                                    src="{{ $product->image_full_url }}"
+                                                                    src="{{ $product?->image_full_url ?? asset('public/assets/admin/img/100x100/2.png') }}"
                                                                         data-onerror-image="{{ asset('public/assets/admin/img/100x100/2.png') }}"
                                                                         alt="Image Description">
                                                                 </div>
@@ -533,7 +533,7 @@
                                                                 <a class="avatar avatar-xl mr-3"
                                                                     href="{{ route('admin.item.view', [$detail->item['id'],'module_id' => $order->module_id]) }}">
                                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                                    src="{{ $product->image_full_url }}"
+                                                                    src="{{ $product?->image_full_url ?? asset('public/assets/admin/img/100x100/2.png') }}"
                                                                         data-onerror-image="{{ asset('public/assets/admin/img/100x100/2.png') }}"
                                                                         alt="Image Description">
                                                                 </a>
@@ -1341,7 +1341,7 @@
                                 <div class="avatar avatar-circle">
                                     <img class="avatar-img onerror-image"
                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                        src="{{ $order->customer->image_full_url }}"
+                                        src="{{ $order->customer?->image_full_url ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                         alt="Image Description">
                                 </div>
                                 <div class="media-body">
@@ -1842,7 +1842,7 @@
                                         <span class="dm_list" role='button' data-id="{{ $dm['id'] }}">
                                             <img class="avatar avatar-sm avatar-circle mr-1 onerror-image"
                                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                                src="{{$dm['image_full_url'] }}"
+                                                src="{{ $dm['image_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                                 alt="{{ $dm['name'] }}">
                                             {{ $dm['name'] }}
                                         </span>
