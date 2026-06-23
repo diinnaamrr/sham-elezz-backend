@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Mail\EmailVerification;
 use App\Mail\LoginVerification;
 use App\Models\BusinessSetting;
@@ -19,7 +20,6 @@ use App\CentralLogics\SMS_module;
 use App\Models\WalletTransaction;
 use App\Models\EmailVerifications;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -1203,20 +1203,46 @@ class CustomerAuthController extends Controller
     }
 
     private function check_guest_cart($user, $guest_id){
-        if($guest_id  && isset($user->id)){
+        if ($guest_id && isset($user->id)) {
+            $moduleId = request()->header('moduleId');
+            $itemTypes = ['Item', 'App\Models\Item'];
 
-            $userStoreIds = Cart::where('user_id', $guest_id)
-                ->join('items', 'carts.item_id', '=', 'items.id')
-                ->pluck('items.store_id')
-                ->toArray();
-
-            Cart::where('user_id', $user->id)
-                ->whereHas('item', function ($query) use ($userStoreIds) {
-                    $query->whereNotIn('store_id', $userStoreIds);
+            $guestStoreIds = Cart::query()
+                ->from('carts')
+                ->leftJoin('items', function ($join) use ($itemTypes) {
+                    $join->on('carts.item_id', '=', 'items.id')
+                        ->whereIn('carts.item_type', $itemTypes);
                 })
-                ->delete();
+                ->where('carts.user_id', $guest_id)
+                ->when($moduleId, fn ($query) => $query->where('carts.module_id', $moduleId))
+                ->selectRaw('DISTINCT COALESCE(carts.store_id, items.store_id) as resolved_store_id')
+                ->pluck('resolved_store_id')
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
 
-            Cart::where('user_id', $guest_id)->update(['user_id' => $user->id, 'is_guest' => 0]);
+            if (!empty($guestStoreIds)) {
+                $cartIdsToDelete = Cart::query()
+                    ->from('carts')
+                    ->leftJoin('items', function ($join) use ($itemTypes) {
+                        $join->on('carts.item_id', '=', 'items.id')
+                            ->whereIn('carts.item_type', $itemTypes);
+                    })
+                    ->where('carts.user_id', $user->id)
+                    ->when($moduleId, fn ($query) => $query->where('carts.module_id', $moduleId))
+                    ->whereNotNull(DB::raw('COALESCE(carts.store_id, items.store_id)'))
+                    ->whereNotIn(DB::raw('COALESCE(carts.store_id, items.store_id)'), $guestStoreIds)
+                    ->pluck('carts.id');
+
+                if ($cartIdsToDelete->isNotEmpty()) {
+                    Cart::whereIn('id', $cartIdsToDelete)->delete();
+                }
+            }
+
+            Cart::where('user_id', $guest_id)
+                ->when($moduleId, fn ($query) => $query->where('module_id', $moduleId))
+                ->update(['user_id' => $user->id, 'is_guest' => 0]);
         }
         return true;
     }

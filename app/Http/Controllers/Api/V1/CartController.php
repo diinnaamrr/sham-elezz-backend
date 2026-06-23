@@ -247,7 +247,7 @@ class CartController extends Controller
         $cart->is_guest = $is_guest;
         $cart->add_on_ids = isset($request->add_on_ids)?json_encode($request->add_on_ids):json_encode([]);
         $cart->add_on_qtys = isset($request->add_on_qtys)?json_encode($request->add_on_qtys):json_encode([]);
-        $cart->item_type = $request->model;
+        $cart->item_type = $model;
         $cart->price = $request->price;
         $cart->quantity = $request->quantity;
         $cart->variation = isset($request->variation)?json_encode($request->variation):json_encode([]);
