@@ -12,6 +12,7 @@ use App\CentralLogics\Helpers;
 use App\CentralLogics\CouponLogic;
 use App\Http\Controllers\Controller;
 use App\Models\ItemCampaign;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
@@ -24,12 +25,33 @@ class CartController extends Controller
     {
         $storeId = $request->query('store_id', $request->input('store_id'));
         if ($storeId === null || $storeId === '') {
+            $storeId = $request->header('storeId', $request->header('store-id'));
+        }
+        if ($storeId === null || $storeId === '') {
             return null;
         }
         if (is_numeric($storeId)) {
             return (int) $storeId;
         }
         return Store::where('slug', $storeId)->value('id');
+    }
+
+    /**
+     * Shared-menu items may exist in multiple stores; if stocked at only one, infer that store.
+     */
+    protected function inferSharedMenuStoreId($item): ?int
+    {
+        if (!($item instanceof Item) || !($item->is_shared_menu ?? false)) {
+            return null;
+        }
+
+        $storeIds = DB::table('store_item_stock')
+            ->where('item_id', $item->id)
+            ->pluck('store_id')
+            ->unique()
+            ->values();
+
+        return $storeIds->count() === 1 ? (int) $storeIds->first() : null;
     }
 
     /**
@@ -54,7 +76,20 @@ class CartController extends Controller
             }
         }
 
-        return null;
+        return $this->inferSharedMenuStoreId($item);
+    }
+
+    protected function syncCartStoreContext(int $user_id, int $is_guest, int $moduleId, ?int $storeId): void
+    {
+        if (!$storeId) {
+            return;
+        }
+
+        Cart::where('user_id', $user_id)
+            ->where('is_guest', $is_guest)
+            ->where('module_id', $moduleId)
+            ->whereNull('store_id')
+            ->update(['store_id' => $storeId]);
     }
 
     protected function resolveCartItemContextStoreId($cartRow, ?int $requestContextStoreId = null): ?int
@@ -67,6 +102,9 @@ class CartController extends Controller
         }
         if ($cartRow->item && !($cartRow->item->is_shared_menu ?? false) && $cartRow->item->store_id) {
             return (int) $cartRow->item->store_id;
+        }
+        if ($cartRow->item instanceof Item) {
+            return $this->inferSharedMenuStoreId($cartRow->item);
         }
 
         return null;
@@ -90,6 +128,12 @@ class CartController extends Controller
             $data->add_on_ids = json_decode($data->add_on_ids, true);
             $data->add_on_qtys = json_decode($data->add_on_qtys, true);
             $data->variation = json_decode($data->variation, true);
+
+            $resolvedStoreId = $this->resolveCartItemContextStoreId($data, $requestContextStoreId);
+            if ($resolvedStoreId) {
+                $data->store_id = $resolvedStoreId;
+            }
+
             $this->applyContextStoreIdToCartItem($data, $requestContextStoreId);
             $data->item = Helpers::cart_product_data_formatting(
                 $data->item,
@@ -99,6 +143,10 @@ class CartController extends Controller
                 false,
                 app()->getLocale()
             );
+
+            if ($resolvedStoreId && is_array($data->item) && empty($data->item['store_id'])) {
+                $data->item['store_id'] = $resolvedStoreId;
+            }
 
             return $data;
         });
@@ -238,6 +286,21 @@ class CartController extends Controller
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('item')->get();
         $storeIdForCart = $this->resolveStoreIdWhenAdding($request, $item, $carts);
+
+        if (($item->is_shared_menu ?? false) && !$storeIdForCart && $carts->isEmpty()) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'store_id', 'message' => translate('messages.store_required_warning')]
+                ]
+            ], 403);
+        }
+
+        $this->syncCartStoreContext(
+            $user_id,
+            $is_guest,
+            (int) $request->header('moduleId'),
+            $storeIdForCart
+        );
 
         $cart = new Cart();
         $cart->user_id = $user_id;
