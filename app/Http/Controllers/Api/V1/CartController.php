@@ -37,21 +37,37 @@ class CartController extends Controller
     }
 
     /**
-     * Shared-menu items may exist in multiple stores; if stocked at only one, infer that store.
+     * Infer store for shared-menu items from store_item_stock (optionally scoped to zone).
      */
-    protected function inferSharedMenuStoreId($item): ?int
+    protected function inferSharedMenuStoreId($item, ?Request $request = null): ?int
     {
         if (!($item instanceof Item) || !($item->is_shared_menu ?? false)) {
             return null;
         }
 
-        $storeIds = DB::table('store_item_stock')
-            ->where('item_id', $item->id)
-            ->pluck('store_id')
+        $query = DB::table('store_item_stock')
+            ->join('stores', 'stores.id', '=', 'store_item_stock.store_id')
+            ->where('store_item_stock.item_id', $item->id)
+            ->where('stores.status', 1);
+
+        if ($request && $request->hasHeader('zoneId')) {
+            $zoneIds = json_decode($request->header('zoneId'), true);
+            if (is_array($zoneIds) && !empty($zoneIds)) {
+                $query->whereIn('stores.zone_id', $zoneIds);
+            }
+        }
+
+        $storeIds = $query
+            ->orderByDesc('store_item_stock.stock')
+            ->pluck('store_item_stock.store_id')
             ->unique()
             ->values();
 
-        return $storeIds->count() === 1 ? (int) $storeIds->first() : null;
+        if ($storeIds->isEmpty()) {
+            return null;
+        }
+
+        return (int) $storeIds->first();
     }
 
     /**
@@ -76,7 +92,7 @@ class CartController extends Controller
             }
         }
 
-        return $this->inferSharedMenuStoreId($item);
+        return $this->inferSharedMenuStoreId($item, $request);
     }
 
     protected function syncCartStoreContext(int $user_id, int $is_guest, int $moduleId, ?int $storeId): void
@@ -92,7 +108,7 @@ class CartController extends Controller
             ->update(['store_id' => $storeId]);
     }
 
-    protected function resolveCartItemContextStoreId($cartRow, ?int $requestContextStoreId = null): ?int
+    protected function resolveCartItemContextStoreId($cartRow, ?int $requestContextStoreId = null, ?Request $request = null): ?int
     {
         if ($cartRow->store_id) {
             return (int) $cartRow->store_id;
@@ -104,37 +120,37 @@ class CartController extends Controller
             return (int) $cartRow->item->store_id;
         }
         if ($cartRow->item instanceof Item) {
-            return $this->inferSharedMenuStoreId($cartRow->item);
+            return $this->inferSharedMenuStoreId($cartRow->item, $request);
         }
 
         return null;
     }
 
-    protected function applyContextStoreIdToCartItem($cartRow, ?int $requestContextStoreId = null): void
+    protected function applyContextStoreIdToCartItem($cartRow, ?int $requestContextStoreId = null, ?Request $request = null): void
     {
         if (!$cartRow->item) {
             return;
         }
 
-        $storeId = $this->resolveCartItemContextStoreId($cartRow, $requestContextStoreId);
+        $storeId = $this->resolveCartItemContextStoreId($cartRow, $requestContextStoreId, $request);
         if ($storeId && ($cartRow->item->is_shared_menu ?? false) && !$cartRow->item->getAttribute('context_store_id')) {
             $cartRow->item->setAttribute('context_store_id', $storeId);
         }
     }
 
-    protected function formatCartRows($carts, ?int $requestContextStoreId = null)
+    protected function formatCartRows($carts, ?int $requestContextStoreId = null, ?Request $request = null)
     {
-        return $carts->map(function ($data) use ($requestContextStoreId) {
+        return $carts->map(function ($data) use ($requestContextStoreId, $request) {
             $data->add_on_ids = json_decode($data->add_on_ids, true);
             $data->add_on_qtys = json_decode($data->add_on_qtys, true);
             $data->variation = json_decode($data->variation, true);
 
-            $resolvedStoreId = $this->resolveCartItemContextStoreId($data, $requestContextStoreId);
+            $resolvedStoreId = $this->resolveCartItemContextStoreId($data, $requestContextStoreId, $request);
             if ($resolvedStoreId) {
                 $data->store_id = $resolvedStoreId;
             }
 
-            $this->applyContextStoreIdToCartItem($data, $requestContextStoreId);
+            $this->applyContextStoreIdToCartItem($data, $requestContextStoreId, $request);
             $data->item = Helpers::cart_product_data_formatting(
                 $data->item,
                 $data->variation,
@@ -152,10 +168,10 @@ class CartController extends Controller
         });
     }
 
-    protected function resolveStoreIdFromCarts($carts, ?int $requestContextStoreId = null): ?int
+    protected function resolveStoreIdFromCarts($carts, ?int $requestContextStoreId = null, ?Request $request = null): ?int
     {
         foreach ($carts as $cart) {
-            $storeId = $this->resolveCartItemContextStoreId($cart, $requestContextStoreId);
+            $storeId = $this->resolveCartItemContextStoreId($cart, $requestContextStoreId, $request);
             if ($storeId) {
                 return $storeId;
             }
@@ -167,9 +183,9 @@ class CartController extends Controller
     /**
      * Backfill store_id on legacy cart rows (shared menu items added before this fix).
      */
-    protected function backfillCartStoreIds($carts, ?int $requestContextStoreId = null): void
+    protected function backfillCartStoreIds($carts, ?int $requestContextStoreId = null, ?Request $request = null): void
     {
-        $knownStoreId = $this->resolveStoreIdFromCarts($carts, $requestContextStoreId);
+        $knownStoreId = $this->resolveStoreIdFromCarts($carts, $requestContextStoreId, $request);
         if (!$knownStoreId) {
             return;
         }
@@ -191,9 +207,9 @@ class CartController extends Controller
             ->with('item')
             ->get();
 
-        $this->backfillCartStoreIds($carts, $contextStoreId);
+        $this->backfillCartStoreIds($carts, $contextStoreId, $request);
 
-        return $this->formatCartRows($carts, $contextStoreId);
+        return $this->formatCartRows($carts, $contextStoreId, $request);
     }
 
     public function get_carts(Request $request)
@@ -286,14 +302,6 @@ class CartController extends Controller
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('item')->get();
         $storeIdForCart = $this->resolveStoreIdWhenAdding($request, $item, $carts);
-
-        if (($item->is_shared_menu ?? false) && !$storeIdForCart && $carts->isEmpty()) {
-            return response()->json([
-                'errors' => [
-                    ['code' => 'store_id', 'message' => translate('messages.store_required_warning')]
-                ]
-            ], 403);
-        }
 
         $this->syncCartStoreContext(
             $user_id,
