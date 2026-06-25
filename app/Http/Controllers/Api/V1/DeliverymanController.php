@@ -328,21 +328,7 @@ class DeliverymanController extends Controller
 
         if($dm->type == 'zone_wise')
         {
-            $orders = $orders->where('zone_id', $dm->zone_id)
-            ->where(function($query){
-                $query->whereNull('store_id')
-
-                    ->orWhere(function($query){
-                        $query->whereHas('store', function($q){
-                            $q->where('store_business_model','subscription')->whereHas('store_sub', function($q1){
-                                $q1->where('self_delivery', 0);
-                            });
-                        })
-                        ->orWhereHas('store', function($qu) {
-                            $qu->where('store_business_model','commission')->where('self_delivery_system', 0);
-                        });
-                    });
-            });
+            $orders = $orders->where('zone_id', $dm->zone_id)->VisibleToZoneDeliveryman();
         }
         else
         {
@@ -362,9 +348,7 @@ class DeliverymanController extends Controller
                     });
             });
         }
-        if(isset($dm->vehicle_id )){
-            $orders = $orders->where('dm_vehicle_id',$dm->vehicle_id);
-        }
+        $orders = $orders->ForDeliverymanVehicle($dm->vehicle_id);
         $orders = $orders->dmOrder()
         ->Notpos()
         ->NotDigitalOrder()

@@ -1050,6 +1050,8 @@ class OrderController extends Controller
 
             DB::commit();
 
+            $order->refresh();
+            $order->load(['store.store_sub', 'zone', 'module', 'customer', 'guest']);
 
             $payments = $order->payments()->where('payment_method','cash_on_delivery')->exists();
             $order_mail_status = Helpers::get_mail_status('place_order_mail_status_user');
