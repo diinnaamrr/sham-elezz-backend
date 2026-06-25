@@ -501,13 +501,7 @@ class OrderController extends Controller
 
         $order_details = [];
         $order = new Order();
-        $order->id = 100000 + Order::count() + 1;
-        if (Order::find($order->id)) {
-            $order->id = Order::orderBy('id', 'desc')->first()->id + 1;
-        }
-
-
-        $order_status ='pending';
+        $order->id = OrderLogic::generate_order_id();
         if(($request->partial_payment && $request->payment_method != 'offline_payment') || $request->payment_method == 'wallet' ){
             $order_status ='confirmed';
         }
@@ -1001,6 +995,7 @@ class OrderController extends Controller
             DB::beginTransaction();
             $order->save();
             if ($request->order_type !== 'parcel') {
+                OrderDetail::where('order_id', $order->id)->delete();
                 foreach ($order_details as $key => $item) {
                     $order_details[$key]['order_id'] = $order->id;
 
@@ -1371,10 +1366,7 @@ class OrderController extends Controller
         $product_price = 0;
         $store_discount_amount = 0;
         $order = new Order();
-        $order->id = 100000 + Order::count() + 1;
-        if (Order::find($order->id)) {
-            $order->id = Order::orderBy('id', 'desc')->first()->id + 1;
-        }
+        $order->id = OrderLogic::generate_order_id();
         $order->user_id = $request->user ? $request->user->id : $request['guest_id'];
         $order->payment_status = 'unpaid';
         $order->order_status = 'pending';

@@ -29,6 +29,13 @@ class OrderLogic
         return rand(1000, 9999) . '-' . Str::random(5) . '-' . time();
     }
 
+    public static function generate_order_id(): int
+    {
+        $maxId = (int) Order::max('id');
+
+        return max($maxId, 100000) + 1;
+    }
+
     public static function track_order($order_id)
     {
         return Helpers::order_data_formatting(Order::with(['details', 'delivery_man.rating'])->where(['id' => $order_id])->first(), false);
