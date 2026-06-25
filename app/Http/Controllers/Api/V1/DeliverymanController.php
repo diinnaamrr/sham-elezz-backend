@@ -426,10 +426,11 @@ class DeliverymanController extends Controller
 
         $dm->increment('assigned_order_count');
 
+        $order->load(['module', 'store', 'customer', 'guest', 'delivery_man']);
         $fcm_token= $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
 
-
-        $value = Helpers::order_status_update_message('accepted',$order->module->module_type);
+        $moduleType = $order->module?->module_type ?? 'food';
+        $value = Helpers::order_status_update_message('accepted', $moduleType);
         $value = Helpers::text_variable_data_format(value:$value,store_name:$order->store?->name,order_id:$order->id,user_name:"{$order?->customer?->f_name} {$order?->customer?->l_name}",delivery_man_name:"{$order->delivery_man?->f_name} {$order->delivery_man?->l_name}");
         try {
             if($value && $fcm_token && Helpers::getNotificationStatusData('customer','customer_order_notification','push_notification_status'))
@@ -741,11 +742,8 @@ class DeliverymanController extends Controller
             return response()->json([], 200);
         }
 
-        return response()->json([
-            'errors' => [
-                ['code' => 'order', 'message' => translate('messages.not_found')]
-            ]
-        ], 404);
+        $order->load(['store', 'customer', 'guest', 'module']);
+        return response()->json(Helpers::order_data_formatting($order), 200);
     }
 
     public function get_order(Request $request)
@@ -765,7 +763,7 @@ class DeliverymanController extends Controller
                 'errors' => [
                     ['code' => 'order', 'message' => translate('messages.not_found')]
                 ]
-            ], 204);
+            ], 404);
         }
         return response()->json(Helpers::order_data_formatting($order), 200);
     }
