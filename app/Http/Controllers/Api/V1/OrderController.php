@@ -594,6 +594,9 @@ class OrderController extends Controller
 
 
         $carts = Cart::where('user_id', $order->user_id)->where('is_guest',$order->is_guest)->where('module_id',$request->header('moduleId'))
+        ->where(function ($query) use ($request) {
+            $query->where('store_id', $request->store_id)->orWhereNull('store_id');
+        })
         ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
             return $query->where('id',$request->cart_id);
         })
@@ -1014,11 +1017,13 @@ class OrderController extends Controller
                 }
                 $store->increment('total_order');
             }
-            if(!isset($request->is_buy_now) || (isset($request->is_buy_now) && $request->is_buy_now == 0 )){
-                foreach ($carts as $cart) {
-                    $cart->delete();
-                }
-            }
+            Cart::where('user_id', $order->user_id)
+                ->where('is_guest', $order->is_guest)
+                ->where('module_id', $request->header('moduleId'))
+                ->where(function ($query) use ($request) {
+                    $query->where('store_id', $request->store_id)->orWhereNull('store_id');
+                })
+                ->delete();
             if($request->user){
                 $customer = $request->user;
                 $customer->zone_id = $order->zone_id;

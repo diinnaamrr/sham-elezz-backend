@@ -204,6 +204,11 @@ class CartController extends Controller
         $carts = Cart::where('user_id', $user_id)
             ->where('is_guest', $is_guest)
             ->where('module_id', $request->header('moduleId'))
+            ->when($contextStoreId, function ($query) use ($contextStoreId) {
+                $query->where(function ($q) use ($contextStoreId) {
+                    $q->where('store_id', $contextStoreId)->orWhereNull('store_id');
+                });
+            })
             ->with('item')
             ->get();
 
@@ -302,6 +307,17 @@ class CartController extends Controller
 
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('item')->get();
         $storeIdForCart = $this->resolveStoreIdWhenAdding($request, $item, $carts);
+
+        if ($storeIdForCart) {
+            $existingStoreIds = $carts->pluck('store_id')->filter()->unique();
+            if ($existingStoreIds->isNotEmpty() && !$existingStoreIds->contains($storeIdForCart)) {
+                Cart::where('user_id', $user_id)
+                    ->where('is_guest', $is_guest)
+                    ->where('module_id', $request->header('moduleId'))
+                    ->delete();
+                $carts = collect([]);
+            }
+        }
 
         $this->syncCartStoreContext(
             $user_id,
