@@ -502,6 +502,8 @@ class OrderController extends Controller
         $order_details = [];
         $order = new Order();
         $order->id = OrderLogic::generate_order_id();
+
+        $order_status = 'pending';
         if(($request->partial_payment && $request->payment_method != 'offline_payment') || $request->payment_method == 'wallet' ){
             $order_status ='confirmed';
         }
