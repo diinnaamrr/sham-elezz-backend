@@ -111,22 +111,22 @@
                     @endif
 
                     @if (\App\CentralLogics\Helpers::module_permission_check('module'))
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/module') ? 'active' : '' }}">
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module*') || Request::is('admin/module*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.system_module_setup') }}">
                             <i class="tio-globe nav-icon"></i>
                             <span class="text-truncate">{{ translate('messages.system_module_setup') }}</span>
                         </a>
-                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/module*') ? 'block' : 'none' }}">
-                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/module/create') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.module.create') }}" title="{{ translate('messages.add_module') }}">
+                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/business-settings/module*') || Request::is('admin/module*') ? 'block' : 'none' }}">
+                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module/store') || Request::is('admin/module/create') ? 'active' : '' }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.business-settings.module.create') ? route('admin.business-settings.module.create') : (Route::has('admin.module.create') ? route('admin.module.create') : '#') }}" title="{{ translate('messages.add_module') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">
                                         {{ translate('messages.add_module') }}
                                     </span>
                                 </a>
                             </li>
-                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/module') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.module.index') }}" title="{{ translate('messages.modules') }}">
+                            <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module*') || Request::is('admin/module') ? 'active' : '' }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.business-settings.module.index') ? route('admin.business-settings.module.index') : (Route::has('admin.module.index') ? route('admin.module.index') : '#') }}" title="{{ translate('messages.modules') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">
                                         {{ translate('messages.modules') }}
