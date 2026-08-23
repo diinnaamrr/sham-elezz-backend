@@ -55,6 +55,32 @@
                         </a>
                     </li>
                     <!-- End Dashboards -->
+
+                    <!-- Menu Management (قائمة الطعام) -->
+                    <li class="nav-item">
+                        <small class="nav-subtitle" title="قائمة الطعام">إدارة قائمة الطعام (المنيو)</small>
+                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                    </li>
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/menu*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="إدارة المنيو">
+                            <i class="tio-restaurant nav-icon"></i>
+                            <span class="text-truncate">إدارة قائمة الطعام</span>
+                        </a>
+                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/menu*') ? 'block' : 'none' }}">
+                            <li class="nav-item {{ Request::is('admin/menu/categories*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.menu.categories.index') }}" title="أقسام المنيو">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">أقسام المنيو</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('admin/menu/items*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.menu.items.index') }}" title="أصناف المنيو">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">أصناف المنيو</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <!-- Marketing section -->
                     <li class="nav-item">
                         <small class="nav-subtitle" title="{{ translate('messages.employee_handle') }}">{{ translate('pos section') }}</small>
