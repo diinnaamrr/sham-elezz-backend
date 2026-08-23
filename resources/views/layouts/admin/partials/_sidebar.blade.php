@@ -486,37 +486,31 @@
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/category*') ? 'block' : 'none' }}">
                             <li class="nav-item @yield('main_category') {{ Request::is('admin/category/add') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.category.add') }}" title="{{ translate('messages.category') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.category.add') ? route('admin.category.add') : '#' }}" title="{{ translate('messages.category') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">{{ translate('messages.category') }}</span>
                                 </a>
                             </li>
 
                             <li class="nav-item @yield('sub_category') {{ (request()->input('position') == 1 && Request::is('admin/category/add')) ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.category.add', ['position' => 1]) }}" title="{{ translate('messages.sub_category') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.category.add') ? route('admin.category.add', ['position' => 1]) : '#' }}" title="{{ translate('messages.sub_category') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">{{ translate('messages.sub_category') }}</span>
                                 </a>
                             </li>
 
-                            {{-- <li class="nav-item {{Request::is('admin/category/add-sub-sub-category')?'active':''}}">
-                            <a class="nav-link " href="{{route('admin.category.add-sub-sub-category')}}" title="add new sub sub category">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">Sub-Sub-Category</span>
-                            </a>
-                        </li> --}}
-                        <li class="nav-item {{ Request::is('admin/category/bulk-import') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.category.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {{ Request::is('admin/category/bulk-export') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.category.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
-                            </a>
-                        </li>
+                            <li class="nav-item {{ Request::is('admin/category/bulk-import') ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ Route::has('admin.category.bulk-import') ? route('admin.category.bulk-import') : '#' }}" title="{{ translate('messages.bulk_import') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('admin/category/bulk-export') ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ Route::has('admin.category.bulk-export-index') ? route('admin.category.bulk-export-index') : '#' }}" title="{{ translate('messages.bulk_export') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
+                                </a>
+                            </li>
                     </ul>
                 </li>
                 @endif
@@ -525,7 +519,7 @@
                 <!-- Attributes -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('attribute'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/attribute*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.attribute.add-new') }}" title="{{ translate('messages.attributes') }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.attribute.add-new') ? route('admin.attribute.add-new') : '#' }}" title="{{ translate('messages.attributes') }}">
                         <i class="tio-apps nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('messages.attributes') }}
@@ -538,7 +532,7 @@
                 <!-- Unit -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('unit'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/unit*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.unit.index') }}" title="{{ translate('messages.units') }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.unit.index') ? route('admin.unit.index') : '#' }}" title="{{ translate('messages.units') }}">
                         <i class="tio-ruler nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">
                             {{ translate('messages.units') }}
@@ -557,20 +551,20 @@
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/addon*') ? 'block' : 'none' }}">
                         <li class="nav-item {{ Request::is('admin/addon/add-new') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.addon.add-new') }}" title="{{ translate('messages.addon_list') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.addon.add-new') ? route('admin.addon.add-new') : '#' }}" title="{{ translate('messages.addon_list') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.list') }}</span>
                             </a>
                         </li>
 
                         <li class="nav-item {{ Request::is('admin/addon/bulk-import') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.addon.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.addon.bulk-import') ? route('admin.addon.bulk-import') : '#' }}" title="{{ translate('messages.bulk_import') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
                             </a>
                         </li>
                         <li class="nav-item {{ Request::is('admin/addon/bulk-export') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.addon.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.addon.bulk-export-index') ? route('admin.addon.bulk-export-index') : '#' }}" title="{{ translate('messages.bulk_export') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
                             </a>
@@ -588,47 +582,45 @@
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/item*') ? 'block' : 'none' }}">
                         <li class="nav-item {{ Request::is('admin/item/add-new') || (Request::is('admin/item/edit/*') && strpos(request()->fullUrl(), 'product_gellary=1') !== false  )  ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.item.add-new') }}" title="{{ translate('messages.add_new') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.item.add-new') ? route('admin.item.add-new') : '#' }}" title="{{ translate('messages.add_new') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.add_new') }}</span>
                             </a>
                         </li>
                         <li class="nav-item {{ Request::is('admin/item/list') || (Request::is('admin/item/edit/*') && (strpos(request()->fullUrl(), 'temp_product=1') == false && strpos(request()->fullUrl(), 'product_gellary=1') == false  ) ) ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.item.list') }}" title="{{ translate('messages.food_list') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.item.list') ? route('admin.item.list') : '#' }}" title="{{ translate('messages.food_list') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.list') }}</span>
                             </a>
                         </li>
-                        {{-- @if (\App\CentralLogics\Helpers::get_mail_status('product_gallery')) --}}
                         <li class="nav-item {{  Request::is('admin/item/product-gallery') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.item.product_gallery') }}" title="{{ translate('messages.Product_Gallery') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.item.product_gallery') ? route('admin.item.product_gallery') : '#' }}" title="{{ translate('messages.Product_Gallery') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.Product_Gallery') }}</span>
                             </a>
                         </li>
-                        {{-- @endif --}}
                         @if (\App\CentralLogics\Helpers::get_mail_status('product_approval'))
                         <li class="nav-item {{ Request::is('admin/item/new/item/list') || (Request::is('admin/item/edit/*') && strpos(request()->fullUrl(), 'temp_product=1') !== false  ) ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.item.approval_list') }}" title="{{ translate('messages.New_Item_Request') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.item.approval_list') ? route('admin.item.approval_list') : '#' }}" title="{{ translate('messages.New_Item_Request') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.New_Item_Request') }}</span>
                             </a>
                         </li>
                         @endif
                         <li class="nav-item {{ Request::is('admin/item/reviews') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.item.reviews') }}" title="{{ translate('messages.review_list') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.item.reviews') ? route('admin.item.reviews') : '#' }}" title="{{ translate('messages.review_list') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.review') }}</span>
                             </a>
                         </li>
                         <li class="nav-item {{ Request::is('admin/item/bulk-import') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.item.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.item.bulk-import') ? route('admin.item.bulk-import') : '#' }}" title="{{ translate('messages.bulk_import') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
                             </a>
                         </li>
                         <li class="nav-item {{ Request::is('admin/item/bulk-export') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.item.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.item.bulk-export-index') ? route('admin.item.bulk-export-index') : '#' }}" title="{{ translate('messages.bulk_export') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
                             </a>
@@ -652,7 +644,7 @@
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/store*') ? 'block' : 'none' }}">
                             <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/add') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.add') }}" title="{{ translate('messages.add_store') }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.store.add') ? route('admin.store.add') : '#' }}" title="{{ translate('messages.add_store') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">
                                         {{ translate('messages.add_store') }}
@@ -661,21 +653,21 @@
                             </li>
 
                             <li class="navbar-item {{ Request::is('admin/store/list') ||  Request::is('admin/store/view/*')  ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.list') }}" title="{{ translate('messages.stores_list') }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.store.list') ? route('admin.store.list') : '#' }}" title="{{ translate('messages.stores_list') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">{{ translate('messages.stores') }}
                                         {{ translate('list') }}</span>
                                 </a>
                             </li>
                             <li class="navbar-item {{ Request::is('admin/store/pending-requests') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.pending-requests') }}" title="{{ translate('messages.pending_requests') }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.store.pending-requests') ? route('admin.store.pending-requests') : '#' }}" title="{{ translate('messages.pending_requests') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate text-capitalize">{{ translate('new_joining_requests') }}</span>
                                 </a>
                             </li>
 
                             <li class="navbar-item {{ Request::is('admin/store/recommended-store') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.recommended_store') }}" title="{{ translate('messages.pending_requests') }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.store.recommended_store') ? route('admin.store.recommended_store') : '#' }}" title="{{ translate('messages.pending_requests') }}">
                                     <span class="tio-hot"></span>
                                     <span class="text-truncate text-capitalize">{{ translate('Recommended_Store') }}</span>
                                 </a>
@@ -683,13 +675,13 @@
 
 
                             <li class="nav-item {{ Request::is('admin/store/bulk-import') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.store.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.store.bulk-import') ? route('admin.store.bulk-import') : '#' }}" title="{{ translate('messages.bulk_import') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/store/bulk-export') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.store.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.store.bulk-export-index') ? route('admin.store.bulk-export-index') : '#' }}" title="{{ translate('messages.bulk_export') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
                                 </a>
@@ -850,8 +842,8 @@
 
                 <!-- withdraw -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('withdraw_list'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/withdraw*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.withdraw_list') }}" title="{{ translate('messages.store_withdraws') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/store/withdraw*') || Request::is('admin/store/withdraw*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.transactions.store.withdraw_list') ? route('admin.transactions.store.withdraw_list') : (Route::has('admin.store.withdraw_list') ? route('admin.store.withdraw_list') : '#') }}" title="{{ translate('messages.store_withdraws') }}">
                         <i class="tio-table nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.store_withdraws') }}</span>
                     </a>
@@ -860,8 +852,8 @@
                 <!-- End withdraw -->
                 <!-- account -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('collect_cash'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/account-transaction*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.account-transaction.index') }}" title="{{ translate('messages.collect_cash') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/account-transaction*') || Request::is('admin/account-transaction*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.transactions.account-transaction.index') ? route('admin.transactions.account-transaction.index') : (Route::has('admin.account-transaction.index') ? route('admin.account-transaction.index') : '#') }}" title="{{ translate('messages.collect_cash') }}">
                         <i class="tio-money nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.collect_cash') }}</span>
                     </a>
@@ -871,8 +863,8 @@
 
                 <!-- provide_dm_earning -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('provide_dm_earning'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/provide-deliveryman-earnings*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.provide-deliveryman-earnings.index') }}" title="{{ translate('messages.deliverymen_earning_provide') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/provide-deliveryman-earnings*') || Request::is('admin/provide-deliveryman-earnings*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.transactions.provide-deliveryman-earnings.index') ? route('admin.transactions.provide-deliveryman-earnings.index') : (Route::has('admin.provide-deliveryman-earnings.index') ? route('admin.provide-deliveryman-earnings.index') : '#') }}" title="{{ translate('messages.deliverymen_earning_provide') }}">
                         <i class="tio-send nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.deliverymen_earning_provide') }}</span>
                     </a>
