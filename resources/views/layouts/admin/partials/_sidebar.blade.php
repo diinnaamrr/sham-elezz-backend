@@ -87,7 +87,7 @@
                     <!-- Pos -->
                     @if(\App\CentralLogics\Helpers::module_permission_check('pos'))
                     <li class="navbar-vertical-aside-has-menu {{Request::is('admin/pos*')?'active':''}}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link " href="{{route('admin.pos.index')}}" title="{{translate('New Sale')}}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link " href="{{ Route::has('admin.pos.index') ? route('admin.pos.index') : '#' }}" title="{{translate('New Sale')}}">
                             <i class="tio-shopping-basket-outlined nav-icon"></i>
                             <span class="text-truncate">{{translate('New Sale')}}</span>
                         </a>
@@ -152,13 +152,13 @@
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/campaign*') ? 'block' : 'none' }}">
 
                         <li class="nav-item {{ Request::is('admin/campaign/basic/*') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.campaign.list', 'basic') }}" title="{{ translate('messages.basic_campaigns') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.campaign.list') ? route('admin.campaign.list', 'basic') : '#' }}" title="{{ translate('messages.basic_campaigns') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.basic_campaigns') }}</span>
                             </a>
                         </li>
                         <li class="nav-item {{ Request::is('admin/campaign/item/*') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.campaign.list', 'item') }}" title="{{ translate('messages.item_campaigns') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.campaign.list') ? route('admin.campaign.list', 'item') : '#' }}" title="{{ translate('messages.item_campaigns') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.item_campaigns') }}</span>
                             </a>
@@ -225,7 +225,7 @@
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/order*') ? 'block' : 'none' }}">
                             <li class="nav-item {{ Request::is('admin/order/list/all') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('admin.order.list', ['all']) }}" title="{{ translate('messages.all_orders') }}">
+                                <a class="nav-link" href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['all']) : '#' }}" title="{{ translate('messages.all_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.all') }}
@@ -236,7 +236,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/list/scheduled') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('admin.order.list', ['scheduled']) }}" title="{{ translate('messages.scheduled_orders') }}">
+                                <a class="nav-link" href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['scheduled']) : '#' }}" title="{{ translate('messages.scheduled_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.scheduled') }}
@@ -247,7 +247,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/list/pending') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['pending']) }}" title="{{ translate('messages.pending_orders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['pending']) : '#' }}" title="{{ translate('messages.pending_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.pending') }}
@@ -259,7 +259,7 @@
                             </li>
 
                             <li class="nav-item {{ Request::is('admin/order/list/accepted') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['accepted']) }}" title="{{ translate('messages.accepted_orders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['accepted']) : '#' }}" title="{{ translate('messages.accepted_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.accepted') }}
@@ -270,7 +270,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/list/processing') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['processing']) }}" title="{{ translate('messages.processing_orders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['processing']) : '#' }}" title="{{ translate('messages.processing_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.processing') }}
@@ -281,7 +281,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/list/item_on_the_way') ? 'active' : '' }}">
-                                <a class="nav-link text-capitalize" href="{{ route('admin.order.list', ['item_on_the_way']) }}" title="{{ translate('messages.order_on_the_way') }}">
+                                <a class="nav-link text-capitalize" href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['item_on_the_way']) : '#' }}" title="{{ translate('messages.order_on_the_way') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.order_on_the_way') }}
@@ -292,7 +292,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/list/delivered') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['delivered']) }}" title="{{ translate('messages.delivered_orders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['delivered']) : '#' }}" title="{{ translate('messages.delivered_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.delivered') }}
@@ -303,7 +303,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/list/canceled') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['canceled']) }}" title="{{ translate('messages.canceled_orders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['canceled']) : '#' }}" title="{{ translate('messages.canceled_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.canceled') }}
@@ -314,7 +314,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/list/failed') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['failed']) }}" title="{{ translate('messages.payment_failed_orders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['failed']) : '#' }}" title="{{ translate('messages.payment_failed_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container text-capitalize">
                                         {{ translate('messages.payment_failed') }}
@@ -325,7 +325,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/list/refunded') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['refunded']) }}" title="{{ translate('messages.refunded_orders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.order.list') ? route('admin.order.list', ['refunded']) : '#' }}" title="{{ translate('messages.refunded_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.refunded') }}
@@ -336,7 +336,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/order/offline/payment/list*') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.offline_verification_list', ['all']) }}" title="{{ translate('Offline_Payments') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.order.offline_verification_list') ? route('admin.order.offline_verification_list', ['all']) : '#' }}" title="{{ translate('Offline_Payments') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.Offline_Payments') }}
@@ -364,7 +364,7 @@
 
                         <li class="nav-item {{ Request::is('admin/refund/requested') ||  Request::is('admin/refund/rejected') ||Request::is('admin/refund/refunded') ? 'active' : '' }}">
                             <a class="nav-link "
-                                href="{{ route('admin.refund.refund_attr', ['requested']) }}"
+                                href="{{ Route::has('admin.refund.refund_attr') ? route('admin.refund.refund_attr', ['requested']) : '#' }}"
                                 title="{{ translate('Refund Requests') }} ">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate sidebar--badge-container">
@@ -400,7 +400,7 @@
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="{{ Request::is('admin/dispatch*') ? 'display-block' : 'display-none' }}">
                             <li class="nav-item {{ Request::is('admin/dispatch/list/searching_for_deliverymen') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.dispatch.list', ['searching_for_deliverymen']) }}" title="{{ translate('messages.unassigned_orders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.dispatch.list') ? route('admin.dispatch.list', ['searching_for_deliverymen']) : '#' }}" title="{{ translate('messages.unassigned_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{translate('messages.unassigned_orders')}}
@@ -411,7 +411,7 @@
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('admin/dispatch/list/on_going') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.dispatch.list', ['on_going']) }}" title="{{ translate('messages.ongoingOrders') }}">
+                                <a class="nav-link " href="{{ Route::has('admin.dispatch.list') ? route('admin.dispatch.list', ['on_going']) : '#' }}" title="{{ translate('messages.ongoingOrders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.ongoingOrders') }}
@@ -443,7 +443,7 @@
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/parcel*') ? 'block' : 'none' }}">
                             <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/parcel/category') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.parcel.category.index') }}" title="{{ translate('messages.parcel_category') }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.parcel.category.index') ? route('admin.parcel.category.index') : '#' }}" title="{{ translate('messages.parcel_category') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">
                                         {{ translate('messages.parcel_category') }}
@@ -451,7 +451,7 @@
                                 </a>
                             </li>
                             <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/parcel/orders*') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.parcel.orders', ['all']) }}" title="{{ translate('messages.parcel_orders') }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.parcel.orders') ? route('admin.parcel.orders', ['all']) : '#' }}" title="{{ translate('messages.parcel_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">
                                         {{ translate('messages.parcel_orders') }}
@@ -460,7 +460,7 @@
                             </li>
 
                             <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/parcel/settings') ? 'active' : '' }}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.parcel.settings') }}" title="{{ translate('messages.parcel_settings') }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.parcel.settings') ? route('admin.parcel.settings') : '#' }}" title="{{ translate('messages.parcel_settings') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate">
                                         {{ translate('messages.parcel_settings') }}
@@ -812,6 +812,20 @@
                         <span class="text-truncate">{{ translate('messages.contact_messages') }}</span>
                     </a>
                 </li>
+
+                @if (\App\CentralLogics\Helpers::module_permission_check('refund'))
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/refund/settings') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link"
+                        href="{{ Route::has('admin.refund.refund_settings') ? route('admin.refund.refund_settings') : '#' }}"
+                        title="{{ translate('messages.refund_settings') }}">
+                        <i class="tio-settings nav-icon"></i>
+                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                            {{ translate('messages.refund_settings') }}
+                        </span>
+                    </a>
+                </li>
+                @endif
+
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/customer/settings') || Request::is('admin/customer/settings') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.users.customer.settings') ? route('admin.users.customer.settings') : (Route::has('admin.customer.settings') ? route('admin.customer.settings') : '#') }}" title="{{ translate('messages.Customer_settings') }}">
                         <i class="tio-settings nav-icon"></i>
@@ -879,38 +893,38 @@
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/business-setup') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.business-settings.business-setup') }}" title="{{ translate('messages.business_setup') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.business-setup') ? route('admin.business-settings.business-setup') : '#' }}" title="{{ translate('messages.business_setup') }}">
                         <span class="tio-settings nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.business_setup') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{Request::is('admin/business-settings/social-media')?'active':''}}">
-                    <a class="nav-link " href="{{route('admin.business-settings.social-media.index')}}" title="{{translate('messages.Social Media')}}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.social-media.index') ? route('admin.business-settings.social-media.index') : '#' }}" title="{{translate('messages.Social Media')}}">
                         <span class="tio-facebook nav-icon"></span>
                         <span class="text-truncate">{{translate('messages.Social Media')}}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/payment-method') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.business-settings.payment-method') }}" title="{{ translate('messages.payment_methods') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.third-party.payment-method') ? route('admin.business-settings.third-party.payment-method') : (Route::has('admin.business-settings.payment-method') ? route('admin.business-settings.payment-method') : '#') }}" title="{{ translate('messages.payment_methods') }}">
                         <span class="tio-atm nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.payment_methods') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/mail-config') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.business-settings.mail-config') }}" title="{{ translate('messages.mail_config') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.third-party.mail-config') ? route('admin.business-settings.third-party.mail-config') : (Route::has('admin.business-settings.mail-config') ? route('admin.business-settings.mail-config') : '#') }}" title="{{ translate('messages.mail_config') }}">
                         <span class="tio-email nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.mail_config') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/sms-module') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.business-settings.sms-module') }}" title="{{ translate('messages.sms_system_module') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.third-party.sms-module') ? route('admin.business-settings.third-party.sms-module') : (Route::has('admin.business-settings.sms-module') ? route('admin.business-settings.sms-module') : '#') }}" title="{{ translate('messages.sms_system_module') }}">
                         <span class="tio-message nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.sms_system_module') }}</span>
                     </a>
                 </li>
 
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/fcm-index') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.business-settings.fcm-index') }}" title="{{ translate('messages.notification_settings') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.third-party.fcm-index') ? route('admin.business-settings.third-party.fcm-index') : (Route::has('admin.business-settings.fcm-index') ? route('admin.business-settings.fcm-index') : '#') }}" title="{{ translate('messages.notification_settings') }}">
                         <span class="tio-notifications nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.notification_settings') }}</span>
                     </a>
@@ -926,19 +940,19 @@
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/app-settings*') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.business-settings.app-settings') }}" title="{{ translate('messages.app_settings') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.app-settings') ? route('admin.business-settings.app-settings') : (Route::has('admin.business-settings.web-app.third-party.app-settings') ? route('admin.business-settings.web-app.third-party.app-settings') : '#') }}" title="{{ translate('messages.app_settings') }}">
                         <span class="tio-android nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.app_settings') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/landing-page-settings*') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.business-settings.landing-page-settings', 'index') }}" title="{{ translate('messages.landing_page_settings') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.landing-page-settings') ? route('admin.business-settings.landing-page-settings', 'index') : '#' }}" title="{{ translate('messages.landing_page_settings') }}">
                         <span class="tio-website nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.landing_page_settings') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/config*') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.business-settings.config-setup') }}" title="{{ translate('messages.third_party_apis') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.business-settings.config-setup') ? route('admin.business-settings.config-setup') : (Route::has('admin.business-settings.third-party.config-setup') ? route('admin.business-settings.third-party.config-setup') : '#') }}" title="{{ translate('messages.third_party_apis') }}">
                         <span class="tio-key nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.third_party_apis') }}</span>
                     </a>
@@ -1037,13 +1051,13 @@
                 </li>
 
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/report/item-wise-report') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.report.item-wise-report') }}" title="{{ translate('messages.item_report') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.report.item-wise-report') ? route('admin.report.item-wise-report') : (Route::has('admin.transactions.report.item-wise-report') ? route('admin.transactions.report.item-wise-report') : '#') }}" title="{{ translate('messages.item_report') }}">
                         <span class="tio-chart-bar-1 nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.item_report') }}</span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/report/stock-report') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.report.stock-report') }}" title="{{ translate('messages.limited_stock_item') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.report.stock-report') ? route('admin.report.stock-report') : (Route::has('admin.transactions.report.stock-report') ? route('admin.transactions.report.stock-report') : '#') }}" title="{{ translate('messages.limited_stock_item') }}">
                         <span class="tio-chart-bar-4 nav-icon"></span>
                         <span class="text-truncate text-capitalize">{{ translate('messages.limited_stock_item') }}</span>
                     </a>
@@ -1051,7 +1065,7 @@
 
 
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/report/store-wise-report') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.report.store-summary-report') }}" title="{{ translate('messages.store_wise_report') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.report.store-summary-report') ? route('admin.report.store-summary-report') : (Route::has('admin.transactions.report.store-summary-report') ? route('admin.transactions.report.store-summary-report') : '#') }}" title="{{ translate('messages.store_wise_report') }}">
                         <span class="tio-home nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.store_report') }}</span>
                     </a>
@@ -1059,14 +1073,14 @@
 
 
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/report/order-report') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.report.order-report') }}" title="{{ translate('messages.order_report') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.report.order-report') ? route('admin.report.order-report') : (Route::has('admin.transactions.report.order-report') ? route('admin.transactions.report.order-report') : '#') }}" title="{{ translate('messages.order_report') }}">
                         <span class="tio-voice nav-icon"></span>
                         <span class="text-truncate text-capitalize">{{ translate('messages.order_report') }}</span>
                     </a>
                 </li>
 
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/report/transaction-report') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.report.transaction-report') }}" title="{{ translate('messages.transaction_report') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.report.transaction-report') ? route('admin.report.transaction-report') : (Route::has('admin.transactions.report.transaction-report') ? route('admin.transactions.report.transaction-report') : '#') }}" title="{{ translate('messages.transaction_report') }}">
                         <span class="tio-chart-pie-1 nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.transaction_report') }}</span>
                     </a>
@@ -1074,7 +1088,7 @@
 
 
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/report/expense-report') ? 'active' : '' }}">
-                    <a class="nav-link " href="{{ route('admin.report.expense-report') }}" title="{{ translate('messages.expense_report') }}">
+                    <a class="nav-link " href="{{ Route::has('admin.report.expense-report') ? route('admin.report.expense-report') : (Route::has('admin.transactions.report.expense-report') ? route('admin.transactions.report.expense-report') : '#') }}" title="{{ translate('messages.expense_report') }}">
                         <span class="tio-money nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.expense_report') }}</span>
                     </a>
@@ -1092,7 +1106,7 @@
 
                 @if (\App\CentralLogics\Helpers::module_permission_check('custom_role'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/custom-role*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.custom-role.create') }}" title="{{ translate('messages.employee_Role') }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.custom-role.create') ? route('admin.custom-role.create') : '#' }}" title="{{ translate('messages.employee_Role') }}">
                         <i class="tio-incognito nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.employee_Role') }}</span>
                     </a>
@@ -1107,13 +1121,13 @@
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/employee*') ? 'block' : 'none' }}">
                         <li class="nav-item {{ Request::is('admin/employee/add-new') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.employee.add-new') }}" title="{{ translate('messages.add_new_Employee') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.employee.add-new') ? route('admin.employee.add-new') : '#' }}" title="{{ translate('messages.add_new_Employee') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.add_new') }}</span>
                             </a>
                         </li>
                         <li class="nav-item {{ Request::is('admin/employee/list') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.employee.list') }}" title="{{ translate('messages.Employee_list') }}">
+                            <a class="nav-link " href="{{ Route::has('admin.employee.list') ? route('admin.employee.list') : '#' }}" title="{{ translate('messages.Employee_list') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.list') }}</span>
                             </a>
@@ -1177,7 +1191,7 @@
 
                             <div class="dropdown-divider"></div>
 
-                            <a class="dropdown-item" href="{{route('admin.settings')}}">
+                            <a class="dropdown-item" href="{{ Route::has('admin.settings') ? route('admin.settings') : '#' }}">
                                 <span class="text-truncate pr-2" title="Settings">{{translate('messages.settings')}}</span>
                             </a>
 
