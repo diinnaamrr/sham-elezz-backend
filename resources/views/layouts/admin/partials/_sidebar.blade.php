@@ -705,8 +705,8 @@
                     <small class="nav-subtitle" title="{{ translate('messages.deliveryman_section') }}">{{ translate('messages.deliveryman_management') }}</small>
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/add') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.add') }}" title="{{ translate('messages.add_delivery_man') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/add') || Request::is('admin/delivery-man/add') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.users.delivery-man.add') ? route('admin.users.delivery-man.add') : (Route::has('admin.delivery-man.add') ? route('admin.delivery-man.add') : '#') }}" title="{{ translate('messages.add_delivery_man') }}">
                         <i class="tio-running nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('messages.add_delivery_man') }}
@@ -714,8 +714,8 @@
                     </a>
                 </li>
 
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/new') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link text-capitalize" href="{{ route('admin.delivery-man.new') }}" title="{{ translate('messages.new_joining_requests') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/new') || Request::is('admin/delivery-man/new') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link text-capitalize" href="{{ Route::has('admin.users.delivery-man.new') ? route('admin.users.delivery-man.new') : (Route::has('admin.delivery-man.new') ? route('admin.delivery-man.new') : '#') }}" title="{{ translate('messages.new_joining_requests') }}">
                         <i class="tio-man nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('messages.new_joining_requests') }}
@@ -724,8 +724,8 @@
                 </li>
 
 
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/list') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.list') }}" title="{{ translate('messages.deliveryman_list') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man') || Request::is('admin/delivery-man/list') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.users.delivery-man.list') ? route('admin.users.delivery-man.list') : (Route::has('admin.delivery-man.list') ? route('admin.delivery-man.list') : '#') }}" title="{{ translate('messages.deliveryman_list') }}">
                         <i class="tio-filter-list nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('messages.deliveryman_list') }}
@@ -733,8 +733,8 @@
                     </a>
                 </li>
 
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/delivery-man/reviews/list') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.delivery-man.reviews.list') }}" title="{{ translate('messages.reviews') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/reviews') || Request::is('admin/delivery-man/reviews/list') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.users.delivery-man.reviews.list') ? route('admin.users.delivery-man.reviews.list') : (Route::has('admin.delivery-man.reviews.list') ? route('admin.delivery-man.reviews.list') : '#') }}" title="{{ translate('messages.reviews') }}">
                         <i class="tio-star-outlined nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('messages.reviews') }}
