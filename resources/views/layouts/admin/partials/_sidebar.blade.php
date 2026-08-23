@@ -101,8 +101,8 @@
                     </li>
 
                     @if (\App\CentralLogics\Helpers::module_permission_check('zone'))
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/zone*') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.zone.home') }}" title="{{ translate('messages.zone_setup') }}">
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/zone*') || Request::is('admin/zone*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ Route::has('admin.business-settings.zone.home') ? route('admin.business-settings.zone.home') : (Route::has('admin.zone.home') ? route('admin.zone.home') : '#') }}" title="{{ translate('messages.zone_setup') }}">
                             <i class="tio-city nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                 {{ translate('messages.zone_setup') }} </span>

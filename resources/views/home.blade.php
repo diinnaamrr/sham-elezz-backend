@@ -338,10 +338,15 @@
 
 <div class="hero">
     <div class="video-container"> 
-        <video autoplay muted loop>
-            <source src="{{ asset('public/assets/landing/v.mp4') }}" type="video/mp4">
-            {{ __('messages.Your browser does not support video.') }}
-        </video>
+        @php($fixed_header_img = \App\Models\DataSetting::where('type','admin_landing_page')->where('key','fixed_header_image')->first())
+        @if(isset($fixed_header_img) && $fixed_header_img->value)
+            <img src="{{ asset('storage/app/public/landing/'.$fixed_header_img->value) }}" alt="Hero Banner" class="onerror-image" data-onerror-image="{{ asset('public/assets/landing/img/z1.jpg') }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+        @else
+            <video autoplay muted loop>
+                <source src="{{ asset('public/assets/landing/v.mp4') }}" type="video/mp4">
+                {{ __('messages.Your browser does not support video.') }}
+            </video>
+        @endif
     </div>
 
     <div class="hero-content">

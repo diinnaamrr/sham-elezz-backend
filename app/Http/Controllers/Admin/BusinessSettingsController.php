@@ -3230,6 +3230,17 @@ class BusinessSettingsController extends Controller
             $fixed_header_sub_title->value = $request->fixed_header_sub_title[array_search('default', $request->lang)];
             $fixed_header_sub_title->save();
 
+            if ($request->hasFile('fixed_header_image')) {
+                $fixed_header_image = DataSetting::where('type', 'admin_landing_page')->where('key', 'fixed_header_image')->first();
+                if ($fixed_header_image == null) {
+                    $fixed_header_image = new DataSetting();
+                }
+                $fixed_header_image->key = 'fixed_header_image';
+                $fixed_header_image->type = 'admin_landing_page';
+                $fixed_header_image->value = Helpers::update('landing/', $fixed_header_image->value, 'png', $request->file('fixed_header_image'));
+                $fixed_header_image->save();
+            }
+
             $fixed_module_title = DataSetting::where('type', 'admin_landing_page')->where('key', 'fixed_module_title')->first();
             if ($fixed_module_title == null) {
                 $fixed_module_title = new DataSetting();
