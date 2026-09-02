@@ -457,6 +457,7 @@ Log::info('Delivery men raw:', $deliveryMen->toArray());
                 $order->parcel_category->increment('orders_count');
             }
 
+            OrderLogic::ensureLoyaltyPointForOrder($order);
             OrderLogic::update_unpaid_order_payment(order_id:$order->id, payment_method:$order->payment_method);
 
         } else if ($request->order_status == 'refunded' && BusinessSetting::where('key', 'refund_active_status')->first()->value == 1) {

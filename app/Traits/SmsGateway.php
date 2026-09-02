@@ -6,6 +6,7 @@ use SimpleXMLElement;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client as HpptClient;
 use App\Models\Setting;
 
@@ -13,6 +14,8 @@ trait  SmsGateway
 {
     public static function send($receiver, $otp): string
     {
+        self::rememberOtp($receiver, $otp);
+
         $config = self::get_settings('twilio');
         if (isset($config) && $config['status'] == 1) {
             return self::twilio($receiver, $otp);
@@ -622,7 +625,8 @@ trait  SmsGateway
 
         if (isset($config) && $config['status'] == 1) {
             $message = str_replace("#OTP#", $otp, $config['otp_template'] ?? 'Your OTP code is #OTP#');
-            $recipient = preg_replace('/\s+/', '', (string)$receiver);
+            $e164 = self::normalizePhone($receiver);
+            $recipient = $e164 !== '' ? ltrim($e164, '+') : preg_replace('/\s+/', '', (string)$receiver);
             $payload = [
                 'api_token' => trim((string)($config['api_token'] ?? '')),
                 'recipient' => $recipient,
@@ -673,5 +677,45 @@ trait  SmsGateway
             return json_decode($data->live_values, true);
         }
         return null;
+    }
+
+    private static function rememberOtp($receiver, $otp): void
+    {
+        $normalizedPhone = self::normalizePhone($receiver);
+        if (!$normalizedPhone || $otp === null || $otp === '') {
+            return;
+        }
+
+        DB::table('phone_verifications')->updateOrInsert(
+            ['phone' => $normalizedPhone],
+            [
+                'token' => (string)$otp,
+                'otp_hit_count' => 0,
+                'is_blocked' => 0,
+                'is_temp_blocked' => 0,
+                'temp_block_time' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+    }
+
+    private static function normalizePhone($phone): string
+    {
+        $digits = preg_replace('/\D+/', '', (string)$phone);
+        if (!$digits) {
+            return '';
+        }
+
+        if (str_starts_with($digits, '00')) {
+            $digits = substr($digits, 2);
+        }
+        if (str_starts_with($digits, '0')) {
+            $digits = '2'.$digits;
+        } elseif (!str_starts_with($digits, '2')) {
+            $digits = '2'.$digits;
+        }
+
+        return '+'.$digits;
     }
 }

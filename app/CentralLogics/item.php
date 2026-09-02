@@ -21,6 +21,22 @@ class ProductLogic
         }
         return Store::where('slug', $store_id)->value('id');
     }
+
+    /** الكاتيجوري + كل السابكاتيجوريز (كل المستويات) */
+    protected static function resolveCategoryIdsWithSubcategories($category_id): array
+    {
+        $ids = is_array($category_id) ? $category_id : explode(',', (string) $category_id);
+        $all = collect([]);
+        foreach ($ids as $cid) {
+            $category = Category::find($cid);
+            if ($category) {
+                $all = $all->merge($category->getAllSubcategoryIds());
+            } else {
+                $all->push($cid);
+            }
+        }
+        return $all->unique()->values()->all();
+    }
     public static function get_product($id)
     {
         return Item::active()
@@ -46,14 +62,12 @@ class ProductLogic
         $latest_items_sort_by_temp_closed =PriorityList::where('name', 'latest_items_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
 
 
-        if($category_id != 0){
-            $category_id = explode(',', $category_id);
-        }
+        $category_ids = $category_id != 0
+            ? self::resolveCategoryIdsWithSubcategories($category_id)
+            : null;
         $query = Item::
-        when($category_id != 0, function($q)use($category_id){
-            $q->whereHas('category',function($q)use($category_id){
-                return $q->whereIn('id',$category_id)->orWhereIn('parent_id', $category_id);
-            });
+        when($category_ids, function($q) use ($category_ids) {
+            $q->whereIn('category_id', $category_ids);
         })
         ->when(isset($product_id), function($q)use($product_id){
             $q->where('id', '!=', $product_id);
@@ -141,10 +155,8 @@ class ProductLogic
 
 
         $query = Item::
-        when($category_id != 0, function($q)use($category_id){
-            $q->whereHas('category',function($q)use($category_id){
-                return $q->whereId($category_id)->orWhere('parent_id', $category_id);
-            });
+        when($category_ids, function($q) use ($category_ids) {
+            $q->whereIn('category_id', $category_ids);
         })
         ->when(isset($product_id), function($q)use($product_id){
             $q->where('id', '!=', $product_id);
@@ -162,55 +174,30 @@ class ProductLogic
         ->when($min && $max, function($query)use($min,$max){
             $query->whereBetween('price',[$min,$max]);
         })
-        ->when(is_numeric($store_id),function ($qurey) use($store_id){
-            $qurey->where('store_id', $store_id);
+        ->when($store_id !== null && $store_id !== '', function ($query) use ($store_id) {
+            $resolved = self::resolveStoreId($store_id);
+            $sid = $resolved ?: (is_numeric($store_id) ? (int) $store_id : null);
+            if ($sid) {
+                $query->where(function ($q) use ($sid) {
+                    $q->where('items.store_id', $sid)
+                        ->orWhere(function ($q2) use ($sid) {
+                            $q2->where('items.is_shared_menu', true)
+                                ->whereExists(function ($sub) use ($sid) {
+                                    $sub->select(\Illuminate\Support\Facades\DB::raw(1))
+                                        ->from('store_item_stock')
+                                        ->whereColumn('store_item_stock.item_id', 'items.id')
+                                        ->where('store_item_stock.store_id', $sid);
+                                });
+                        });
+                });
+            } else {
+                $query->whereHas('store', function ($q) use ($store_id) {
+                    $q->where('slug', $store_id);
+                });
+            }
         })
-        ->when(!is_numeric($store_id), function ($query) use ($store_id) {
-            $query->whereHas('store', function ($q) use ($store_id) {
-                return $q->where('slug', $store_id);
-            });
-        })
 
-        ->select(['items.*'])
-        ->selectSub(function ($subQuery) {
-            $subQuery->selectRaw('active as temp_available')
-                ->from('stores')
-                ->whereColumn('stores.id', 'items.store_id');
-        }, 'temp_available')
-        ->active()->type($type);
-
-        if ($latest_items_default_status == '1'){
-            $query = $query->latest();
-        } else {
-            if(config('module.current_module_data')['module_type']  !== 'food'){
-                if($latest_items_sort_by_unavailable == 'remove'){
-                    $query = $query->where('stock', '>', 0);
-                }elseif($latest_items_sort_by_unavailable == 'last'){
-                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
-                }
-            }
-
-            if($latest_items_sort_by_temp_closed == 'remove'){
-                $query = $query->having('temp_available', '>', 0);
-            }elseif($latest_items_sort_by_temp_closed == 'last'){
-                $query = $query->orderByDesc('temp_available');
-            }
-
-            if ($latest_items_sort_by_general == 'rating') {
-                $query = $query->orderByDesc('avg_rating');
-            } elseif ($latest_items_sort_by_general == 'review_count') {
-                $query = $query->withCount('reviews')->orderByDesc('reviews_count');
-
-            } elseif ($latest_items_sort_by_general == 'a_to_z') {
-                $query = $query->orderBy('name');
-            } elseif ($latest_items_sort_by_general == 'z_to_a') {
-                $query = $query->orderByDesc('name');
-            } elseif ($latest_items_sort_by_general == 'latest_created') {
-                $query = $query->latest();
-            }
-        }
-
-
+        ->select(['items.*']);
 
         $item_categories = $query->pluck('category_id')->toArray();
 

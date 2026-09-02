@@ -70,9 +70,12 @@ class AddonController extends BaseController
 
     public function add(AddonAddRequest $request): RedirectResponse
     {
-        $addon = $this->addonRepo->add(data: $this->addonService->getAddData(request: $request));
-        $this->translationRepo->addByModel(request: $request, model: $addon, modelPath: 'App\Models\AddOn', attribute: 'name');
-        Toastr::success(translate('messages.addon_added_successfully'));
+        $items = $this->addonService->getAddData(request: $request);
+        foreach ($items as $data) {
+            $addon = $this->addonRepo->add(data: $data);
+            $this->translationRepo->addByModel(request: $request, model: $addon, modelPath: 'App\Models\AddOn', attribute: 'name');
+        }
+        Toastr::success(translate('messages.addon_added_successfully') . ' (' . count($items) . ')');
         return back();
     }
 
@@ -86,7 +89,7 @@ class AddonController extends BaseController
 
     public function update(AddonUpdateRequest $request, $id): RedirectResponse
     {
-        $addon = $this->addonRepo->update(id: $id ,data: $this->addonService->getAddData(request: $request));
+        $addon = $this->addonRepo->update(id: $id ,data: $this->addonService->getUpdateData(request: $request));
         $this->translationRepo->updateByModel(request: $request, model: $addon, modelPath: 'App\Models\AddOn', attribute: 'name');
         Toastr::success(translate('messages.addon_updated_successfully'));
         return back();

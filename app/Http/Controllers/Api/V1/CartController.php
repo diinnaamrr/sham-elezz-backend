@@ -12,6 +12,7 @@ use App\CentralLogics\Helpers;
 use App\CentralLogics\CouponLogic;
 use App\Http\Controllers\Controller;
 use App\Models\ItemCampaign;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
@@ -24,12 +25,196 @@ class CartController extends Controller
     {
         $storeId = $request->query('store_id', $request->input('store_id'));
         if ($storeId === null || $storeId === '') {
+            $storeId = $request->header('storeId', $request->header('store-id'));
+        }
+        if ($storeId === null || $storeId === '') {
             return null;
         }
         if (is_numeric($storeId)) {
             return (int) $storeId;
         }
         return Store::where('slug', $storeId)->value('id');
+    }
+
+    /**
+     * Infer store for shared-menu items from store_item_stock (optionally scoped to zone).
+     */
+    protected function inferSharedMenuStoreId($item, ?Request $request = null): ?int
+    {
+        if (!($item instanceof Item) || !($item->is_shared_menu ?? false)) {
+            return null;
+        }
+
+        $query = DB::table('store_item_stock')
+            ->join('stores', 'stores.id', '=', 'store_item_stock.store_id')
+            ->where('store_item_stock.item_id', $item->id)
+            ->where('stores.status', 1);
+
+        if ($request && $request->hasHeader('zoneId')) {
+            $zoneIds = json_decode($request->header('zoneId'), true);
+            if (is_array($zoneIds) && !empty($zoneIds)) {
+                $query->whereIn('stores.zone_id', $zoneIds);
+            }
+        }
+
+        $storeIds = $query
+            ->orderByDesc('store_item_stock.stock')
+            ->pluck('store_item_stock.store_id')
+            ->unique()
+            ->values();
+
+        if ($storeIds->isEmpty()) {
+            return null;
+        }
+
+        return (int) $storeIds->first();
+    }
+
+    /**
+     * Resolve store context when adding a cart line (shared menu items have no store_id on the item).
+     */
+    protected function resolveStoreIdWhenAdding(Request $request, $item, $existingCarts): ?int
+    {
+        if ($fromRequest = $this->resolveContextStoreId($request)) {
+            return $fromRequest;
+        }
+
+        if (!($item->is_shared_menu ?? false) && $item->store_id) {
+            return (int) $item->store_id;
+        }
+
+        foreach ($existingCarts as $cart) {
+            if ($cart->store_id) {
+                return (int) $cart->store_id;
+            }
+            if ($cart->item?->store_id && !($cart->item->is_shared_menu ?? false)) {
+                return (int) $cart->item->store_id;
+            }
+        }
+
+        return $this->inferSharedMenuStoreId($item, $request);
+    }
+
+    protected function syncCartStoreContext(int $user_id, int $is_guest, int $moduleId, ?int $storeId): void
+    {
+        if (!$storeId) {
+            return;
+        }
+
+        Cart::where('user_id', $user_id)
+            ->where('is_guest', $is_guest)
+            ->where('module_id', $moduleId)
+            ->whereNull('store_id')
+            ->update(['store_id' => $storeId]);
+    }
+
+    protected function resolveCartItemContextStoreId($cartRow, ?int $requestContextStoreId = null, ?Request $request = null): ?int
+    {
+        if ($cartRow->store_id) {
+            return (int) $cartRow->store_id;
+        }
+        if ($requestContextStoreId) {
+            return $requestContextStoreId;
+        }
+        if ($cartRow->item && !($cartRow->item->is_shared_menu ?? false) && $cartRow->item->store_id) {
+            return (int) $cartRow->item->store_id;
+        }
+        if ($cartRow->item instanceof Item) {
+            return $this->inferSharedMenuStoreId($cartRow->item, $request);
+        }
+
+        return null;
+    }
+
+    protected function applyContextStoreIdToCartItem($cartRow, ?int $requestContextStoreId = null, ?Request $request = null): void
+    {
+        if (!$cartRow->item) {
+            return;
+        }
+
+        $storeId = $this->resolveCartItemContextStoreId($cartRow, $requestContextStoreId, $request);
+        if ($storeId && ($cartRow->item->is_shared_menu ?? false) && !$cartRow->item->getAttribute('context_store_id')) {
+            $cartRow->item->setAttribute('context_store_id', $storeId);
+        }
+    }
+
+    protected function formatCartRows($carts, ?int $requestContextStoreId = null, ?Request $request = null)
+    {
+        return $carts->map(function ($data) use ($requestContextStoreId, $request) {
+            $data->add_on_ids = json_decode($data->add_on_ids, true);
+            $data->add_on_qtys = json_decode($data->add_on_qtys, true);
+            $data->variation = json_decode($data->variation, true);
+
+            $resolvedStoreId = $this->resolveCartItemContextStoreId($data, $requestContextStoreId, $request);
+            if ($resolvedStoreId) {
+                $data->store_id = $resolvedStoreId;
+            }
+
+            $this->applyContextStoreIdToCartItem($data, $requestContextStoreId, $request);
+            $data->item = Helpers::cart_product_data_formatting(
+                $data->item,
+                $data->variation,
+                $data->add_on_ids,
+                $data->add_on_qtys,
+                false,
+                app()->getLocale()
+            );
+
+            if ($resolvedStoreId && is_array($data->item) && empty($data->item['store_id'])) {
+                $data->item['store_id'] = $resolvedStoreId;
+            }
+
+            return $data;
+        });
+    }
+
+    protected function resolveStoreIdFromCarts($carts, ?int $requestContextStoreId = null, ?Request $request = null): ?int
+    {
+        foreach ($carts as $cart) {
+            $storeId = $this->resolveCartItemContextStoreId($cart, $requestContextStoreId, $request);
+            if ($storeId) {
+                return $storeId;
+            }
+        }
+
+        return $requestContextStoreId;
+    }
+
+    /**
+     * Backfill store_id on legacy cart rows (shared menu items added before this fix).
+     */
+    protected function backfillCartStoreIds($carts, ?int $requestContextStoreId = null, ?Request $request = null): void
+    {
+        $knownStoreId = $this->resolveStoreIdFromCarts($carts, $requestContextStoreId, $request);
+        if (!$knownStoreId) {
+            return;
+        }
+
+        foreach ($carts as $cart) {
+            if (!$cart->store_id) {
+                $cart->store_id = $knownStoreId;
+                $cart->save();
+            }
+        }
+    }
+
+    protected function loadAndFormatCarts(int $user_id, int $is_guest, Request $request)
+    {
+        $contextStoreId = $this->resolveContextStoreId($request);
+        $carts = Cart::where('user_id', $user_id)
+            ->where('is_guest', $is_guest)
+            ->where('module_id', $request->header('moduleId'))
+            ->when($contextStoreId, function ($query) use ($contextStoreId) {
+                $query->where(function ($q) use ($contextStoreId) {
+                    $q->where('store_id', $contextStoreId)->orWhereNull('store_id');
+                });
+            })
+            ->with('item')
+            ->get();
+
+        $this->backfillCartStoreIds($carts, $contextStoreId, $request);
+
+        return $this->formatCartRows($carts, $contextStoreId, $request);
     }
 
     public function get_carts(Request $request)
@@ -43,19 +228,7 @@ class CartController extends Controller
         }
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
-        $contextStoreId = $this->resolveContextStoreId($request);
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) use ($contextStoreId) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-            if ($contextStoreId && $data->item && ($data->item->is_shared_menu ?? false) && !$data->item->getAttribute('context_store_id')) {
-                $data->item->setAttribute('context_store_id', $contextStoreId);
-            }
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-			return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         
         // حساب إجمالي المبلغ
         $total_amount = 0;
@@ -123,27 +296,45 @@ class CartController extends Controller
             ], 403);
         }
 
+        $zeroPriceCartErrors = Helpers::validate_cart_zero_base_price_item(
+            $item,
+            $request->price,
+            $request->variation ?? []
+        );
+        if ($zeroPriceCartErrors) {
+            return response()->json(['errors' => $zeroPriceCartErrors], 403);
+        }
+
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('item')->get();
+        $storeIdForCart = $this->resolveStoreIdWhenAdding($request, $item, $carts);
 
-//        foreach($carts as $cart){
-//                if($cart?->item?->store_id  && $cart?->item?->store_id != $item->store_id){
-//                    return response()->json([
-//                        'errors' => [
-//                            ['code' => 'different_stores', 'message' => translate('messages.Please_select_items_from_the_same_store')]
-//                        ]
-//                    ], 403);
-//                }
-//            }
+        if ($storeIdForCart) {
+            $existingStoreIds = $carts->pluck('store_id')->filter()->unique();
+            if ($existingStoreIds->isNotEmpty() && !$existingStoreIds->contains($storeIdForCart)) {
+                Cart::where('user_id', $user_id)
+                    ->where('is_guest', $is_guest)
+                    ->where('module_id', $request->header('moduleId'))
+                    ->delete();
+                $carts = collect([]);
+            }
+        }
 
+        $this->syncCartStoreContext(
+            $user_id,
+            $is_guest,
+            (int) $request->header('moduleId'),
+            $storeIdForCart
+        );
 
         $cart = new Cart();
         $cart->user_id = $user_id;
         $cart->module_id = $request->header('moduleId');
+        $cart->store_id = $storeIdForCart;
         $cart->item_id = $request->item_id;
         $cart->is_guest = $is_guest;
         $cart->add_on_ids = isset($request->add_on_ids)?json_encode($request->add_on_ids):json_encode([]);
         $cart->add_on_qtys = isset($request->add_on_qtys)?json_encode($request->add_on_qtys):json_encode([]);
-        $cart->item_type = $request->model;
+        $cart->item_type = $model;
         $cart->price = $request->price;
         $cart->quantity = $request->quantity;
         $cart->variation = isset($request->variation)?json_encode($request->variation):json_encode([]);
@@ -151,15 +342,7 @@ class CartController extends Controller
 
         $item->carts()->save($cart);
 
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         return response()->json($carts, 200);
     }
 
@@ -188,6 +371,18 @@ class CartController extends Controller
             ], 403);
         }
 
+        $variationForValidation = $request->has('variation')
+            ? $request->variation
+            : json_decode($cart->variation, true);
+        $zeroPriceCartErrors = Helpers::validate_cart_zero_base_price_item(
+            $item,
+            $request->price,
+            $variationForValidation
+        );
+        if ($zeroPriceCartErrors) {
+            return response()->json(['errors' => $zeroPriceCartErrors], 403);
+        }
+
         $cart->user_id = $user_id;
         $cart->module_id = $request->header('moduleId');
         $cart->is_guest = $is_guest;
@@ -198,15 +393,7 @@ class CartController extends Controller
         $cart->variation = isset($request->variation)?json_encode($request->variation):$cart->variation;
         $cart->save();
 
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         return response()->json($carts, 200);
     }
 
@@ -227,15 +414,7 @@ class CartController extends Controller
         $cart = Cart::find($request->cart_id);
         $cart->delete();
 
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         return response()->json($carts, 200);
     }
 
@@ -259,15 +438,7 @@ class CartController extends Controller
         }
 
 
-        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
-            $data->add_on_ids = json_decode($data->add_on_ids,true);
-            $data->add_on_qtys = json_decode($data->add_on_qtys,true);
-            $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-            return $data;
-		});
+        $carts = $this->loadAndFormatCarts($user_id, $is_guest, $request);
         return response()->json($carts, 200);
     }
 
@@ -300,6 +471,9 @@ class CartController extends Controller
             ->with('item')
             ->get();
 
+        $requestContextStoreId = $this->resolveContextStoreId($request);
+        $this->backfillCartStoreIds($carts, $requestContextStoreId);
+
         // التحقق من أن الكارت غير فارغ
         if ($carts->isEmpty()) {
             return response()->json([
@@ -312,11 +486,9 @@ class CartController extends Controller
         // التأكد من أن كل المنتجات من نفس المتجر
         $store_ids = [];
         foreach ($carts as $cart) {
-            if ($cart->item) {
-                $store_id = $cart->item->store_id ?? null;
-                if ($store_id) {
-                    $store_ids[] = $store_id;
-                }
+            $store_id = $this->resolveCartItemContextStoreId($cart, $requestContextStoreId);
+            if ($store_id) {
+                $store_ids[] = $store_id;
             }
         }
 
@@ -357,6 +529,11 @@ class CartController extends Controller
             $item = $cart->item;
             if (!$item) {
                 continue;
+            }
+
+            $cartStoreId = $this->resolveCartItemContextStoreId($cart, $requestContextStoreId);
+            if ($cartStoreId && ($item->is_shared_menu ?? false) && !$item->getAttribute('context_store_id')) {
+                $item->setAttribute('context_store_id', $cartStoreId);
             }
 
             // حساب سعر المنتج

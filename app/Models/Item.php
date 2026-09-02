@@ -242,14 +242,20 @@ class Item extends Model
         if (!is_numeric($storeId)) {
             return $query;
         }
-        return $query->where(function ($q) use ($storeId) {
-            $q->where('items.store_id', $storeId)
-                ->orWhere(function ($q2) use ($storeId) {
-                    $q2->where('items.is_shared_menu', true)
-                        ->whereExists(function ($sub) use ($storeId) {
+        return self::applyStoreMenuFilter($query, (int) $storeId);
+    }
+
+    /** فلترة منتجات المطعم + المنيو المشترك (للاستخدام مع DB::table أو Eloquent) */
+    public static function applyStoreMenuFilter($query, int $storeId, string $table = 'items')
+    {
+        return $query->where(function ($q) use ($storeId, $table) {
+            $q->where($table . '.store_id', $storeId)
+                ->orWhere(function ($q2) use ($storeId, $table) {
+                    $q2->where($table . '.is_shared_menu', true)
+                        ->whereExists(function ($sub) use ($storeId, $table) {
                             $sub->select(\Illuminate\Support\Facades\DB::raw(1))
                                 ->from('store_item_stock')
-                                ->whereColumn('store_item_stock.item_id', 'items.id')
+                                ->whereColumn('store_item_stock.item_id', $table . '.id')
                                 ->where('store_item_stock.store_id', $storeId);
                         });
                 });

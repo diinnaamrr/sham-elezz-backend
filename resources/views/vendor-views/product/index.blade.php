@@ -175,14 +175,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-4">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.sub_category')}}<span
-                                                class="input-label-secondary"></span></label>
-                                        <select name="sub_category_id" id="sub-categories" class="form-control js-select2-custom get-request" data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-sub-categories">
-                                        </select>
-                                    </div>
-                                </div>
                                 @if ($module_data['unit'])
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
@@ -274,7 +266,7 @@
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.price')}}</label>
-                                        <input type="number" min="0" max="999999999999" step="0.01" value="1" name="price" class="form-control"
+                                        <input type="number" min="0" max="999999999999" step="0.01" value="0" name="price" class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>
@@ -824,7 +816,7 @@
 
     $('#reset_btn').click(function(){
             $('#category_id').val(null).trigger('change');
-            $('#sub-categories').val(null).trigger('change');
+            $('.dynamic-category-wrapper').remove();
             $('#unit').val(null).trigger('change');
             $('#veg').val(0).trigger('change');
             $('#addons').val(null).trigger('change');

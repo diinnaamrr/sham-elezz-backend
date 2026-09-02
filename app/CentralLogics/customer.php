@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\BusinessSetting;
 use App\Models\WalletTransaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\LoyaltyPointTransaction;
 use App\Models\WalletBonus;
 
@@ -83,6 +84,11 @@ class CustomerLogic
     {
         $settings = array_column(BusinessSetting::whereIn('key', ['loyalty_point_status', 'loyalty_point_exchange_rate', 'loyalty_point_item_purchase_point'])->get()->toArray(), 'value', 'key');
         if ($settings['loyalty_point_status'] != 1) {
+            Log::info('Loyalty point skipped: feature disabled', [
+                'user_id' => $user_id,
+                'reference' => $referance,
+                'transaction_type' => $transaction_type,
+            ]);
             return false;
         }
 
@@ -115,9 +121,24 @@ class CustomerLogic
             $user->save();
             $loyalty_point_transaction->save();
             DB::commit();
+            Log::info('Loyalty point transaction created', [
+                'user_id' => $user_id,
+                'reference' => $referance,
+                'transaction_type' => $transaction_type,
+                'credit' => $credit,
+                'debit' => $debit,
+                'balance' => $current_balance,
+                'transaction_id' => $loyalty_point_transaction->transaction_id,
+            ]);
             return $credit ?? true;
         } catch (\Exception $ex) {
             info($ex->getMessage());
+            Log::error('Loyalty point transaction failed', [
+                'user_id' => $user_id,
+                'reference' => $referance,
+                'transaction_type' => $transaction_type,
+                'error' => $ex->getMessage(),
+            ]);
             DB::rollback();
 
             return false;

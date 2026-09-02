@@ -2,7 +2,7 @@
 
 @section('title',translate('messages.Update category'))
 
-@if($category->position ==  1)
+@if($category->position >=  1)
 @section('sub_category')
 @else
 @section('main_category')
@@ -89,6 +89,25 @@ active
 
                         </div>
                         <div class="col-md-6">
+                            @if ($category->position >= 1 && isset($parentCategories))
+                            <div class="form-group">
+                                <label class="input-label" for="parent_id">
+                                    @if($category->position == 1)
+                                        {{translate('messages.main_category')}}
+                                    @else
+                                        {{translate('messages.parent_category')}}
+                                    @endif
+                                    <span class="input-label-secondary">*</span>
+                                </label>
+                                <select id="parent_id" name="parent_id" class="form-control js-select2-custom" required>
+                                    @foreach($parentCategories as $parentCat)
+                                        <option value="{{$parentCat['id']}}" {{ $category->parent_id == $parentCat['id'] ? 'selected' : '' }}>
+                                            {{$parentCat['name']}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @endif
                             @if ($category->position == 0)
                             <div class="h-100 d-flex align-items-center flex-column">
                                 <label class="mb-4">{{translate('messages.image')}}
@@ -135,8 +154,5 @@ active
             readURL(this);
             $('#viewer').show(1000)
         });
-
-
-
     </script>
 @endpush

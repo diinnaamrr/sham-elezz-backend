@@ -56,7 +56,7 @@ $countryCode= strtolower($country?$country->value:'auto');
         </div>
     </div>
 </div>
-@if (!isset($module_type))
+@if (!isset($module_type) || empty($module_type))
 @php($module_type = Config::get('module.current_module_type'))
 @endif
 
@@ -71,7 +71,11 @@ $countryCode= strtolower($country?$country->value:'auto');
 @php($module_type = 'settings')
 @endif
 
-@include("layouts.admin.partials._sidebar_{$module_type}")
+@if(!empty($module_type) && view()->exists("layouts.admin.partials._sidebar_{$module_type}"))
+    @include("layouts.admin.partials._sidebar_{$module_type}")
+@else
+    @include("layouts.admin.partials._sidebar")
+@endif
 
 <!-- END ONLY DEV -->
 

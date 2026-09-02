@@ -60,7 +60,7 @@
 
     <div class="tab-content">
         <div class="tab-pane fade show active">
-            <form action="{{ route('admin.business-settings.admin-landing-page-settings', 'fixed-data') }}" method="POST">
+            <form action="{{ route('admin.business-settings.admin-landing-page-settings', 'fixed-data') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($language)
                 <div class="lang_form"  id="default-form">
@@ -81,6 +81,16 @@
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
                                     <input id="fixed_header_sub_title" type="text"  maxlength="100" name="fixed_header_sub_title[]" value="{{$fixed_header_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_More_than_just_a_reliable_eCommerce_platform')}}">
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="form-label">صورة الهيدر الرئيسية (Hero Banner Image)</label>
+                                    @php($fixed_header_image = \App\Models\DataSetting::where('type','admin_landing_page')->where('key','fixed_header_image')->first())
+                                    @if($fixed_header_image && $fixed_header_image->value)
+                                        <div class="mb-2">
+                                            <img src="{{ asset('storage/app/public/landing/'.$fixed_header_image->value) }}" class="rounded onerror-image" data-onerror-image="{{ asset('public/assets/landing/img/z1.jpg') }}" style="max-height: 120px; object-fit: cover;">
+                                        </div>
+                                    @endif
+                                    <input type="file" name="fixed_header_image" class="form-control-file" accept="image/*">
                                 </div>
                             </div>
                         </div>

@@ -173,19 +173,39 @@ class Helpers
         }
         $data['variations'] = $variations;
         $data_variation = $data['food_variations']?(gettype($data['food_variations']) == 'array' ? $data['food_variations'] : json_decode($data['food_variations'],true)):[];
-        if($data->module->module_type == 'food'){
+        if ($data->module->module_type == 'food' && is_array($selected_variation)) {
             foreach ($selected_variation as $selected_item) {
-                foreach ($data_variation as &$all_item) {
-                    if ($selected_item["name"] === $all_item["name"]) {
-                        foreach ($all_item["values"] as &$value) {
-                            if (in_array($value["label"], $selected_item["values"]["label"])) {
-                                $value["isSelected"] = true;
-                            }else{
-                                $value["isSelected"] = false;
-                            }
+                if (!is_array($selected_item) || !isset($selected_item['name'], $selected_item['values'])) {
+                    continue;
+                }
+                $selectedLabels = [];
+                if (isset($selected_item['values']['label'])) {
+                    $lbl = $selected_item['values']['label'];
+                    $selectedLabels = is_array($lbl) ? $lbl : [$lbl];
+                } elseif (is_array($selected_item['values'])) {
+                    foreach ($selected_item['values'] as $sv) {
+                        if (is_array($sv) && array_key_exists('label', $sv)) {
+                            $selectedLabels[] = $sv['label'];
                         }
                     }
                 }
+                foreach ($data_variation as &$all_item) {
+                    if (!is_array($all_item) || ($selected_item['name'] ?? null) !== ($all_item['name'] ?? null)) {
+                        continue;
+                    }
+                    if (!isset($all_item['values']) || !is_array($all_item['values'])) {
+                        continue;
+                    }
+                    foreach ($all_item['values'] as &$value) {
+                        if (!is_array($value)) {
+                            continue;
+                        }
+                        $valueLabel = $value['label'] ?? null;
+                        $value['isSelected'] = $valueLabel !== null && in_array($valueLabel, $selectedLabels);
+                    }
+                    unset($value);
+                }
+                unset($all_item);
             }
         }
         $data['food_variations'] = $data_variation;
@@ -1042,7 +1062,7 @@ class Helpers
             if ($item['item_id']){
                 $product = \App\Models\Item::where(['id' => $item['item_details']['id']])->first();
                 $item['image_full_url'] = $product?->image_full_url;
-                $item['images_full_url'] = $product->images_full_url;
+                $item['images_full_url'] = $product?->images_full_url ?? [];
             }else{
                $product = \App\Models\ItemCampaign::where(['id' => $item['item_details']['id']])->first();
                 $item['image_full_url'] = $product?->image_full_url;
@@ -2833,6 +2853,108 @@ class Helpers
         $expense->created_at = now();
         $expense->updated_at = now();
         return $expense->save();
+    }
+
+    /**
+     * When base price is 0, product must have variations so cart line price can be > 0.
+     *
+     * @return array<int, array{code: string, message: string}>|null
+     */
+    public static function validate_zero_base_price_variations(
+        float $price,
+        array $foodVariations,
+        array $attributeVariations,
+        ?string $moduleType = null
+    ): ?array {
+        if ($price > 0) {
+            return null;
+        }
+
+        if ($moduleType === 'food') {
+            if (count($foodVariations) === 0) {
+                return [[
+                    'code' => 'food_variations',
+                    'message' => translate('messages.when_price_is_zero_add_food_variations'),
+                ]];
+            }
+
+            $hasRequiredGroup = false;
+            $hasPricedOption = false;
+            foreach ($foodVariations as $group) {
+                if (($group['required'] ?? 'off') === 'on') {
+                    $hasRequiredGroup = true;
+                }
+                foreach ($group['values'] ?? [] as $value) {
+                    if ((float)($value['optionPrice'] ?? 0) > 0) {
+                        $hasPricedOption = true;
+                    }
+                }
+            }
+
+            if (!$hasRequiredGroup) {
+                return [[
+                    'code' => 'food_variations',
+                    'message' => translate('messages.when_price_is_zero_variation_must_be_required'),
+                ]];
+            }
+
+            if (!$hasPricedOption) {
+                return [[
+                    'code' => 'food_variations',
+                    'message' => translate('messages.when_price_is_zero_option_price_required'),
+                ]];
+            }
+
+            return null;
+        }
+
+        if (count($attributeVariations) === 0) {
+            return [[
+                'code' => 'variations',
+                'message' => translate('messages.when_price_is_zero_add_variations'),
+            ]];
+        }
+
+        $maxVariationPrice = 0;
+        foreach ($attributeVariations as $variation) {
+            $maxVariationPrice = max($maxVariationPrice, (float)($variation['price'] ?? 0));
+        }
+
+        if ($maxVariationPrice <= 0) {
+            return [[
+                'code' => 'variations',
+                'message' => translate('messages.when_price_is_zero_variation_price_required'),
+            ]];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<int, array{code: string, message: string}>|null
+     */
+    public static function validate_cart_zero_base_price_item($item, $requestPrice, $variation): ?array
+    {
+        if (!$item || (float)$item->price > 0) {
+            return null;
+        }
+
+        $variations = is_array($variation) ? $variation : json_decode($variation ?? '[]', true);
+        if (!is_array($variations) || count($variations) === 0) {
+            return [[
+                'code' => 'variation',
+                'message' => translate('messages.when_price_is_zero_select_variation_for_cart'),
+            ]];
+        }
+
+        if ((float)$requestPrice <= 0) {
+            return [[
+                'code' => 'price',
+                'message' => translate('messages.when_price_is_zero_cart_price_must_be_greater_than_zero'),
+            ]];
+        }
+
+        return null;
     }
 
     public static function get_varient(array $product_variations, $variations)

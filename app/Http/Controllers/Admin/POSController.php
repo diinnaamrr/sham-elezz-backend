@@ -12,6 +12,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\CentralLogics\CustomerLogic;
+use App\CentralLogics\OrderLogic;
 use App\CentralLogics\ProductLogic;
 use App\Mail\OrderVerificationMail;
 use App\Models\Store;
@@ -670,10 +671,7 @@ class POSController extends Controller
         $order_details = [];
         $product_data = [];
         $order = new Order();
-        $order->id = 100000 + Order::count() + 1;
-        if (Order::find($order->id)) {
-            $order->id = Order::latest()->first()->id + 1;
-        }
+        $order->id = OrderLogic::generate_order_id();
         $order->distance = isset($address) ? $address['distance'] : 0;
         $order->payment_status = $request->type == 'wallet'?'paid':'unpaid';
         $order->order_status = $request->type == 'wallet'?'confirmed':'pending';
@@ -852,6 +850,7 @@ class POSController extends Controller
                 }
             };
             $order->save();
+            OrderDetail::where('order_id', $order->id)->delete();
             foreach ($order_details as $key => $item) {
                 $order_details[$key]['order_id'] = $order->id;
             }

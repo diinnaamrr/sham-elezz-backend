@@ -16,14 +16,45 @@ class APIGuestMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->header('Authorization') && app('auth')->guard('api')){
-            $request->merge(['user'=>auth('api')->user()]);
-            return $next($request);
-        }elseif($request->guest_id){
+        $token = $this->extractBearerToken($request);
+
+        if ($token && $this->isPlausibleJwt($token)) {
+            try {
+                $user = auth('api')->user();
+                if ($user) {
+                    $request->merge(['user' => $user]);
+                    return $next($request);
+                }
+            } catch (\Throwable $e) {
+                // Invalid or expired token — fall through to guest handling.
+            }
+        }
+
+        if ($request->guest_id) {
             return $next($request);
         }
-        return response()->json(['errors' => 'Unauthorized'], 401);
 
-        // return response()->json(['Unauthorized', 401]);
+        return response()->json(['errors' => 'Unauthorized'], 401);
+    }
+
+    protected function extractBearerToken(Request $request): ?string
+    {
+        $auth = $request->header('Authorization');
+        if (!$auth || !str_starts_with($auth, 'Bearer ')) {
+            return null;
+        }
+
+        $token = trim(substr($auth, 7));
+
+        return $token !== '' ? $token : null;
+    }
+
+    protected function isPlausibleJwt(string $token): bool
+    {
+        if (in_array(strtolower($token), ['null', 'undefined', 'none'], true)) {
+            return false;
+        }
+
+        return substr_count($token, '.') === 2;
     }
 }

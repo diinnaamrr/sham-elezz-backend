@@ -13,6 +13,7 @@ use App\Scopes\StoreScope;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use App\CentralLogics\OrderLogic;
 use App\Models\BusinessSetting;
 use Illuminate\Support\Facades\DB;
 use App\CentralLogics\ProductLogic;
@@ -508,10 +509,7 @@ class POSController extends Controller
         $product_data = [];
 
         $order = new Order();
-        $order->id = 100000 + Order::count() + 1;
-        if (Order::find($order->id)) {
-            $order->id = Order::latest()->first()->id + 1;
-        }
+        $order->id = OrderLogic::generate_order_id();
         $order->payment_status = isset($address)?'unpaid':'paid';
         if($request->user_id){
 
@@ -670,6 +668,7 @@ class POSController extends Controller
             }
             $order->payment_method = $request->type;
             $order->save();
+            OrderDetail::where('order_id', $order->id)->delete();
             foreach ($order_details as $key => $item) {
                 $order_details[$key]['order_id'] = $order->id;
             }

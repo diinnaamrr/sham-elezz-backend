@@ -282,30 +282,48 @@
                                             data-original-title="{{ translate('messages.Required.')}}"> *
                                             </span></label>
                                         <select name="category_id" class="js-data-example-ajax form-control"
-                                            id="category_id">
-                                            @if ($category)
-                                                <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                                            id="category_id" required>
+                                            @if($category)
+                                                <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
+                                            @else
+                                                @php $main_cat_ids = json_decode($product->category_ids, true); @endphp
+                                                @if(!empty($main_cat_ids[0]['id']))
+                                                    <?php $fallback_cat = \App\Models\Category::find($main_cat_ids[0]['id']); ?>
+                                                    @if($fallback_cat)
+                                                        <option value="{{ $fallback_cat->id }}" selected>{{ $fallback_cat->name }}</option>
+                                                    @endif
+                                                @endif
                                             @endif
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="exampleFormControlSelect1">{{ translate('messages.sub_category') }}<span
-                                                class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.category_required_warning') }}"><img
-                                                    src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.category_required_warning') }}"></span></label>
-                                        <select name="sub_category_id" class="js-data-example-ajax form-control"
-                                            id="sub-categories">
-                                            @if (isset($sub_category))
-                                                <option value="{{ $sub_category['id'] }}">{{ $sub_category['name'] }}
-                                                </option>
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
+                                @php
+                                    $category_chain = json_decode($product->category_ids, true) ?? [];
+                                @endphp
+                                @for ($i = 1; $i < count($category_chain); $i++)
+                                    @php
+                                        $parent_id = $category_chain[$i - 1]['id'] ?? null;
+                                        $selected_id = $category_chain[$i]['id'] ?? null;
+                                        $depth = $i;
+                                        $sibling_categories = $parent_id
+                                            ? \App\Models\Category::where('parent_id', $parent_id)->orderBy('name')->get()
+                                            : collect();
+                                    @endphp
+                                    @if($sibling_categories->isNotEmpty())
+                                        <div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="{{ $depth }}">
+                                            <div class="form-group mb-0">
+                                                <label class="input-label">{{ translate('messages.sub_category') }}</label>
+                                                <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="{{ $depth }}">
+                                                    @foreach($sibling_categories as $option)
+                                                        <option value="{{ $option->id }}" {{ (int) $selected_id === (int) $option->id ? 'selected' : '' }}>
+                                                            {{ $option->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endfor
                                 <div class="col-sm-6 col-lg-3" id="condition_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="condition_id">{{ translate('messages.Suitable_For') }}<span
@@ -615,6 +633,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 d-none" id="zero_price_variation_hint">
+                    <div class="alert alert-warning mb-0">
+                        عند سعر المنتج 0: أضف Food Variations مطلوبة (Required) وضع سعر أكبر من 0 على الأقل في خيار واحد.
+                    </div>
+                </div>
                 <div class="col-lg-12" id="food_variation_section">
                     <div class="card shadow--card-2 border-0">
                         <div class="card-header flex-wrap">
@@ -781,11 +804,10 @@
 @push('script_2')
 <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
 <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+<script src="{{ asset('public/assets/admin') }}/js/view-pages/product-index.js"></script>
 <script>
     "use strict";
-     let removedImageKeys = [];
-    let element = "";
-
+    let removedImageKeys = [];
 
     $(document).on('click','.function_remove_img' ,function(){
     let key = $(this).data('key');
@@ -838,7 +860,7 @@
          hide_min_max(data);
      });
 
-    let count =   $('.count_div').length;
+    count = $('.count_div').length || count;
 
     $(document).ready(function() {
         $("#add_new_option_button").click(function(e) {
@@ -964,8 +986,6 @@
         let e = $(this);
         deleteRow(e);
     });
-    let countRow = 0;
-
     function add_new_row_button(data) {
         // count = data;
         countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
@@ -1081,15 +1101,15 @@
         @endif
     });
 
-    let module_id = {{ $product->module_id }};
-    let module_type = "{{ $product->module->module_type }}";
-    let parent_category_id = {{ $category ? $category->id : 0 }};
-    <?php
-    $module_data = config('module.' . $product->module->module_type);
-    unset($module_data['description']);
-    ?>
-    let module_data = {{ str_replace('"', '', json_encode($module_data)) }};
-    let stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
+    module_id = {{ $product->module_id }};
+    module_type = "{{ $product->module->module_type }}";
+    parent_category_id = {{ $category ? $category->id : 0 }};
+    @php
+        $edit_module_data = config('module.' . $product->module->module_type);
+        unset($edit_module_data['description']);
+    @endphp
+    module_data = @json($edit_module_data);
+    stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
     input_field_visibility_update();
 
     function modulChange(id) {
@@ -1173,13 +1193,6 @@
             $('#allergy').hide();
         }
     }
-
-     $('#category_id').on('change', function () {
-         parent_category_id = $(this).val();
-        let subCategoriesSelect = $('#sub-categories');
-            subCategoriesSelect.empty();
-            subCategoriesSelect.append('<option value="" selected>{{ translate("messages.select_sub_category") }}</option>');
-     });
 
      $('.foodModalClose').on('click',function (){
          $('#food-modal').hide();
@@ -1305,32 +1318,20 @@
         }
     });
 
-    $('#sub-categories').select2({
-        ajax: {
-            url: '{{ url('/') }}/admin/item/get-categories',
-            data: function(params) {
-                return {
-                    q: params.term, // search term
-                    page: params.page,
-                    module_id: module_id,
-                    parent_id: parent_category_id,
-                    sub_category: true
-                };
-            },
-            processResults: function(data) {
-                return {
-                    results: data
-                };
-            },
-            __port: function(params, success, failure) {
-                let $request = $.ajax(params);
-
-                $request.then(success);
-                $request.fail(failure);
-
-                return $request;
-            }
+    let ignoreNextCategoryChange = $('.dynamic-category-wrapper').length > 0;
+    $('#category_id').off('change').on('change', function () {
+        if (ignoreNextCategoryChange) {
+            ignoreNextCategoryChange = false;
+            return;
         }
+        parent_category_id = $(this).val();
+        fetchDynamicCategories(parent_category_id, 0);
+    });
+
+    $(document).off('change', '.dynamic-category-select').on('change', '.dynamic-category-select', function() {
+        let parent_id = $(this).val();
+        let depth = parseInt($(this).data('depth'), 10);
+        fetchDynamicCategories(parent_id, depth);
     });
 
     $('#choice_attributes').on('change', function() {
@@ -1397,8 +1398,8 @@
      //        }
      //    });
 
-    $('#product_form').on('submit', function() {
-        console.log('working');
+    $('#product_form').on('submit', function(e) {
+        e.preventDefault();
         let formData = new FormData(this);
         $.ajaxSetup({
             headers: {
@@ -1442,8 +1443,16 @@
                             '{{ route('admin.item.list') }}';
                     }, 2000);
                 }
+            },
+            error: function(xhr) {
+                $('#loading').hide();
+                toastr.error(xhr.responseJSON?.message || '{{ translate('messages.something_went_wrong') }}', {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
             }
         });
+        return false;
     });
 
     $('#reset_btn').click(function() {
@@ -1516,7 +1525,7 @@
         $('#module_id').val(null).trigger('change');
         $('#store_id').val(null).trigger('change');
         $('#category_id').val(null).trigger('change');
-        $('#sub-categories').val(null).trigger('change');
+        $('.dynamic-category-wrapper').remove();
         $('#unit').val(null).trigger('change');
         $('#veg').val(0).trigger('change');
         $('#add_on').val(null).trigger('change');

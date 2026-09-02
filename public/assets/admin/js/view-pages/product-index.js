@@ -131,7 +131,75 @@ $("#customFileEg1").change(function() {
 $('#category_id').on('change', function () {
     parent_category_id = $(this).val();
     console.log(parent_category_id);
+    fetchDynamicCategories(parent_category_id, 0);
 });
+
+$(document).on('change', '.dynamic-category-select', function() {
+    let parent_id = $(this).val();
+    let depth = $(this).data('depth');
+    fetchDynamicCategories(parent_id, depth);
+});
+
+function appendDynamicCategory(html) {
+    let $html = $(html);
+    if ($('.dynamic-category-wrapper').length) {
+        $('.dynamic-category-wrapper').last().after($html);
+    } else {
+        $('#category_id').closest('[class*="col-"]').after($html);
+    }
+}
+
+function fetchDynamicCategories(parent_id, depth) {
+    depth = parseInt(depth, 10) || 0;
+
+    if (depth === 0) {
+        $('.dynamic-category-wrapper').remove();
+    } else {
+        $('.dynamic-category-wrapper').each(function() {
+            if (parseInt($(this).data('depth'), 10) > depth) {
+                $(this).remove();
+            }
+        });
+    }
+
+    if (parent_id) {
+        let moduleParam = (typeof module_id !== 'undefined' && module_id) ? '&module_id=' + module_id : '';
+        $.get({
+            url: window.location.origin + '/admin/item/get-categories?parent_id=' + parent_id + '&sub_category=true' + moduleParam,
+            success: function(data) {
+                if (data && data.length > 0) {
+                    let newDepth = depth + 1;
+                    let html = `<div class="col-sm-6 col-lg-3 dynamic-category-wrapper" data-depth="${newDepth}">
+                        <div class="form-group mb-0">
+                            <label class="input-label">Sub Category</label>
+                            <select name="sub_category_ids[]" class="form-control dynamic-category-select" data-depth="${newDepth}">
+                                <option value="" disabled selected>---Select---</option>`;
+                    data.forEach(item => {
+                        html += `<option value="${item.id}">${item.text}</option>`;
+                    });
+                    html += `</select></div></div>`;
+
+                    appendDynamicCategory(html);
+                }
+            }
+        });
+    }
+}
 $(document).on('change', '.combination_update', function () {
     combination_update();
+});
+
+function toggleZeroPriceVariationHint() {
+    const price = parseFloat($('input[name="price"]').val());
+    if (!isNaN(price) && price === 0) {
+        $('#zero_price_variation_hint').removeClass('d-none');
+        $('#food_variation_section').removeClass('d-none');
+    } else {
+        $('#zero_price_variation_hint').addClass('d-none');
+    }
+}
+
+$(document).on('input change', 'input[name="price"]', toggleZeroPriceVariationHint);
+$(document).ready(function () {
+    toggleZeroPriceVariationHint();
 });

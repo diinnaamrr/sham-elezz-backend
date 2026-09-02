@@ -463,7 +463,7 @@ class ItemController extends Controller
         return response()->json($items, 200);
     }
 
-    public function get_product($id)
+    public function get_product(Request $request, $id)
     {
         try {
 
@@ -478,13 +478,25 @@ class ItemController extends Controller
                 $qurey-> where('slug', $id);
             })
             ->first();
-            $store = StoreLogic::get_store_details($item->store_id);
+
+            $contextStoreId = $this->resolveContextStoreId($request);
+            $effectiveStoreId = (($item->is_shared_menu ?? false) && $contextStoreId)
+                ? $contextStoreId
+                : $item->store_id;
+
+            if (($item->is_shared_menu ?? false) && $contextStoreId) {
+                $item->setAttribute('context_store_id', $contextStoreId);
+            }
+
+            $store = StoreLogic::get_store_details($effectiveStoreId);
             if($store)
             {
                 $category_ids = DB::table('items')
                 ->join('categories', 'items.category_id', '=', 'categories.id')
                 ->selectRaw('categories.position as positions, IF((categories.position = "0"), categories.id, categories.parent_id) as categories')
-                ->where('items.store_id', $item->store_id)
+                ->where(function ($q) use ($effectiveStoreId) {
+                    Item::applyStoreMenuFilter($q, (int) $effectiveStoreId);
+                })
                 ->where('categories.status',1)
                 ->groupBy('categories','positions')
                 ->get();
@@ -492,7 +504,10 @@ class ItemController extends Controller
                 $store = Helpers::store_data_formatting($store);
                 $store['category_ids'] = array_map('intval', $category_ids->pluck('categories')->toArray());
                 $store['category_details'] = Category::whereIn('id',$store['category_ids'])->get();
-                $store['price_range']  = Item::withoutGlobalScopes()->where('store_id', $item->store_id)
+                $store['price_range']  = Item::withoutGlobalScopes()
+                ->where(function ($q) use ($effectiveStoreId) {
+                    Item::applyStoreMenuFilter($q, (int) $effectiveStoreId);
+                })
                 ->select(DB::raw('MIN(price) AS min_price, MAX(price) AS max_price'))
                 ->get(['min_price','max_price'])->toArray();
             }
