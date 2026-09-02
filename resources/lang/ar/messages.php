@@ -1531,6 +1531,7 @@
   'Twitter' => 'تغريد',
   'LinkedIn' => 'LinkedIn',
   'Pinterest' => 'بينتيريست',
+  'TikTok' => 'تيك توك',
   'social_media_link' => 'رابط وسائل التواصل الاجتماعي',
   'link' => 'وصلة',
   'social_media_required' => 'وسائل التواصل الاجتماعي المطلوبة',

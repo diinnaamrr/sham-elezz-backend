@@ -57,6 +57,7 @@
                     <!-- End Dashboards -->
 
                     <!-- Menu Management -->
+                    @if(\App\CentralLogics\Helpers::module_permission_check('food_menu_management'))
                     <li class="nav-item">
                         <small class="nav-subtitle" title="{{ translate('messages.food_menu_management') }}">{{ translate('messages.food_menu_management') }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
@@ -81,6 +82,7 @@
                             </li>
                         </ul>
                     </li>
+                    @endif
                     <!-- Marketing section -->
                     <li class="nav-item">
                         <small class="nav-subtitle" title="{{ translate('messages.employee_handle') }}">{{ translate('pos section') }}</small>

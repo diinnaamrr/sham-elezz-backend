@@ -1531,6 +1531,7 @@
   'Twitter' => 'Twitter',
   'LinkedIn' => 'LinkedIn',
   'Pinterest' => 'Pinterest',
+  'TikTok' => 'TikTok',
   'social_media_link' => 'Social media link',
   'link' => 'Link',
   'social_media_required' => 'Social media required',
