@@ -52,6 +52,8 @@
   'order_on_the_way' => 'اطلب على الطريق',
   'delivered_orders' => 'أوامر تسليم',
   'delivered' => 'تم التوصيل',
+  'waiting_for_customer' => 'في انتظار العميل',
+  'delivered_to_customer' => 'تم التسليم للعميل',
   'canceled_orders' => 'أوامر إلغاء',
   'canceled' => 'ألغى',
   'payment_failed_orders' => 'أوامر فاشلة الدفع',

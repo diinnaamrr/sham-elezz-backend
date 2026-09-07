@@ -52,6 +52,8 @@
   'order_on_the_way' => 'Order on the way',
   'delivered_orders' => 'Delivered orders',
   'delivered' => 'Delivered',
+  'waiting_for_customer' => 'Waiting for customer',
+  'delivered_to_customer' => 'Delivered to customer',
   'canceled_orders' => 'Canceled orders',
   'canceled' => 'Canceled',
   'payment_failed_orders' => 'Payment failed orders',
