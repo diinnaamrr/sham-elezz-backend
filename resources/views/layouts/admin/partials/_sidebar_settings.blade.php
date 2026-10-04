@@ -407,7 +407,7 @@
                     <!-- End Dashboards -->
 
 
-                    @if(count(config('addon_admin_routes'))>0)
+                    @if(count(config('addon_admin_routes') ?? []) > 0)
                         <li class="nav-item">
                             <small
                                 class="nav-subtitle">{{translate('messages.addon_menus')}}</small>
@@ -421,7 +421,7 @@
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{Request::is('admin/payment/configuration/*') || Request::is('admin/sms/configuration/*')?'block':'none'}}">
-                                @foreach(config('addon_admin_routes') as $routes)
+                                @foreach(config('addon_admin_routes') ?? [] as $routes)
                                     @foreach($routes as $route)
                                         <li class="navbar-vertical-aside-has-menu {{Request::is($route['path'])  ? 'active' :''}}">
                                             <a class="js-navbar-vertical-aside-menu-link nav-link "

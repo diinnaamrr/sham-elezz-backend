@@ -242,7 +242,7 @@ Route::group(['prefix' => 'deliveryman', 'as' => 'deliveryman.'], function () {
 
 
 // Admin menu routes
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['admin', 'module:food_menu_management'])->group(function () {
     // Menu Categories
 
     Route::get('menu/categories', [AdminMenuCategoryControllerv::class, 'index'])->name('admin.menu.categories.index');

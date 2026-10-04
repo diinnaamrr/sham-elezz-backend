@@ -45,22 +45,12 @@ class ItemController extends Controller
                     return ($request['vendor']->stores[0]->module->module_type != 'food')  ;
                 })
             ],
-            'price' => 'required|numeric|min:0.01',
+            'price' => 'required|numeric|min:0',
             'discount' => 'required|numeric|min:0',
             'translations'=>'required',
         ], [
             'category_id.required' => translate('messages.category_required'),
         ]);
-
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
-
-        if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
-        }
 
         $data = json_decode($request->translations, true);
 
@@ -68,7 +58,21 @@ class ItemController extends Controller
             $validator->getMessageBag()->add('translations', translate('messages.Name and description in english is required'));
         }
 
-        if ($request['price'] <= $dis || count($data) < 1 || $validator->fails()) {
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
+
+            if ($request['price'] <= $dis) {
+                $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
+            }
+
+            if ($request['price'] <= $dis || count($data) < 1 || $validator->fails()) {
+                return response()->json(['errors' => Helpers::error_processor($validator)], 402);
+            }
+        } elseif (count($data) < 1 || $validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 402);
         }
 
@@ -324,6 +328,15 @@ class ItemController extends Controller
             }
         }
         //combinations end
+        $zeroPriceVariationErrors = Helpers::validate_zero_base_price_variations(
+            (float)$request->price,
+            $food_variations,
+            $variations,
+            $store->module?->module_type
+        );
+        if ($zeroPriceVariationErrors) {
+            return response()->json(['errors' => $zeroPriceVariationErrors], 422);
+        }
         $item->food_variations = json_encode($food_variations);
         $item->price = $request->price;
         $item->image =  $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
@@ -450,29 +463,34 @@ class ItemController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required',
             'category_id' => 'required',
-            'price' => 'required|numeric|min:0.01',
+            'price' => 'required|numeric|min:0',
             'discount' => 'required|numeric|min:0',
 
         ], [
             'category_id.required' => translate('messages.category_required'),
         ]);
 
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
-
-        if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
-        }
         $data = json_decode($request->translations, true);
 
         if (count($data) < 1) {
             $validator->getMessageBag()->add('translations', translate('messages.Name and description in english is required'));
         }
 
-        if ($request['price'] <= $dis || count($data) < 1 || $validator->fails()) {
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
+
+            if ($request['price'] <= $dis) {
+                $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
+            }
+
+            if ($request['price'] <= $dis || count($data) < 1 || $validator->fails()) {
+                return response()->json(['errors' => Helpers::error_processor($validator)], 402);
+            }
+        } elseif (count($data) < 1 || $validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 402);
         }
         $tag_ids = [];
@@ -630,6 +648,16 @@ class ItemController extends Controller
                 $temp_variation['values']= $temp_value;
                 array_push($food_variations,$temp_variation);
             }
+        }
+
+        $zeroPriceVariationErrors = Helpers::validate_zero_base_price_variations(
+            (float)$request->price,
+            $food_variations,
+            $variations,
+            $p->module?->module_type
+        );
+        if ($zeroPriceVariationErrors) {
+            return response()->json(['errors' => $zeroPriceVariationErrors], 422);
         }
 
         // $variation_changed = false;

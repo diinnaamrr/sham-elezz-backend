@@ -23,15 +23,9 @@ class CategoryController extends Controller
             $zone_id=  $request->header('zoneId') ? json_decode($request->header('zoneId'), true) : [];
             $key = explode(' ', $search);
             $featured = $request->query('featured');
-            // Commented out: Sub-category support disabled - only main categories allowed
-            // $categories = Category::withCount(['products','childes'=> function($query){
-            //     $query->where('status',1);
-            // } ])->with(['childes' => function($query)  {
-            //     $query->where('status',1)->withCount(['products','childes'=> function($query){
-            //         $query->where('status',1);
-            //     }]);
-            // }])
-            $categories = Category::withCount(['products'])
+            $categories = Category::withCount(['products', 'childes' => function ($query) {
+                $query->where('status', 1);
+            }])->with(Category::nestedActiveChildesRelation())
             ->where(['position'=>0,'status'=>1])
             ->when(config('module.current_module_data'), function($query){
                 $query->module(config('module.current_module_data')['id']);
@@ -71,10 +65,7 @@ class CategoryController extends Controller
                         ->whereHas('store', function ($query) use ($zone_id) {
                             $query->whereIn('zone_id', $zone_id);
                         })
-                        // Commented out: Sub-category support disabled - only main categories
-                        ->whereHas('category',function($q)use($category){
-                            return $q->whereId($category->id); // Removed: ->orWhere('parent_id', $category->id)
-                        })
+                        ->whereIn('category_id', $category->getAllSubcategoryIds()->unique()->values()->all())
                         ->withCount('orders');
 
                     $productCount = $productCountQuery->count();
@@ -88,17 +79,44 @@ class CategoryController extends Controller
                     $categories = $categories->sortByDesc('order_count')->values()->all();
                 }
             }
-            return response()->json($categories, 200);
+            
+            $formattedCategories = $this->formatCategoryTree($categories);
+            return response()->json($formattedCategories, 200);
         } catch (\Exception $e) {
             return response()->json([], 200);
         }
     }
 
+    private function formatCategoryTree($categories)
+    {
+        $formatted = [];
+        foreach ($categories as $category) {
+            // Get category as array
+            $catData = $category->toArray();
+            
+            // Handle sub categories
+            if (isset($catData['childes'])) {
+                $catData['sub_categories'] = $this->formatCategoryTree($category->childes);
+                unset($catData['childes']);
+            } else {
+                $catData['sub_categories'] = [];
+            }
+            
+            $formatted[] = $catData;
+        }
+        return $formatted;
+    }
+
     public function get_childes($id)
     {
         try {
-            $categories = Category::with('parent')->where(['parent_id' => $id,'status'=>1])->orderBy('priority','desc')->get();
-            return response()->json($categories, 200);
+            $categories = Category::with(array_merge(['parent'], Category::nestedActiveChildesRelation()))
+                ->where(['parent_id' => $id, 'status' => 1])
+                ->orderBy('priority', 'desc')
+                ->get();
+
+            $formattedCategories = $this->formatCategoryTree($categories);
+            return response()->json($formattedCategories, 200);
         } catch (\Exception $e) {
             return response()->json([], 200);
         }
@@ -132,8 +150,7 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json([], 200);
         }
-        // $categoryIds = $category->getAllSubcategoryIds(); // Fetch all subcategories recursively
-        $categoryIds = [$category->id]; // Only use main category ID
+        $categoryIds = $category->getAllSubcategoryIds()->unique()->values()->all();
 
         // Step 2: Get all unique product SKUs first (before pagination)
         $allUniqueSkus = Item::whereIn('category_id', $categoryIds)
@@ -401,9 +418,9 @@ class CategoryController extends Controller
 
             // Build stores with their categories and items
             $storesWithData = $stores->map(function($store) use ($zone_id, $module_id, $categories) {
-                // Get all items for this store
+                // Get all items for this store (including shared menu)
                 $storeItems = Item::active()
-                    ->where('store_id', $store->id)
+                    ->forStore($store->id)
                     ->module($module_id)
                     ->get();
 
@@ -411,6 +428,10 @@ class CategoryController extends Controller
                 $categoriesWithItemsArray = [];
                 
                 foreach ($storeItems as $item) {
+                    if (($item->is_shared_menu ?? false) && !$item->getAttribute('context_store_id')) {
+                        $item->setAttribute('context_store_id', $store->id);
+                    }
+
                     $categoryId = $item->category_id;
                     
                     // Only include main categories (position = 0)

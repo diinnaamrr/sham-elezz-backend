@@ -74,7 +74,7 @@ class ItemController extends Controller
 ],
 
 
-            'price' => 'required|numeric|between:.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'discount' => 'required|numeric|min:0',
             'store_id' => 'required_unless:is_shared_menu,1',
             'shared_menu_default_stock' => 'required_if:is_shared_menu,1|nullable|integer|min:0',
@@ -92,19 +92,21 @@ class ItemController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
 
-        if ($request['price'] <= $dis) {
+            if ($request['price'] <= $dis) {
                 $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
-        }
+            }
 
-        if ($request['price'] <= $dis || $validator->fails()) {
+            if ($request['price'] <= $dis || $validator->fails()) {
                 return response()->json(['errors' => Helpers::error_processor($validator)]);
             }
+        }
 
         $images = [];
         $sku = $request->sku ?? 'SKU-' . strtoupper(Str::random(8));
@@ -221,30 +223,43 @@ class ItemController extends Controller
       $item->cost = $request->has('cost') ? (float) $request->cost : 0; 
         $item->name = $request->name[array_search('default', $request->lang)];
 
-        // Commented out: Sub category and Sub sub category support disabled - only main categories allowed
         $category = [];
         if ($request->category_id != null) {
             array_push($category, [
                 'id' => $request->category_id,
-                'position' => 0, // Changed to 0 - only main categories
+                'position' => 1,
             ]);
         }
-        // Commented out: Sub category support disabled
-        // if ($request->sub_category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->sub_category_id,
-        //         'position' => 2,
-        //     ]);
-        // }
-        // Commented out: Sub sub category support disabled
-        // if ($request->sub_sub_category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->sub_sub_category_id,
-        //         'position' => 3,
-        //     ]);
-        // }
+        if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
+            $position = 2;
+            foreach ($request->sub_category_ids as $id) {
+                if ($id != null) {
+                    array_push($category, [
+                        'id' => $id,
+                        'position' => $position,
+                    ]);
+                    $position++;
+                }
+            }
+            $sub_cat_ids = $request->sub_category_ids;
+            $item->category_id = end($sub_cat_ids) ?: $request->category_id;
+        } else {
+            if ($request->sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_category_id,
+                    'position' => 2,
+                ]);
+            }
+            if ($request->sub_sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_sub_category_id,
+                    'position' => 3,
+                ]);
+            }
+            $item->category_id = $request->sub_sub_category_id
+                ?: ($request->sub_category_id ?: $request->category_id);
+        }
         $item->category_ids = json_encode($category);
-        $item->category_id = $request->category_id; // Always use main category_id
         $item->description =  $request->description[array_search('default', $request->lang)];
 
         $choice_options = [];
@@ -339,6 +354,17 @@ class ItemController extends Controller
                 $temp_variation['values'] = $temp_value;
                 array_push($food_variations, $temp_variation);
             }
+        }
+
+        $module_type = Config::get('module.current_module_type');
+        $zeroPriceVariationErrors = Helpers::validate_zero_base_price_variations(
+            (float)$request->price,
+            $food_variations,
+            $variations,
+            $module_type
+        );
+        if ($zeroPriceVariationErrors) {
+            return response()->json(['errors' => $zeroPriceVariationErrors], 422);
         }
 
         $item->food_variations = json_encode($food_variations);
@@ -449,15 +475,14 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
         return back();
     }
 
-    // Commented out: Sub category support disabled - only main categories
     $temp = $product->category;
-    // if ($temp?->position) {
-    //     $sub_category = $temp;
-    //     $category = $temp->parent;
-    // } else {
+    if ($temp && $temp->parent_id) {
+        $sub_category = $temp;
+        $category = $temp->parent;
+    } else {
         $category = $temp;
-        $sub_category = null; // Always null - no sub categories
-    // }
+        $sub_category = null;
+    }
 
     return view('admin-views.product.edit', compact('product', 'sub_category', 'category', 'temp_product'));
 }
@@ -481,7 +506,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'name.0' => 'required',
             'name.*' => 'max:191',
             'category_id' => 'required',
-            'price' => 'required|numeric|between:.01,999999999999.99',
+            'price' => 'required|numeric|between:0,999999999999.99',
             'store_id' => 'required_unless:is_shared_menu,1',
             'shared_menu_default_stock' => 'required_if:is_shared_menu,1|nullable|integer|min:0',
             'description' => 'array',
@@ -499,17 +524,21 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'description.0.required' => translate('default_description_is_required'),
         ]);
 
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
+        if ($request['price'] > 0) {
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
+            }
 
-        if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
-        }
+            if ($request['price'] <= $dis) {
+                $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
+            }
 
-        if ($request['price'] <= $dis || $validator->fails()) {
+            if ($request['price'] <= $dis || $validator->fails()) {
+                return response()->json(['errors' => Helpers::error_processor($validator)]);
+            }
+        } elseif ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
@@ -572,29 +601,38 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
         $new_name = $request->name[array_search('default', $request->lang)];
         $item->name = $new_name;
 
-        // Commented out: Sub category and Sub sub category support disabled - only main categories allowed
         $category = [];
         if ($request->category_id != null) {
             array_push($category, [
                 'id' => $request->category_id,
-                'position' => 0, // Changed to 0 - only main categories
+                'position' => 1,
             ]);
         }
-        // Commented out: Sub category support disabled
-        // if ($request->sub_category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->sub_category_id,
-        //         'position' => 2,
-        //     ]);
-        // }
-        // Commented out: Sub sub category support disabled
-        // if ($request->sub_sub_category_id != null) {
-        //     array_push($category, [
-        //         'id' => $request->sub_sub_category_id,
-        //         'position' => 3,
-        //     ]);
-        // }
-
+        if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
+            $position = 2;
+            foreach ($request->sub_category_ids as $id) {
+                if ($id != null) {
+                    array_push($category, [
+                        'id' => $id,
+                        'position' => $position,
+                    ]);
+                    $position++;
+                }
+            }
+        } else {
+            if ($request->sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_category_id,
+                    'position' => 2,
+                ]);
+            }
+            if ($request->sub_sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_sub_category_id,
+                    'position' => 3,
+                ]);
+            }
+        }
 
         $images = $item['images'];
         if (!$request?->temp_product) {
@@ -615,7 +653,13 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
         }
 
 
-        $item->category_id = $request->category_id; // Always use main category_id
+        if ($request->sub_category_ids != null && is_array($request->sub_category_ids)) {
+            $sub_cat_ids = $request->sub_category_ids;
+            $item->category_id = end($sub_cat_ids) ?: $request->category_id;
+        } else {
+            $item->category_id = $request->sub_sub_category_id
+                ?: ($request->sub_category_id ?: $request->category_id);
+        }
         $item->category_ids = json_encode($category);
         $item->description =  $request->description[array_search('default', $request->lang)];
 
@@ -703,6 +747,17 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
                 array_push($food_variations, $temp_variation);
             }
         }
+
+        $zeroPriceVariationErrors = Helpers::validate_zero_base_price_variations(
+            (float)$request->price,
+            $food_variations,
+            $variations,
+            $item->module?->module_type
+        );
+        if ($zeroPriceVariationErrors) {
+            return response()->json(['errors' => $zeroPriceVariationErrors], 422);
+        }
+
         $slug = Str::slug($request->name[array_search('default', $request->lang)]);
         $item->slug = $item->slug ? $item->slug : "{$slug}{$item->id}";
         $item->food_variations = json_encode($food_variations);
@@ -929,7 +984,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             ->withoutGlobalScope('translate')
             ->where('id', '!=', $item->id)
             ->whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($new_name))])
-            ->where('category_id', $request->category_id)
+            ->where('category_id', $item->category_id)
             ->get();
         
         $similar_items = $similar_items->merge($similar_items_new);
@@ -940,7 +995,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
         $all_similar_in_category = Item::withoutGlobalScope(StoreScope::class)
             ->withoutGlobalScope('translate')
             ->where('id', '!=', $item->id)
-            ->where('category_id', $request->category_id)
+            ->where('category_id', $item->category_id)
             ->where(function($query) use ($old_name, $new_name) {
                 $query->whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($old_name))])
                       ->orWhereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($new_name))]);
@@ -958,7 +1013,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
                      ->where('translations.key', '=', 'name');
             })
             ->where('items.id', '!=', $item->id)
-            ->where('items.category_id', $request->category_id)
+            ->where('items.category_id', $item->category_id)
             ->where(function($query) use ($old_name, $new_name) {
                 $query->whereRaw('LOWER(TRIM(translations.value)) = ?', [strtolower(trim($old_name))])
                       ->orWhereRaw('LOWER(TRIM(translations.value)) = ?', [strtolower(trim($new_name))]);
@@ -983,7 +1038,7 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
             'old_name' => $old_name,
             'new_name' => $new_name,
             'old_category_id' => $old_category_id,
-            'new_category_id' => $request->category_id,
+            'new_category_id' => $item->category_id,
             'similar_items_count' => $similar_items->count(),
             'similar_items_ids' => $similar_items->pluck('id')->toArray()
         ]);
@@ -1188,17 +1243,27 @@ if ($request->has('image') && filter_var($request->image, FILTER_VALIDATE_URL)) 
     }
     public function get_categories(Request $request)
     {
-        $key = explode(' ', $request['q']);
         $cat = Category::when(isset($request->module_id), function ($query) use ($request) {
             $query->where('module_id', $request->module_id);
         })
             ->when($request->sub_category, function ($query) {
                 $query->where('position', '>', '0');
             })
-            ->where(['parent_id' => $request->parent_id])
-            ->when(isset($key), function ($q) use ($key) {
+            ->when(
+                $request->sub_category && (!$request->has('parent_id') || $request->parent_id === '' || $request->parent_id === null),
+                function ($query) {
+                    $query->whereRaw('1 = 0');
+                },
+                function ($query) use ($request) {
+                    $query->where('parent_id', (int) $request->parent_id);
+                }
+            )
+            ->when($request->filled('q'), function ($q) use ($request) {
+                $key = explode(' ', $request->q);
                 foreach ($key as $value) {
-                    $q->where('name', 'like', "%{$value}%");
+                    if (trim($value) !== '') {
+                        $q->where('name', 'like', "%{$value}%");
+                    }
                 }
             })
             ->get()

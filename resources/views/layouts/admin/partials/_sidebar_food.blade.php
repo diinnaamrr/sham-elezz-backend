@@ -55,6 +55,34 @@
                         </a>
                     </li>
                     <!-- End Dashboards -->
+
+                    <!-- Menu Management -->
+                    @if(\App\CentralLogics\Helpers::module_permission_check('food_menu_management'))
+                    <li class="nav-item">
+                        <small class="nav-subtitle" title="{{ translate('messages.food_menu_management') }}">{{ translate('messages.food_menu_management') }}</small>
+                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                    </li>
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/menu*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.food_menu_management') }}">
+                            <i class="tio-restaurant nav-icon"></i>
+                            <span class="text-truncate">{{ translate('messages.food_menu_management') }}</span>
+                        </a>
+                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/menu*') ? 'block' : 'none' }}">
+                            <li class="nav-item {{ Request::is('admin/menu/categories*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.menu.categories.index') }}" title="{{ translate('messages.menu_categories') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.menu_categories') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('admin/menu/items*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.menu.items.index') }}" title="{{ translate('messages.menu_items') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.menu_items') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    @endif
                     <!-- Marketing section -->
                     <li class="nav-item">
                         <small class="nav-subtitle" title="{{ translate('messages.employee_handle') }}">{{ translate('pos section') }}</small>
@@ -402,6 +430,15 @@
                                         <span class="text-truncate">{{ translate('messages.sub_category') }}</span>
                                     </a>
                                 </li>
+
+                                @for($i = 2; $i <= 9; $i++)
+                                <li class="nav-item {{ request()->input('position') == $i && Request::is('admin/category/add') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.category.add',['position'=>$i]) }}" title="{{ translate('messages.sub_category') }} {{ $i }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.sub_category') }} {{ $i }}</span>
+                                    </a>
+                                </li>
+                                @endfor
 
                                 <li class="nav-item {{ Request::is('admin/category/bulk-import') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('admin.category.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">

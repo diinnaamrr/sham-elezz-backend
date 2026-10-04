@@ -47,9 +47,13 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::get('store/get-store-ratings', [VendorController::class,'get_store_ratings'])->name('store.get-store-ratings');
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
-            Route::get(Category::NAME_LIST[URI], [CategoryController::class, 'getNameList'])->name('get-all');
+                Route::get(Category::NAME_LIST[URI], [CategoryController::class, 'getNameList'])->name('get-all');
+                Route::get('sub-parent-options/{mainCategoryId}', [CategoryController::class, 'getSubParentOptions'])->name('sub-parent-options');
             Route::group(['middleware' => ['module:category']], function () {
                 Route::get(Category::ADD[URI], [CategoryController::class, 'index'])->name('add');
+                Route::get('add-sub-category', function () {
+                    return redirect()->route('admin.category.add', ['position' => 1]);
+                })->name('add-sub-category');
                 Route::get(Category::UPDATE[URI].'/{id}', [CategoryController::class, 'getUpdateView'])->name('edit');
                 Route::post(Category::UPDATE[URI].'/{id}', [CategoryController::class, 'update'])->name('update');
                 Route::get(Category::PRIORITY[URI].'/{category}', [CategoryController::class, 'updatePriority'])->name('priority');

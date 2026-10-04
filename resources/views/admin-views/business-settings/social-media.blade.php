@@ -33,6 +33,7 @@
                                     <option value="twitter">{{ translate('messages.Twitter') }}</option>
                                     <option value="linkedin">{{ translate('messages.LinkedIn') }}</option>
                                     <option value="pinterest">{{ translate('messages.Pinterest') }}</option>
+                                    <option value="tiktok">{{ translate('messages.TikTok') }}</option>
                                 </select>
                             </div>
                             <div class="col-md-6">

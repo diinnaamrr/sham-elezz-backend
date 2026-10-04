@@ -202,29 +202,54 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.category')}}<span
                                                 class="input-label-secondary">*</span></label>
-                                        <select name="category_id" id="category-id" class="form-control js-select2-custom get-request"
+                                        @php
+                                            $selected_main_cat_id = null;
+                                            if (isset($product_category[0])) {
+                                                $selected_main_cat_id = is_array($product_category[0])
+                                                    ? ($product_category[0]['id'] ?? null)
+                                                    : ($product_category[0]->id ?? null);
+                                            }
+                                        @endphp
+                                        <select name="category_id" id="category_id" class="form-control js-select2-custom get-request"
                                         data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-categories"
                                                >
-                                            @foreach($categories as $category)
-                                                <option
-                                                    value="{{$category['id']}}" {{ $category->id==$product_category[0]->id ? 'selected' : ''}} >{{$category['name']}}</option>
+                                            <option value="">{{ translate('messages.select') }}</option>
+                                            @foreach($categories as $catOption)
+                                                <option value="{{ $catOption->id }}" {{ $selected_main_cat_id == $catOption->id ? 'selected' : '' }}>
+                                                    {{ $catOption->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6 col-lg-4">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.sub_category')}}<span
-                                                class="input-label-secondary"></span></label>
-                                        <select name="sub_category_id" id="sub-categories"
-                                                data-id="{{count($product_category)>=2?$product_category[1]->id:''}}"
-                                                class="form-control js-select2-custom get-request"
-                                                data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-sub-categories">
-
-                                        </select>
-                                    </div>
-                                </div>
+                                @php
+                                    $category_chain = json_decode($product->category_ids, true) ?? [];
+                                @endphp
+                                @for ($i = 1; $i < count($category_chain); $i++)
+                                    @php
+                                        $parent_id = $category_chain[$i - 1]['id'] ?? null;
+                                        $selected_id = $category_chain[$i]['id'] ?? null;
+                                        $depth = $i;
+                                        $sibling_categories = $parent_id
+                                            ? \App\Models\Category::where('parent_id', $parent_id)->orderBy('name')->get()
+                                            : collect();
+                                    @endphp
+                                    @if($sibling_categories->isNotEmpty())
+                                        <div class="col-sm-6 col-lg-4 dynamic-category-wrapper" data-depth="{{ $depth }}">
+                                            <div class="form-group mb-0">
+                                                <label class="input-label">{{ translate('messages.sub_category') }}</label>
+                                                <select name="sub_category_ids[]" class="form-control js-select2-custom dynamic-category-select" data-depth="{{ $depth }}">
+                                                    @foreach($sibling_categories as $option)
+                                                        <option value="{{ $option->id }}" {{ (int) $selected_id === (int) $option->id ? 'selected' : '' }}>
+                                                            {{ $option->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endfor
                                 @if ($module_data['common_condition'])
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
@@ -626,6 +651,20 @@
 
     mod_type="{{ $module_type }}";
 
+    $(function () {
+        let ignoreNextCategoryChange = $('.dynamic-category-wrapper').length > 0;
+        $('#category_id').off('change').on('change', function () {
+            if (ignoreNextCategoryChange) {
+                ignoreNextCategoryChange = false;
+                return;
+            }
+            fetchDynamicCategories($(this).val(), 0);
+        });
+        $(document).off('change', '.dynamic-category-select').on('change', '.dynamic-category-select', function () {
+            fetchDynamicCategories($(this).val(), parseInt($(this).data('depth'), 10));
+        });
+    });
+
     $(document).ready(function() {
         $("#add_new_option_button").click(function(e) {
             $('#empty-variation').hide();
@@ -756,13 +795,7 @@
 
 
         $(document).ready(function () {
-            setTimeout(function () {
-                let category = $("#category-id").val();
-                let sub_category = '{{count($product_category)>=2?$product_category[1]->id:''}}';
-                let sub_sub_category ='{{count($product_category)>=3?$product_category[2]->id:''}}';
-                getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id=' + category + '&&sub_category=' + sub_category, 'sub-categories');
-                getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id=' + sub_category + '&&sub_category=' + sub_sub_category, 'sub-sub-categories');
-            }, 1000)
+            // Dynamic categories are pre-rendered from server-side
         });
 
 
@@ -806,7 +839,8 @@
             });
         }
 
-        $('#product_form').on('submit', function () {
+        $('#product_form').on('submit', function (e) {
+            e.preventDefault();
             let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
@@ -851,8 +885,16 @@
                             location.href = '{{route('vendor.item.list')}}';
                         }, 2000);
                     }
+                },
+                error: function (xhr) {
+                    $('#loading').hide();
+                    toastr.error(xhr.responseJSON?.message || '{{ translate('messages.something_went_wrong') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
                 }
             });
+            return false;
         });
 
         $(function () {

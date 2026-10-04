@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @property array name
- * @property string|int store_id
+ * @property array store_ids
  * @property string|float price
  * @property array lang
  */
@@ -31,7 +31,8 @@ class AddonAddRequest extends FormRequest
         return [
             'name.*' => 'max:191',
             'name'=>'array|required',
-            'store_id' => 'required',
+            'store_ids' => 'required|array|min:1',
+            'store_ids.*' => 'required',
             'price' => 'required|numeric|between:0,999999999999.99',
             'name.0'=>'required',
         ];
@@ -41,8 +42,9 @@ class AddonAddRequest extends FormRequest
     {
         return [
             'name.required' => translate('messages.Name is required!'),
-            'store_id.required' => translate('messages.please_select_store'),
+            'store_ids.required' => translate('messages.please_select_store'),
             'name.0.required'=>translate('default_data_is_required'),
         ];
     }
 }
+

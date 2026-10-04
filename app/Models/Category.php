@@ -95,9 +95,45 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
+    public function activeChildes(): HasMany
+    {
+        return $this->childes()->where('status', 1)->orderByDesc('priority');
+    }
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public static function nestedActiveChildesRelation(int $depth = 20): array
+    {
+        if ($depth <= 0) {
+            return [];
+        }
+
+        return [
+            'childes' => function ($query) use ($depth) {
+                $query->where('status', 1)
+                    ->orderByDesc('priority')
+                    ->when($depth > 1, function ($q) use ($depth) {
+                        $q->with(self::nestedActiveChildesRelation($depth - 1));
+                    });
+            },
+        ];
+    }
+
+    public function isDescendantOf(int $categoryId): bool
+    {
+        $parent = $this->parent;
+
+        while ($parent) {
+            if ((int) $parent->id === $categoryId) {
+                return true;
+            }
+            $parent = $parent->parent;
+        }
+
+        return false;
     }
     public function storage()
     {
@@ -182,17 +218,87 @@ class Category extends Model
         });
         return null;
     }
-  public function getAllSubcategoryIds()
-{
-    $subcategories = $this->childes()->with('childes')->get();
+    public function getAllSubcategoryIds()
+    {
+        $subcategories = $this->childes()->with('childes')->get();
 
-    $ids = collect([$this->id]); // Include main category
+        $ids = collect([$this->id]);
 
-    foreach ($subcategories as $sub) {
-        $ids = $ids->merge($sub->getAllSubcategoryIds()); // Recursively get subcategories
+        foreach ($subcategories as $sub) {
+            $ids = $ids->merge($sub->getAllSubcategoryIds());
+        }
+
+        return $ids;
     }
 
-    return $ids;
-}
+    public function getNestingDepth(): int
+    {
+        $depth = 0;
+        $parent = $this->parent;
+
+        while ($parent) {
+            $depth++;
+            $parent = $parent->parent;
+        }
+
+        return $depth;
+    }
+
+    public function getAncestorPath(string $separator = ' › '): string
+    {
+        $names = [];
+        $parent = $this->parent;
+
+        while ($parent) {
+            array_unshift($names, $parent->name);
+            $parent = $parent->parent;
+        }
+
+        return implode($separator, $names);
+    }
+
+    public function getRootCategoryId(): int
+    {
+        if ($this->position === 0) {
+            return (int) $this->id;
+        }
+
+        $current = $this;
+
+        while ($current->parent_id) {
+            $parent = $current->parent;
+
+            if (!$parent) {
+                $parent = static::withoutGlobalScopes()->find($current->parent_id);
+            }
+
+            if (!$parent) {
+                break;
+            }
+
+            if ($parent->position === 0) {
+                return (int) $parent->id;
+            }
+
+            $current = $parent;
+        }
+
+        return (int) $this->parent_id;
+    }
+
+    public function isDirectChildOfMain(): bool
+    {
+        if ($this->position !== 1) {
+            return false;
+        }
+
+        $parent = $this->parent;
+
+        if (!$parent && $this->parent_id) {
+            $parent = static::withoutGlobalScopes()->find($this->parent_id);
+        }
+
+        return $parent && $parent->position === 0;
+    }
 
 }

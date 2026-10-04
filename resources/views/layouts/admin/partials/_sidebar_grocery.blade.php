@@ -415,6 +415,62 @@
                                 </a>
                             </li>
 
+                            <li class="nav-item {{ request()->input('position') == 2 && Request::is('admin/category/add') ? 'active' : '' }}">
+                                <a class="nav-link "  href="{{ route('admin.category.add',['position'=>2]) }}" title="{{ translate('messages.sub_category') }} 2">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.sub_category') }} 2</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ request()->input('position') == 3 && Request::is('admin/category/add') ? 'active' : '' }}">
+                                <a class="nav-link "  href="{{ route('admin.category.add',['position'=>3]) }}" title="{{ translate('messages.sub_category') }} 3">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.sub_category') }} 3</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ request()->input('position') == 4 && Request::is('admin/category/add') ? 'active' : '' }}">
+                                <a class="nav-link "  href="{{ route('admin.category.add',['position'=>4]) }}" title="{{ translate('messages.sub_category') }} 4">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.sub_category') }} 4</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ request()->input('position') == 5 && Request::is('admin/category/add') ? 'active' : '' }}">
+                                <a class="nav-link "  href="{{ route('admin.category.add',['position'=>5]) }}" title="{{ translate('messages.sub_category') }} 5">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.sub_category') }} 5</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ request()->input('position') == 6 && Request::is('admin/category/add') ? 'active' : '' }}">
+                                <a class="nav-link "  href="{{ route('admin.category.add',['position'=>6]) }}" title="{{ translate('messages.sub_category') }} 6">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.sub_category') }} 6</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ request()->input('position') == 7 && Request::is('admin/category/add') ? 'active' : '' }}">
+                                <a class="nav-link "  href="{{ route('admin.category.add',['position'=>7]) }}" title="{{ translate('messages.sub_category') }} 7">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.sub_category') }} 7</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ request()->input('position') == 8 && Request::is('admin/category/add') ? 'active' : '' }}">
+                                <a class="nav-link "  href="{{ route('admin.category.add',['position'=>8]) }}" title="{{ translate('messages.sub_category') }} 8">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.sub_category') }} 8</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ request()->input('position') == 9 && Request::is('admin/category/add') ? 'active' : '' }}">
+                                <a class="nav-link "  href="{{ route('admin.category.add',['position'=>9]) }}" title="{{ translate('messages.sub_category') }} 9">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.sub_category') }} 9</span>
+                                </a>
+                            </li>
+
                         <li class="nav-item {{ Request::is('admin/category/bulk-import') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.category.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>

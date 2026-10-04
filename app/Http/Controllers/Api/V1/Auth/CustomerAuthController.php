@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Mail\EmailVerification;
 use App\Mail\LoginVerification;
 use App\Models\BusinessSetting;
@@ -19,7 +20,6 @@ use App\CentralLogics\SMS_module;
 use App\Models\WalletTransaction;
 use App\Models\EmailVerifications;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -58,7 +58,7 @@ class CustomerAuthController extends Controller
             $user->is_phone_verified = 1;
             $user->save();
 
-            DB::table('phone_verifications')->where('phone', $request->phone)->delete();
+            DB::table('phone_verifications')->where('phone', $this->normalizePhoneNumber($request->phone))->delete();
 
             return response()->json([
                 'message' => translate('messages.phone_number_verified_successfully'),
@@ -66,8 +66,10 @@ class CustomerAuthController extends Controller
             ], 200);
         }
 
+        $normalizedPhone = $this->normalizePhoneNumber($request->phone);
+
         $verification = DB::table('phone_verifications')->where([
-            'phone' => $request->phone,
+            'phone' => $normalizedPhone,
             'token' => $request->otp,
         ])->first();
 
@@ -80,7 +82,7 @@ class CustomerAuthController extends Controller
         }
 
         DB::table('phone_verifications')->where([
-            'phone' => $request->phone,
+            'phone' => $normalizedPhone,
             'token' => $request->otp,
         ])->delete();
 
@@ -114,6 +116,7 @@ class CustomerAuthController extends Controller
             $user = User::where('email', $request->email)->first();
         }
         $temporaryToken = null;
+        $verificationPhone = $request->filled('phone') ? $this->normalizePhoneNumber($request->phone) : null;
 
         if($user && $request->login_type== 'manual')
         {
@@ -173,7 +176,7 @@ class CustomerAuthController extends Controller
                 ])->first();
             }elseif ($request->verification_type == 'phone'){
                 $data = DB::table('phone_verifications')->where([
-                    'phone' => $request['phone'],
+                    'phone' => $verificationPhone,
                     'token' => $request['otp'],
                 ])->first();
             }
@@ -190,7 +193,7 @@ class CustomerAuthController extends Controller
                     $user->is_email_verified = 1;
                 }elseif ($request->verification_type == 'phone'){
                     DB::table('phone_verifications')->where([
-                        'phone' => $request['phone'],
+                        'phone' => $verificationPhone,
                         'token' => $request['otp'],
                     ])->delete();
 
@@ -222,7 +225,7 @@ class CustomerAuthController extends Controller
                     $max_otp_hit_time = 60; // seconds
                     $temp_block_time = 600; // seconds
 
-                    $verification_data = DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+                    $verification_data = DB::table('phone_verifications')->where('phone', $verificationPhone)->first();
 
                     if (isset($verification_data)) {
                         if (isset($verification_data->temp_block_time) && Carbon::parse($verification_data->temp_block_time)->DiffInSeconds() <= $temp_block_time) {
@@ -238,7 +241,7 @@ class CustomerAuthController extends Controller
                         }
 
                         if ($verification_data->is_temp_blocked == 1 && Carbon::parse($verification_data->updated_at)->DiffInSeconds() >= $max_otp_hit_time) {
-                            DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                            DB::table('phone_verifications')->updateOrInsert(['phone' => $verificationPhone],
                                 [
                                     'otp_hit_count' => 0,
                                     'is_temp_blocked' => 0,
@@ -250,7 +253,7 @@ class CustomerAuthController extends Controller
 
                         if ($verification_data->otp_hit_count >= $max_otp_hit && Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $max_otp_hit_time && $verification_data->is_temp_blocked == 0) {
 
-                            DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                            DB::table('phone_verifications')->updateOrInsert(['phone' => $verificationPhone],
                                 [
                                     'is_temp_blocked' => 1,
                                     'temp_block_time' => now(),
@@ -266,7 +269,7 @@ class CustomerAuthController extends Controller
                     }
 
 
-                    DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                    DB::table('phone_verifications')->updateOrInsert(['phone' => $verificationPhone],
                         [
                             'otp_hit_count' => DB::raw('otp_hit_count + 1'),
                             'updated_at' => now(),
@@ -280,7 +283,7 @@ class CustomerAuthController extends Controller
         }
         if($request->login_type== 'otp'){
             $data = DB::table('phone_verifications')->where([
-                'phone' => $request['phone'],
+                'phone' => $verificationPhone,
                 'token' => $request['otp'],
             ])->first();
 
@@ -294,7 +297,7 @@ class CustomerAuthController extends Controller
                     return response()->json(['token' => $temporaryToken, 'is_phone_verified'=>1, 'is_email_verified'=>1, 'is_personal_info' => 1, 'is_exist_user' =>$is_exist_user, 'login_type' => 'otp', 'email' => $user_email], 200);
                 }elseif (($user && $user->is_phone_verified == 1) || ($user && $user->is_phone_verified == 0 && $user->is_from_pos == 1)){
                     DB::table('phone_verifications')->where([
-                        'phone' => $request['phone'],
+                        'phone' => $verificationPhone,
                         'token' => $request['otp'],
                     ])->delete();
                     $is_personal_info = 0;
@@ -485,7 +488,7 @@ class CustomerAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'unique:users',
+            'email' => 'nullable|email|unique:users,email',
             'phone' => 'required|unique:users',
             'password' => ['required', Password::min(8)],
 
@@ -556,14 +559,15 @@ class CustomerAuthController extends Controller
 
         $login_settings = array_column(BusinessSetting::whereIn('key',['manual_login_status','otp_login_status','social_login_status','google_login_status','facebook_login_status','apple_login_status','email_verification_status','phone_verification_status'
         ])->get(['key','value'])->toArray(), 'value', 'key');
-        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value??0;
+        $firebase_otp_verification = (int)(BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value ?? 0);
         $phone = 1;
         $mail = 1;
-        if(isset($login_settings['phone_verification_status']) && $login_settings['phone_verification_status'] == 1){
+        if (!empty($login_settings['phone_verification_status']) && (int)$login_settings['phone_verification_status'] === 1) {
             $phone =0;
             if(!$firebase_otp_verification){
+                $normalizedPhone = $this->normalizePhoneNumber($request['phone']);
                 $otp_interval_time= 60; //seconds
-                $verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
+                $verification_data= DB::table('phone_verifications')->where('phone', $normalizedPhone)->first();
 
                 if(isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
                     $time= $otp_interval_time - Carbon::parse($verification_data->updated_at)->DiffInSeconds();
@@ -578,7 +582,7 @@ class CustomerAuthController extends Controller
                 if(env('APP_MODE') == 'test'){
                     $otp = '123456';
                 }
-                DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
+                DB::table('phone_verifications')->updateOrInsert(['phone' => $normalizedPhone],
                     [
                         'token' => $otp,
                         'otp_hit_count' => 0,
@@ -612,9 +616,12 @@ class CustomerAuthController extends Controller
                         'errors' => $errors
                     ], 405);
                 }
+            } else {
+                // Firebase OTP: لا يُرسل رمز من السيرفر؛ يجب إكمال التحقق من التطبيق ثم استدعاء firebase-verify-token
+                $token = null;
             }
 
-        }elseif (isset($login_settings['email_verification_status']) && $login_settings['email_verification_status'] == 1){
+        }elseif (!empty($login_settings['email_verification_status']) && (int)$login_settings['email_verification_status'] === 1 && $request->filled('email')){
             $mail =0;
             $otp = rand(100000, 999999);
             if(env('APP_MODE') == 'test'){
@@ -943,8 +950,9 @@ class CustomerAuthController extends Controller
         }
     }
     private function otp_login($request_data){
+        $verificationPhone = $this->normalizePhoneNumber($request_data['phone']);
         $data = DB::table('phone_verifications')->where([
-            'phone' => $request_data['phone'],
+            'phone' => $verificationPhone,
             'token' => $request_data['otp'],
         ])->first();
 
@@ -982,7 +990,7 @@ class CustomerAuthController extends Controller
             }
 
             DB::table('phone_verifications')->where([
-                'phone' => $request_data['phone'],
+                'phone' => $verificationPhone,
                 'token' => $request_data['otp'],
             ])->delete();
 
@@ -1113,9 +1121,10 @@ class CustomerAuthController extends Controller
         $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value??0;
         if(!$firebase_otp_verification)
         {
+            $normalizedPhone = $this->normalizePhoneNumber($request_data['phone']);
             $otp_interval_time= 60; //seconds
 
-            $verification_data= DB::table('phone_verifications')->where('phone', $request_data['phone'])->first();
+            $verification_data= DB::table('phone_verifications')->where('phone', $normalizedPhone)->first();
 
             if(!$forceResend && isset($verification_data) &&  Carbon::parse($verification_data->updated_at)->DiffInSeconds() < $otp_interval_time){
 
@@ -1130,7 +1139,7 @@ class CustomerAuthController extends Controller
             if(env('APP_MODE') == 'test'){
                 $otp = '123456';
             }
-            DB::table('phone_verifications')->updateOrInsert(['phone' => $request_data['phone']],
+            DB::table('phone_verifications')->updateOrInsert(['phone' => $normalizedPhone],
                 [
                     'token' => $otp,
                     'otp_hit_count' => 0,
@@ -1167,6 +1176,24 @@ class CustomerAuthController extends Controller
         return true;
     }
 
+    private function normalizePhoneNumber($phone)
+    {
+        $phone = trim((string)$phone);
+        $digits = preg_replace('/\D+/', '', $phone);
+
+        if (str_starts_with($digits, '00')) {
+            $digits = substr($digits, 2);
+        }
+
+        if (str_starts_with($digits, '0')) {
+            $digits = '2'.$digits;
+        } elseif (!str_starts_with($digits, '2')) {
+            $digits = '2'.$digits;
+        }
+
+        return '+'.$digits;
+    }
+
     private function refer_code_check($user){
         if($user->ref_code == null && isset($user->id)){
             $ref_code = Helpers::generate_referer_code($user);
@@ -1176,20 +1203,46 @@ class CustomerAuthController extends Controller
     }
 
     private function check_guest_cart($user, $guest_id){
-        if($guest_id  && isset($user->id)){
+        if ($guest_id && isset($user->id)) {
+            $moduleId = request()->header('moduleId');
+            $itemTypes = ['Item', 'App\Models\Item'];
 
-            $userStoreIds = Cart::where('user_id', $guest_id)
-                ->join('items', 'carts.item_id', '=', 'items.id')
-                ->pluck('items.store_id')
-                ->toArray();
-
-            Cart::where('user_id', $user->id)
-                ->whereHas('item', function ($query) use ($userStoreIds) {
-                    $query->whereNotIn('store_id', $userStoreIds);
+            $guestStoreIds = Cart::query()
+                ->from('carts')
+                ->leftJoin('items', function ($join) use ($itemTypes) {
+                    $join->on('carts.item_id', '=', 'items.id')
+                        ->whereIn('carts.item_type', $itemTypes);
                 })
-                ->delete();
+                ->where('carts.user_id', $guest_id)
+                ->when($moduleId, fn ($query) => $query->where('carts.module_id', $moduleId))
+                ->selectRaw('DISTINCT COALESCE(carts.store_id, items.store_id) as resolved_store_id')
+                ->pluck('resolved_store_id')
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
 
-            Cart::where('user_id', $guest_id)->update(['user_id' => $user->id, 'is_guest' => 0]);
+            if (!empty($guestStoreIds)) {
+                $cartIdsToDelete = Cart::query()
+                    ->from('carts')
+                    ->leftJoin('items', function ($join) use ($itemTypes) {
+                        $join->on('carts.item_id', '=', 'items.id')
+                            ->whereIn('carts.item_type', $itemTypes);
+                    })
+                    ->where('carts.user_id', $user->id)
+                    ->when($moduleId, fn ($query) => $query->where('carts.module_id', $moduleId))
+                    ->whereNotNull(DB::raw('COALESCE(carts.store_id, items.store_id)'))
+                    ->whereNotIn(DB::raw('COALESCE(carts.store_id, items.store_id)'), $guestStoreIds)
+                    ->pluck('carts.id');
+
+                if ($cartIdsToDelete->isNotEmpty()) {
+                    Cart::whereIn('id', $cartIdsToDelete)->delete();
+                }
+            }
+
+            Cart::where('user_id', $guest_id)
+                ->when($moduleId, fn ($query) => $query->where('module_id', $moduleId))
+                ->update(['user_id' => $user->id, 'is_guest' => 0]);
         }
         return true;
     }

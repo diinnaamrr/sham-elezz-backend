@@ -108,8 +108,63 @@ $(document).on('change', '.get-request', function () {
     let val= $(this).val();
     let route= $(this).data('url')+val;
     let id= $(this).data('id');
-    getRequest(route, id);
+    // For regular get-request items (not dynamic categories), use the default logic
+    if (!$(this).hasClass('dynamic-category-select') && $(this).attr('id') !== 'category_id') {
+        getRequest(route, id);
+    }
 })
+
+$(document).on('change', '#category_id', function () {
+    let parent_category_id = $(this).val();
+    fetchDynamicCategories(parent_category_id, 0);
+});
+
+$(document).on('change', '.dynamic-category-select', function() {
+    let parent_id = $(this).val();
+    let depth = $(this).data('depth');
+    fetchDynamicCategories(parent_id, depth);
+});
+
+function appendDynamicCategory(html) {
+    let $html = $(html);
+    if ($('.dynamic-category-wrapper').length) {
+        $('.dynamic-category-wrapper').last().after($html);
+    } else {
+        $('#category_id').closest('[class*="col-"]').after($html);
+    }
+}
+
+function fetchDynamicCategories(parent_id, depth) {
+    // Remove any deeper category selects
+    $('.dynamic-category-wrapper').each(function() {
+        if ($(this).data('depth') > depth) {
+            $(this).remove();
+        }
+    });
+
+    if (parent_id) {
+        $.get({
+            url: window.location.origin + '/store-panel/item/get-categories?parent_id=' + parent_id + '&sub_category=true',
+            success: function(data) {
+                // If the response is HTML string representing options
+                if (data && data.options && data.options.trim() !== '<option value="" disabled selected>---Select---</option>') {
+                    let newDepth = depth + 1;
+                    let html = `<div class="col-sm-6 col-lg-4 dynamic-category-wrapper" data-depth="${newDepth}">
+                        <div class="form-group mb-0">
+                            <label class="input-label">Sub Category</label>
+                            <select name="sub_category_ids[]" class="form-control js-select2-custom dynamic-category-select" data-depth="${newDepth}">
+                                ${data.options}
+                            </select></div></div>`;
+
+                    appendDynamicCategory(html);
+                    $('.dynamic-category-wrapper').last().find('.js-select2-custom').each(function () {
+                        $.HSCore.components.HSSelect2.init($(this));
+                    });
+                }
+            }
+        });
+    }
+}
 
 function getRequest(route, id) {
     $.get({

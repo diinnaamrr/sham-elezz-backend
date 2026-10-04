@@ -501,13 +501,9 @@ class OrderController extends Controller
 
         $order_details = [];
         $order = new Order();
-        $order->id = 100000 + Order::count() + 1;
-        if (Order::find($order->id)) {
-            $order->id = Order::orderBy('id', 'desc')->first()->id + 1;
-        }
+        $order->id = OrderLogic::generate_order_id();
 
-
-        $order_status ='pending';
+        $order_status = 'pending';
         if(($request->partial_payment && $request->payment_method != 'offline_payment') || $request->payment_method == 'wallet' ){
             $order_status ='confirmed';
         }
@@ -594,6 +590,9 @@ class OrderController extends Controller
 
 
         $carts = Cart::where('user_id', $order->user_id)->where('is_guest',$order->is_guest)->where('module_id',$request->header('moduleId'))
+        ->where(function ($query) use ($request) {
+            $query->where('store_id', $request->store_id)->orWhereNull('store_id');
+        })
         ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
             return $query->where('id',$request->cart_id);
         })
@@ -998,6 +997,7 @@ class OrderController extends Controller
             DB::beginTransaction();
             $order->save();
             if ($request->order_type !== 'parcel') {
+                OrderDetail::where('order_id', $order->id)->delete();
                 foreach ($order_details as $key => $item) {
                     $order_details[$key]['order_id'] = $order->id;
 
@@ -1014,11 +1014,13 @@ class OrderController extends Controller
                 }
                 $store->increment('total_order');
             }
-            if(!isset($request->is_buy_now) || (isset($request->is_buy_now) && $request->is_buy_now == 0 )){
-                foreach ($carts as $cart) {
-                    $cart->delete();
-                }
-            }
+            Cart::where('user_id', $order->user_id)
+                ->where('is_guest', $order->is_guest)
+                ->where('module_id', $request->header('moduleId'))
+                ->where(function ($query) use ($request) {
+                    $query->where('store_id', $request->store_id)->orWhereNull('store_id');
+                })
+                ->delete();
             if($request->user){
                 $customer = $request->user;
                 $customer->zone_id = $order->zone_id;
@@ -1048,6 +1050,8 @@ class OrderController extends Controller
 
             DB::commit();
 
+            $order->refresh();
+            $order->load(['store.store_sub', 'zone', 'module', 'customer', 'guest']);
 
             $payments = $order->payments()->where('payment_method','cash_on_delivery')->exists();
             $order_mail_status = Helpers::get_mail_status('place_order_mail_status_user');
@@ -1366,10 +1370,7 @@ class OrderController extends Controller
         $product_price = 0;
         $store_discount_amount = 0;
         $order = new Order();
-        $order->id = 100000 + Order::count() + 1;
-        if (Order::find($order->id)) {
-            $order->id = Order::orderBy('id', 'desc')->first()->id + 1;
-        }
+        $order->id = OrderLogic::generate_order_id();
         $order->user_id = $request->user ? $request->user->id : $request['guest_id'];
         $order->payment_status = 'unpaid';
         $order->order_status = 'pending';

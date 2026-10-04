@@ -16,7 +16,9 @@ use App\CentralLogics\CustomerLogic;
 use App\Models\OrderPayment;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\LoyaltyPointTransaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -25,6 +27,13 @@ class OrderLogic
     public static function gen_unique_id()
     {
         return rand(1000, 9999) . '-' . Str::random(5) . '-' . time();
+    }
+
+    public static function generate_order_id(): int
+    {
+        $maxId = (int) Order::max('id');
+
+        return max($maxId, 100000) + 1;
     }
 
     public static function track_order($order_id)
@@ -327,7 +336,31 @@ class OrderLogic
                         }
                     }
 
-                   $create_loyalty_point_transaction= CustomerLogic::create_loyalty_point_transaction($order->user_id, $order->id, $order->order_amount, 'order_place');
+                    $existingLoyaltyTxn = LoyaltyPointTransaction::where([
+                        'user_id' => $order->user_id,
+                        'reference' => (string)$order->id,
+                        'transaction_type' => 'order_place',
+                    ])->first();
+
+                    $create_loyalty_point_transaction = 0;
+                    if (!$existingLoyaltyTxn) {
+                        $create_loyalty_point_transaction = (int) CustomerLogic::create_loyalty_point_transaction(
+                            $order->user_id,
+                            $order->id,
+                            $order->order_amount,
+                            'order_place'
+                        );
+                    } else {
+                        $create_loyalty_point_transaction = (int) $existingLoyaltyTxn->credit;
+                    }
+
+                    Log::info('Loyalty point processing after order transaction', [
+                        'order_id' => $order->id,
+                        'user_id' => $order->user_id,
+                        'already_exists' => (bool)$existingLoyaltyTxn,
+                        'awarded_points' => $create_loyalty_point_transaction,
+                    ]);
+
                     if($create_loyalty_point_transaction > 0) {
                         $notification_data = [
                             'title' => translate('messages.Congratulation'),
@@ -621,6 +654,51 @@ class OrderLogic
 
         }
         return true;
+    }
+
+    public static function ensureLoyaltyPointForOrder($order): int
+    {
+        if (!$order || (int)$order->is_guest === 1 || !$order->user_id) {
+            return 0;
+        }
+
+        $settings = array_column(BusinessSetting::whereIn('key', ['loyalty_point_status', 'loyalty_point_item_purchase_point'])->get()->toArray(), 'value', 'key');
+        if ((int)($settings['loyalty_point_status'] ?? 0) !== 1) {
+            return 0;
+        }
+
+        $existing = LoyaltyPointTransaction::where([
+            'user_id' => $order->user_id,
+            'reference' => (string)$order->id,
+            'transaction_type' => 'order_place',
+        ])->first();
+
+        if ($existing) {
+            return (int)$existing->credit;
+        }
+
+        $awarded = (int)CustomerLogic::create_loyalty_point_transaction($order->user_id, $order->id, $order->order_amount, 'order_place');
+        if ($awarded > 0) {
+            $notification_data = [
+                'title' => translate('messages.Congratulation'),
+                'description' => translate('You_have_received').' '.$awarded.' '.translate('points_as_loyalty_point'),
+                'order_id' => $order->id,
+                'image' => '',
+                'type' => 'loyalty_point',
+            ];
+
+            if (Helpers::getNotificationStatusData('customer', 'customer_loyalty_point_earning', 'push_notification_status') && $order->customer?->cm_firebase_token) {
+                Helpers::send_push_notif_to_device($order->customer?->cm_firebase_token, $notification_data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($notification_data),
+                    'user_id' => $order->user_id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+
+        return $awarded;
     }
 
 

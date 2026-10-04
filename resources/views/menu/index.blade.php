@@ -239,7 +239,6 @@
                                         <span>{{ $item->price }}</span> 
                                         <small>ج.م</small>
                                     </div>
-                                    <button class="add-to-cart-btn">أطلب المنتج</button>
                                 </div>
                             </div>
                         </div>
