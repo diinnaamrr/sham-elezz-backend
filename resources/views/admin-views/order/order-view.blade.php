@@ -1247,6 +1247,7 @@
                                                            data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}" data-message="{{ translate('Change status to handover ?') }}"
                                                             href="javascript:">{{ translate('messages.handover') }}</a>
                                                 @endif
+                                                @endif
                                                 <a class="dropdown-item {{ $order['order_status'] == 'canceled' ? 'active' : '' }} canceled-status">{{ translate('messages.canceled') }}</a>
                                             </div>
 
