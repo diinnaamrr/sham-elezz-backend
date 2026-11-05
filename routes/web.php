@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\AdminMenuCategoryControllerv;
 use App\Http\Controllers\Admin\AdminMenuItemControllerv;
+use App\Http\Controllers\Admin\MenuBannerController;
 use App\Http\Controllers\MenuController;
 
 
@@ -259,6 +260,10 @@ Route::prefix('admin')->middleware(['admin', 'module:food_menu_management'])->gr
     Route::get('menu/items/{id}/edit', [AdminMenuItemControllerv::class, 'edit'])->name('admin.menu.items.edit');
     Route::put('menu/items/{id}', [AdminMenuItemControllerv::class, 'update'])->name('admin.menu.items.update');
     Route::delete('menu/items/{id}', [AdminMenuItemControllerv::class, 'destroy'])->name('admin.menu.items.destroy');
+
+    // Menu Banner
+    Route::get('menu/banner', [MenuBannerController::class, 'index'])->name('admin.menu.banner.index');
+    Route::post('menu/banner', [MenuBannerController::class, 'update'])->name('admin.menu.banner.update');
 });
 
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
