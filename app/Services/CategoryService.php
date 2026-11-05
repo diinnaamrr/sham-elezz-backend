@@ -17,10 +17,7 @@ class CategoryService
 
     public function getViewByPosition(int $position): string
     {
-        return match ($position) {
-            1 => CategoryViewPath::SUB_CATEGORY_INDEX['view'],
-            default => CategoryViewPath::INDEX['view'],
-        };
+        return $position >= 1 ? CategoryViewPath::SUB_CATEGORY_INDEX['view'] : CategoryViewPath::INDEX['view'];
     }
 
     public function getAddData($request, string|null|Object $parentCategory): array

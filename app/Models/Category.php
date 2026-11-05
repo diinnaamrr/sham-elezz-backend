@@ -95,6 +95,11 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
+    public function allChildes(): HasMany
+    {
+        return $this->childes()->with('allChildes')->where('status', 1);
+    }
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id');

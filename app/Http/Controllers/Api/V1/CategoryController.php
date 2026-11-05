@@ -32,6 +32,7 @@ class CategoryController extends Controller
             //     }]);
             // }])
             $categories = Category::withCount(['products'])
+            ->with('allChildes')
             ->where(['position'=>0,'status'=>1])
             ->when(config('module.current_module_data'), function($query){
                 $query->module(config('module.current_module_data')['id']);

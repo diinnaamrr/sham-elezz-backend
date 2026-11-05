@@ -58,8 +58,9 @@ class CategoryController extends BaseController
             dataLimit: config('default_pagination')
         );
 
+        $parentPosition = max(0, $request['position'] - 1);
         $mainCategories = $this->categoryRepo->getMainList(
-            filters: ['position' => 0],
+            filters: ['position' => $parentPosition],
             relations: ['module'],
         );
 

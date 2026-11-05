@@ -1,10 +1,16 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Add new sub category'))
+@section('title', translate('messages.add_new') . ' ' . (request('position', 1) == 1 ? translate('messages.sub_category') : translate('messages.sub_category_'.request('position', 1))))
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
+
+@php
+    $pos = request('position', 1);
+    $category_title = $pos == 1 ? translate('messages.sub_category') : translate('messages.sub_category_'.$pos);
+    $parent_title = $pos == 1 ? translate('messages.category') : ($pos == 2 ? translate('messages.sub_category') : translate('messages.sub_category_'.($pos-1)));
+@endphp
 
 @section('content')
     <div class="content container-fluid">
@@ -15,7 +21,7 @@
                     <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{translate('messages.add_new_sub_category')}}
+                    {{ translate('messages.add_new') }} {{ $category_title }}
                 </span>
             </h1>
         </div>
@@ -49,35 +55,35 @@
                                 data-original-title="{{ translate('messages.Required.')}}"> *
                                 </span>
                             </label>
-                            <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" maxlength="191"  >
+                            <input type="text" name="name[]" class="form-control" placeholder="{{ translate('messages.new') }} {{ $category_title }}" maxlength="191"  >
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                         @foreach($language as $lang)
                             <div class="form-group d-none lang_form col-sm-6" id="{{$lang}}-form">
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" maxlength="191"  >
+                                <input type="text" name="name[]" class="form-control" placeholder="{{ translate('messages.new') }} {{ $category_title }}" maxlength="191"  >
                             </div>
                             <input type="hidden" name="lang[]" value="{{$lang}}">
                         @endforeach
                     @else
                         <div class="form-group col-sm-6">
                             <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}}</label>
-                            <input type="text" name="name" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" value="{{old('name')}}" maxlength="191">
+                            <input type="text" name="name" class="form-control" placeholder="{{ translate('messages.new') }} {{ $category_title }}" value="{{old('name')}}" maxlength="191">
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                     @endif
                         <div class="form-group col-sm-6">
                             <label class="input-label"
-                                for="exampleFormControlSelect1">{{translate('messages.main_category')}}
+                                for="exampleFormControlSelect1">{{ $parent_title }}
                                 <span class="input-label-secondary">*</span></label>
                             <select id="exampleFormControlSelect1" name="parent_id" class="form-control js-select2-custom" required>
-                                <option value="" selected disabled>{{translate('Select Main Category')}}</option>
+                                <option value="" selected disabled>{{ translate('messages.select') }} {{ $parent_title }}</option>
                                 @foreach($mainCategories as $category)
                                     <option value="{{$category['id']}}" >{{$category['name']}} ({{Str::limit($category->module->module_name, 15, '...')}})</option>
                                 @endforeach
                             </select>
                         </div>
-                        <input name="position" value="1" hidden>
+                        <input name="position" value="{{ request('position', 1) }}" hidden>
 
                         <div class="col-sm-12">
                             <div class="btn--container justify-content-end">
@@ -92,13 +98,13 @@
         <div class="card mt-2">
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.sub_category_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
+                    <h5 class="card-title">{{ $category_title }} {{translate('messages.list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
 
                     <form   class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
-                            <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{translate('messages.ex_:_search_sub_categories')}}" aria-label="{{translate('messages.ex_:_sub_categories')}}">
-                            <input type="hidden" name="position" value="1">
+                            <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{ translate('messages.search') }} {{ $category_title }}" aria-label="{{ $category_title }}">
+                            <input type="hidden" name="position" value="{{ request('position', 1) }}">
                             <input type="hidden" name="sub_category" value="1">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
