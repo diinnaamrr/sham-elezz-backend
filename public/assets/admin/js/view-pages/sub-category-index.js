@@ -1,111 +1,182 @@
 "use strict";
-$(document).on('ready', function() {
-    // INITIALIZATION OF NAV SCROLLER
-    // =======================================================
-    $('.js-nav-scroller').each(function() {
-        new HsNavScroller($(this)).init()
-    });
 
-    // INITIALIZATION OF SELECT2
-    // =======================================================
-    $('.js-select2-custom').each(function() {
-        var select2 = $.HSCore.components.HSSelect2.init($(this));
-    });
+function refreshSelect2($element) {
+    if (!$element.length) {
+        return;
+    }
 
+    if ($element.hasClass('select2-hidden-accessible') && typeof $element.select2 === 'function') {
+        $element.select2('destroy');
+    }
 
-    // INITIALIZATION OF DATATABLES
-    // =======================================================
-    var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
-        dom: 'Bfrtip',
-        buttons: [{
-            extend: 'copy',
-            className: 'd-none'
-        },
-            {
-                extend: 'print',
-                className: 'd-none'
-            },
-        ],
-        select: {
-            style: 'multi',
-            selector: 'td:first-child input[type="checkbox"]',
-            classMap: {
-                checkAll: '#datatableCheckAll',
-                counter: '#datatableCounter',
-                counterInfo: '#datatableCounterInfo'
+    if (typeof $.HSCore !== 'undefined' && $.HSCore.components && $.HSCore.components.HSSelect2) {
+        $.HSCore.components.HSSelect2.init($element);
+    }
+}
+
+function formatParentSubOption(state) {
+    if (!state.id) {
+        return state.text;
+    }
+
+    const breadcrumb = $(state.element).data('breadcrumb');
+
+    if (!breadcrumb) {
+        return state.text;
+    }
+
+    return (
+        '<div class="parent-sub-option">' +
+            '<div class="font-weight-bold">' + state.text + '</div>' +
+            '<small class="text-muted d-block">' + breadcrumb + '</small>' +
+        '</div>'
+    );
+}
+
+function refreshParentSubSelect2($element) {
+    if (!$element.length || typeof $element.select2 !== 'function') {
+        refreshSelect2($element);
+        return;
+    }
+
+    if ($element.hasClass('select2-hidden-accessible')) {
+        $element.select2('destroy');
+    }
+
+    $element.select2({
+        placeholder: $element.data('direct-label') || '',
+        allowClear: true,
+        width: '100%',
+        templateResult: formatParentSubOption,
+        templateSelection: function (state) {
+            if (!state.id) {
+                return state.text;
             }
+
+            const breadcrumb = $(state.element).data('breadcrumb');
+            return breadcrumb || state.text;
+        },
+        escapeMarkup: function (markup) {
+            return markup;
         },
     });
+}
 
-    $('#export-copy').click(function() {
-        datatable.button('.buttons-copy').trigger()
+function populateParentSubOptions(mainCategoryId, selectedParentSubId) {
+    const $parentSub = $('#parent_sub_category_id');
+
+    if (!$parentSub.length) {
+        return;
+    }
+
+    const map = window.subCategoriesByMain || {};
+    const key = String(mainCategoryId);
+    const options = map[key] || map[mainCategoryId] || [];
+
+    const directLabel = $parentSub.data('direct-label')
+        || $parentSub.find('option:first').text()
+        || 'Direct under main category';
+
+    $parentSub.empty();
+    $parentSub.append($('<option>', { value: '', text: directLabel }));
+
+    options.forEach(function (option) {
+        const displayName = option.label || option.name.replace(/^—+\s*/g, '').trim();
+
+        $parentSub.append(
+            $('<option>', {
+                value: option.id,
+                text: displayName,
+                title: option.breadcrumb || displayName,
+            }).attr('data-breadcrumb', option.breadcrumb || displayName)
+        );
     });
 
-    $('#export-excel').click(function() {
-        datatable.button('.buttons-excel').trigger()
+    if (mainCategoryId) {
+        $parentSub.prop('disabled', false);
+        $parentSub.val(selectedParentSubId ? String(selectedParentSubId) : '');
+    } else {
+        $parentSub.prop('disabled', true);
+        $parentSub.val('');
+    }
+
+    refreshParentSubSelect2($parentSub);
+}
+
+function initSubCategoryParentPicker() {
+    const $mainCategory = $('#main_category_id');
+    const $parentSub = $('#parent_sub_category_id');
+
+    if (!$mainCategory.length || !$parentSub.length) {
+        return;
+    }
+
+    $parentSub.data(
+        'direct-label',
+        $parentSub.find('option:first').text() || 'Direct under main category'
+    );
+
+    $mainCategory.on('change', function () {
+        populateParentSubOptions($(this).val(), '');
     });
 
-    $('#export-csv').click(function() {
-        datatable.button('.buttons-csv').trigger()
+    const defaults = window.subCategoryFormDefaults || {};
+    const currentMain = $mainCategory.val() || defaults.main_category_id;
+
+    if (currentMain) {
+        populateParentSubOptions(currentMain, defaults.parent_sub_category_id || '');
+    } else {
+        $parentSub.prop('disabled', true);
+        refreshParentSubSelect2($parentSub);
+    }
+}
+
+$(document).on('ready', function () {
+    $('.js-nav-scroller').each(function () {
+        if (typeof HsNavScroller !== 'undefined') {
+            new HsNavScroller($(this)).init();
+        }
     });
 
-    $('#export-pdf').click(function() {
-        datatable.button('.buttons-pdf').trigger()
+    $('#main_category_id').each(function () {
+        refreshSelect2($(this));
     });
 
-    $('#export-print').click(function() {
-        datatable.button('.buttons-print').trigger()
-    });
+    const $datatable = $('#datatable').length ? $('#datatable') : $('#columnSearchDatatable');
 
-    $('#datatableSearch').on('mouseup', function(e) {
-        var $input = $(this),
-            oldValue = $input.val();
+    if ($datatable.length && typeof $.HSCore !== 'undefined' && $.HSCore.components && $.HSCore.components.HSDatatables) {
+        try {
+            var datatable = $.HSCore.components.HSDatatables.init($datatable, {
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'copy', className: 'd-none' },
+                    { extend: 'print', className: 'd-none' },
+                ],
+            });
 
-        if (oldValue == "") return;
+            $('#export-excel').on('click', function () {
+                if (datatable) {
+                    datatable.button('.buttons-excel').trigger();
+                }
+            });
+            $('#export-csv').on('click', function () {
+                if (datatable) {
+                    datatable.button('.buttons-csv').trigger();
+                }
+            });
+        } catch (e) {
+            console.warn('Datatable init skipped:', e);
+        }
+    }
 
-        setTimeout(function() {
-            var newValue = $input.val();
-
-            if (newValue == "") {
-                // Gotcha
-                datatable.search('').draw();
-            }
-        }, 1);
-    });
-
-    $('#toggleColumn_name').change(function(e) {
-        datatable.columns(1).visible(e.target.checked)
-    })
-
-    $('#toggleColumn_email').change(function(e) {
-        datatable.columns(2).visible(e.target.checked)
-    })
-
-    $('#toggleColumn_total_order').change(function(e) {
-        datatable.columns(3).visible(e.target.checked)
-    })
-
-
-    $('#toggleColumn_status').change(function(e) {
-        datatable.columns(4).visible(e.target.checked)
-    })
-
-    $('#toggleColumn_actions').change(function(e) {
-        datatable.columns(5).visible(e.target.checked)
-    })
-
-    // INITIALIZATION OF TAGIFY
-    // =======================================================
-    $('.js-tagify').each(function() {
-        var tagify = $.HSCore.components.HSTagify.init($(this));
-    });
+    initSubCategoryParentPicker();
 });
-var forms = document.querySelectorAll('.priority-form');
 
-forms.forEach(function(form) {
+document.querySelectorAll('.priority-form').forEach(function (form) {
     var select = form.querySelector('.priority-select');
-
-    select.addEventListener('change', function() {
-        form.submit();
-    });
+    if (select) {
+        select.addEventListener('change', function () {
+            form.submit();
+        });
+    }
 });

@@ -42,6 +42,10 @@
                 <a class="nav-link {{ Request::is('admin/business-settings/pages/admin-landing-page-settings/background-color') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.admin-landing-page-settings', 'background-color') }}">{{translate('messages.background_colors')}}</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/business-settings/pages/admin-landing-page-settings/menu-banner*') ? 'active' : '' }}"
+                href="{{ route('admin.business-settings.admin-landing-page-settings', 'menu-banner') }}">{{translate('messages.menu_banner')}}</a>
+            </li>
         </ul>
         <!-- End Nav -->
     </div>

@@ -11,6 +11,7 @@ use App\Models\OrderDetail;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use App\CentralLogics\OrderLogic;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,10 +38,7 @@ class POSController extends Controller
 
         $order_details = [];
         $order = new Order();
-        $order->id = 100000 + Order::all()->count() + 1;
-        if (Order::find($order->id)) {
-            $order->id = Order::latest()->first()->id + 1;
-        }
+        $order->id = OrderLogic::generate_order_id();
         $order->payment_status = 'paid';
         $order->order_status = 'delivered';
         $order->order_type = 'pos';
@@ -116,6 +114,7 @@ class POSController extends Controller
             $order->total_tax_amount= $total_tax_amount;
             $order->order_amount = $total_price + $total_tax_amount + $order->delivery_charge;
             $order->save();
+            OrderDetail::where('order_id', $order->id)->delete();
             foreach ($order_details as $key => $item) {
                 $order_details[$key]['order_id'] = $order->id;
             }

@@ -184,13 +184,17 @@
                                         <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize">
                                             {{ translate('messages.processing') }}
                                         </span>
+                                    @elseif($order['order_status'] == 'handover')
+                                        <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize">
+                                            {{ $order['order_type'] == 'take_away' ? translate('messages.waiting_for_customer') : translate('messages.handover') }}
+                                        </span>
                                     @elseif($order['order_status'] == 'picked_up')
                                         <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize">
                                             {{ translate('messages.out_for_delivery') }}
                                         </span>
                                     @elseif($order['order_status'] == 'delivered')
                                         <span class="badge badge-soft-success ml-2 ml-sm-3 text-capitalize">
-                                            {{ translate('messages.delivered') }}
+                                            {{ $order['order_type'] == 'take_away' ? translate('messages.delivered_to_customer') : translate('messages.delivered') }}
                                         </span>
                                     @elseif($order['order_status'] == 'failed')
                                         <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize">
@@ -685,15 +689,15 @@
                                     @endif
                                 <a class="btn btn--primary w-100 route-alert {{ $order['order_status'] == 'processing' ? '' : 'd-none' }}"
                                    data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}"
-                                   data-message="{{ translate('messages.make_ready_for_handover') }}"
-                                    href="javascript:">{{ translate('messages.make_ready_for_handover') }}</a>
+                                   data-message="{{ $order['order_type'] == 'take_away' ? translate('messages.waiting_for_customer') : translate('messages.make_ready_for_handover') }}"
+                                    href="javascript:">{{ $order['order_type'] == 'take_away' ? translate('messages.waiting_for_customer') : translate('messages.make_ready_for_handover') }}</a>
                                  @if($order['order_status'] == 'handover')
                                     <a class="btn  w-100
                                     {{ ($order['order_type'] == 'take_away' || $order->store->sub_self_delivery == 1)  ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
                                        data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
                                        data-message="{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}"
                                        data-verification="{{ $order_delivery_verification ? 'true' : 'false' }}"
-                                        href="javascript:">{{ translate('messages.make_delivered') }}</a>
+                                        href="javascript:">{{ $order['order_type'] == 'take_away' ? translate('messages.delivered_to_customer') : translate('messages.make_delivered') }}</a>
                                  @endif
 
                             </div>

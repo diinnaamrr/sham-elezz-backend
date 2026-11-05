@@ -3,6 +3,12 @@
 @section('title', 'المنيو - شام العز')
 
 @section('content')
+@php
+    $bannerUrl = $menu_banner ?? null;
+    if (!$bannerUrl) {
+        $bannerUrl = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80';
+    }
+@endphp
 <!-- CSS Styles Moved Inside Content to Ensure Rendering -->
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
@@ -22,18 +28,12 @@
         overflow-x: hidden;
     }
     .menu-hero {
-        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                    url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
         background-size: cover;
         background-position: center;
-        padding: 80px 0;
-        color: #fff;
+        background-repeat: no-repeat;
+        height: 320px;
+        width: 100%;
         margin-top: 0;
-    }
-    .hero-content h1 {
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        font-weight: 700;
-        font-size: 3rem;
     }
     .category-nav-wrapper {
         background: #fff;
@@ -190,18 +190,16 @@
             height: 250px;
         }
     }
+    @media (max-width: 768px) {
+        .menu-hero {
+            height: 180px;
+        }
+    }
 </style>
 
 <div class="menu-page-wrapper">
     <!-- Hero Section -->
-    <div class="menu-hero">
-        <div class="container text-center">
-            <div class="hero-content">
-                <h1 class="mb-3">{{ __('messages.meenu') }}</h1>
-                <p class="lead">{{ __('messages.Discover the authentic taste and exceptional service at Sham Al Ezz') }}</p>
-            </div>
-        </div>
-    </div>
+    <div class="menu-hero" style="background-image: url('{{ $bannerUrl }}');"></div>
 
     <!-- Category Navigation -->
     <div class="category-nav-wrapper">
@@ -239,7 +237,6 @@
                                         <span>{{ $item->price }}</span> 
                                         <small>ج.م</small>
                                     </div>
-                                    <button class="add-to-cart-btn">أطلب المنتج</button>
                                 </div>
                             </div>
                         </div>

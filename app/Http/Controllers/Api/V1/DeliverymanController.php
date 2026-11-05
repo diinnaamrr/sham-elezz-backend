@@ -328,21 +328,7 @@ class DeliverymanController extends Controller
 
         if($dm->type == 'zone_wise')
         {
-            $orders = $orders->where('zone_id', $dm->zone_id)
-            ->where(function($query){
-                $query->whereNull('store_id')
-
-                    ->orWhere(function($query){
-                        $query->whereHas('store', function($q){
-                            $q->where('store_business_model','subscription')->whereHas('store_sub', function($q1){
-                                $q1->where('self_delivery', 0);
-                            });
-                        })
-                        ->orWhereHas('store', function($qu) {
-                            $qu->where('store_business_model','commission')->where('self_delivery_system', 0);
-                        });
-                    });
-            });
+            $orders = $orders->where('zone_id', $dm->zone_id)->VisibleToZoneDeliveryman();
         }
         else
         {
@@ -362,9 +348,7 @@ class DeliverymanController extends Controller
                     });
             });
         }
-        if(isset($dm->vehicle_id )){
-            $orders = $orders->where('dm_vehicle_id',$dm->vehicle_id);
-        }
+        $orders = $orders->ForDeliverymanVehicle($dm->vehicle_id);
         $orders = $orders->dmOrder()
         ->Notpos()
         ->NotDigitalOrder()
@@ -442,10 +426,11 @@ class DeliverymanController extends Controller
 
         $dm->increment('assigned_order_count');
 
+        $order->load(['module', 'store', 'customer', 'guest', 'delivery_man']);
         $fcm_token= $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
 
-
-        $value = Helpers::order_status_update_message('accepted',$order->module->module_type);
+        $moduleType = $order->module?->module_type ?? 'food';
+        $value = Helpers::order_status_update_message('accepted', $moduleType);
         $value = Helpers::text_variable_data_format(value:$value,store_name:$order->store?->name,order_id:$order->id,user_name:"{$order?->customer?->f_name} {$order?->customer?->l_name}",delivery_man_name:"{$order->delivery_man?->f_name} {$order->delivery_man?->l_name}");
         try {
             if($value && $fcm_token && Helpers::getNotificationStatusData('customer','customer_order_notification','push_notification_status'))
@@ -689,6 +674,7 @@ class DeliverymanController extends Controller
                 $order->order_proof = json_encode($images);
             }
 
+            OrderLogic::ensureLoyaltyPointForOrder($order);
             OrderLogic::update_unpaid_order_payment(order_id:$order->id, payment_method:$order->payment_method);
 
         }
@@ -756,11 +742,8 @@ class DeliverymanController extends Controller
             return response()->json([], 200);
         }
 
-        return response()->json([
-            'errors' => [
-                ['code' => 'order', 'message' => translate('messages.not_found')]
-            ]
-        ], 404);
+        $order->load(['store', 'customer', 'guest', 'module']);
+        return response()->json(Helpers::order_data_formatting($order), 200);
     }
 
     public function get_order(Request $request)
@@ -773,14 +756,21 @@ class DeliverymanController extends Controller
         }
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
 
-        $order = Order::with(['customer', 'store','details','parcel_category','payments'])->where(['delivery_man_id' => $dm['id'], 'id' => $request['order_id']])->Notpos()->first();
+        $order = Order::with(['customer', 'store', 'details', 'parcel_category', 'payments'])
+            ->where('id', $request['order_id'])
+            ->where(function ($query) use ($dm) {
+                $query->whereNull('delivery_man_id')
+                    ->orWhere('delivery_man_id', $dm['id']);
+            })
+            ->Notpos()
+            ->first();
         if(!$order)
         {
             return response()->json([
                 'errors' => [
                     ['code' => 'order', 'message' => translate('messages.not_found')]
                 ]
-            ], 204);
+            ], 404);
         }
         return response()->json(Helpers::order_data_formatting($order), 200);
     }

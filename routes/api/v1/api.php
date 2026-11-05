@@ -29,7 +29,11 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
     Route::get('/shipping-policy', 'HomeController@shipping_policy');
     Route::get('/cancelation', 'HomeController@cancelation');
 
-
+   Route::group(['prefix' => 'force-update-config'], function () {
+        Route::get('user', 'ConfigController@force_update_user');
+        Route::get('store', 'ConfigController@force_update_store');
+        Route::get('driver', 'ConfigController@force_update_driver');
+    });
     Route::get('zone/list', 'ZoneController@get_zones');
     Route::get('zone/check', 'ZoneController@zonesCheck');
 

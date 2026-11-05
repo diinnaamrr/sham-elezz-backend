@@ -255,6 +255,38 @@ class Order extends Model
         return $query->whereNull('delivery_man_id')->whereIn('order_type', ['delivery', 'parcel'])->whereNotIn('order_status', ['delivered', 'failed', 'canceled', 'refund_requested', 'refund_request_canceled', 'refunded']);
     }
 
+    public function scopeVisibleToZoneDeliveryman($query)
+    {
+        return $query->where(function ($query) {
+            $query->whereNull('store_id')
+                ->orWhereHas('store', function ($storeQuery) {
+                    $storeQuery->where(function ($q) {
+                        $q->where(function ($q1) {
+                            $q1->where('store_business_model', 'commission')
+                                ->where('self_delivery_system', 0);
+                        })->orWhere(function ($q1) {
+                            $q1->whereIn('store_business_model', ['subscription', 'unsubscribed'])
+                                ->where(function ($inner) {
+                                    $inner->whereHas('store_sub', fn ($sub) => $sub->where('self_delivery', 0))
+                                        ->orWhere('self_delivery_system', 0);
+                                });
+                        });
+                    });
+                });
+        });
+    }
+
+    public function scopeForDeliverymanVehicle($query, $vehicleId)
+    {
+        if (empty($vehicleId)) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($vehicleId) {
+            $q->where('dm_vehicle_id', $vehicleId)->orWhereNull('dm_vehicle_id');
+        });
+    }
+
     public function scopeDelivery($query)
     {
         return $query->where('order_type', '=', 'delivery');

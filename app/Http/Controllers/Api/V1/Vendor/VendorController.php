@@ -466,6 +466,8 @@ class VendorController extends Controller
             if(count($images)>0){
                 $order->order_proof = json_encode($images);
             }
+
+            OrderLogic::ensureLoyaltyPointForOrder($order);
         }
         if($request->status == 'canceled' || $request->status == 'delivered')
         {

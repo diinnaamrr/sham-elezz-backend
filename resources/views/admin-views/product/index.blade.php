@@ -225,20 +225,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-3">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="sub-categories">{{ translate('messages.sub_category') }}<span
-                                                class="input-label-secondary"
-                                                title="{{ translate('messages.category_required_warning') }}"><img
-                                                    src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.category_required_warning') }}"></span></label>
-                                        <select name="sub_category_id" class="js-data-example-ajax form-control" data-placeholder="{{ translate('messages.select_sub_category') }}"
-                                            id="sub-categories">
-
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-sm-6 col-lg-3" id="condition_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="condition_id">{{ translate('messages.Suitable_For') }}<span
@@ -471,7 +457,7 @@
                                             data-original-title="{{ translate('messages.Required.')}}"> *
                                             </span></label>
                                         <input type="number" min="0" max="999999999999.99" step="0.01"
-                                            value="1" name="price" class="form-control"
+                                            value="0" name="price" class="form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>
@@ -519,6 +505,11 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="col-12 d-none" id="zero_price_variation_hint">
+                    <div class="alert alert-warning mb-0">
+                        عند سعر المنتج 0: أضف Food Variations مطلوبة (Required) وضع سعر أكبر من 0 على الأقل في خيار واحد — لا يُضاف للسلة بدون اختيار variation.
                     </div>
                 </div>
                 <div class="col-lg-12" id="food_variation_section">
@@ -1014,33 +1005,7 @@
             }
         });
 
-        $('#sub-categories').select2({
-            ajax: {
-                url: '{{ url('/') }}/admin/item/get-categories',
-                data: function(params) {
-                    return {
-                        q: params.term, // search term
-                        page: params.page,
-                        module_id:{{Config::get('module.current_module_id')}},
-                        parent_id: parent_category_id,
-                        sub_category: true
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data
-                    };
-                },
-                __port: function(params, success, failure) {
-                    let $request = $.ajax(params);
 
-                    $request.then(success);
-                    $request.fail(failure);
-
-                    return $request;
-                }
-            }
-        });
 
         $('#choice_attributes').on('change', function() {
             if (module_id == 0) {
@@ -1211,7 +1176,7 @@
             $('#module_id').val(null).trigger('change');
             $('#store_id').val(null).trigger('change');
             $('#category_id').val(null).trigger('change');
-            $('#sub-categories').val(null).trigger('change');
+            $('.dynamic-category-wrapper').remove();
             $('#unit').val(null).trigger('change');
             $('#veg').val(0).trigger('change');
             $('#add_on').val(null).trigger('change');

@@ -2800,28 +2800,27 @@ class BusinessSettingsController extends Controller
     public function updateSocialLogin($service, Request $request)
     {
         $login_setup_status = Helpers::get_business_settings($service.'_login_status')??0;
-        if($login_setup_status && ($request['status']==0)){
+        if ($login_setup_status && !$request->boolean('status')) {
             Toastr::warning(translate($service.'_login_status_is_enabled_in_login_setup._First_disable_from_login_setup.'));
             return redirect()->back();
         }
         $socialLogin = BusinessSetting::where('key', 'social_login')->first();
+        $decoded = json_decode($socialLogin->value, true) ?? [];
         $credential_array = [];
-        foreach (json_decode($socialLogin['value'], true) as $key => $data) {
+        foreach ($decoded as $data) {
             if ($data['login_medium'] == $service) {
-                $cred = [
+                $credential_array[] = [
                     'login_medium' => $service,
                     'client_id' => $request['client_id'],
                     'client_secret' => $request['client_secret'],
-                    'status' => $request['status'],
+                    'status' => $request->boolean('status') ? '1' : '0',
                 ];
-                array_push($credential_array, $cred);
             } else {
-                array_push($credential_array, $data);
+                $credential_array[] = $data;
             }
         }
-        BusinessSetting::where('key', 'social_login')->update([
-            'value' => $credential_array
-        ]);
+        $socialLogin->value = json_encode($credential_array);
+        $socialLogin->save();
 
         Toastr::success(translate('messages.credential_updated', ['service' => $service]));
         return redirect()->back();
@@ -3200,6 +3199,9 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.landing-page-settings.admin-landing-contact');
         } else if ($tab == 'background-color') {
             return view('admin-views.business-settings.landing-page-settings.admin-landing-background-color');
+        } else if ($tab == 'menu-banner') {
+            $menu_banner = \App\Models\BusinessSetting::where('key', 'menu_banner')->first();
+            return view('admin-views.business-settings.landing-page-settings.admin-menu-banner', compact('menu_banner'));
         }
     }
 
@@ -3230,6 +3232,17 @@ class BusinessSettingsController extends Controller
             $fixed_header_sub_title->type = 'admin_landing_page';
             $fixed_header_sub_title->value = $request->fixed_header_sub_title[array_search('default', $request->lang)];
             $fixed_header_sub_title->save();
+
+            if ($request->hasFile('fixed_header_image')) {
+                $fixed_header_image = DataSetting::where('type', 'admin_landing_page')->where('key', 'fixed_header_image')->first();
+                if ($fixed_header_image == null) {
+                    $fixed_header_image = new DataSetting();
+                }
+                $fixed_header_image->key = 'fixed_header_image';
+                $fixed_header_image->type = 'admin_landing_page';
+                $fixed_header_image->value = Helpers::update('landing/', $fixed_header_image->value, 'png', $request->file('fixed_header_image'));
+                $fixed_header_image->save();
+            }
 
             $fixed_module_title = DataSetting::where('type', 'admin_landing_page')->where('key', 'fixed_module_title')->first();
             if ($fixed_module_title == null) {
@@ -4377,6 +4390,29 @@ class BusinessSettingsController extends Controller
                 ])
             ]);
             Toastr::success(translate('messages.background_updated'));
+        } elseif ($tab == 'menu-banner') {
+            $request->validate([
+                'menu_banner' => 'nullable|image|max:10240',
+            ]);
+
+            if ($request->has('reset_banner')) {
+                $old_banner = \App\Models\BusinessSetting::where('key', 'menu_banner')->first();
+                if ($old_banner) {
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists('banner/' . $old_banner->value)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete('banner/' . $old_banner->value);
+                    }
+                    $old_banner->delete();
+                }
+                Toastr::success(translate('messages.banner_reset_successfully'));
+                return back();
+            }
+
+            if ($request->hasFile('menu_banner')) {
+                $old_banner = \App\Models\BusinessSetting::where('key', 'menu_banner')->first();
+                $image_name = Helpers::update('banner/', $old_banner?->value, 'png', $request->file('menu_banner'));
+                Helpers::businessUpdateOrInsert(['key' => 'menu_banner'], ['value' => $image_name]);
+                Toastr::success(translate('messages.banner_updated_successfully'));
+            }
         }
         return back();
     }

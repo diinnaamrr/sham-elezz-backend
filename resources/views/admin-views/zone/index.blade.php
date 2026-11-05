@@ -388,7 +388,8 @@
 @endsection
 
 @push('script_2')
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initialize&libraries=drawing,places&v=3.49"></script>
+    <script src="{{asset('public/assets/admin/js/zone-polygon-drawer.js')}}"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initialize&libraries=places&v=3.49"></script>
 <script>
     "use strict";
         $(".popover-wrapper").click(function(){
@@ -510,12 +511,12 @@
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             }
             map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
-            drawingManager = new google.maps.drawing.DrawingManager({
-                drawingMode: google.maps.drawing.OverlayType.POLYGON,
+            drawingManager = new ZonePolygonDrawer({
+                drawingMode: 'polygon',
                 drawingControl: true,
                 drawingControlOptions: {
                 position: google.maps.ControlPosition.TOP_CENTER,
-                drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+                drawingModes: ['polygon']
                 },
                 polygonOptions: {
                 editable: true

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\OrderReference;
 
 class OrderObserver
@@ -30,7 +31,7 @@ class OrderObserver
      */
     public function deleted(Order $order): void
     {
-        //
+        OrderDetail::where('order_id', $order->id)->delete();
     }
 
     /**

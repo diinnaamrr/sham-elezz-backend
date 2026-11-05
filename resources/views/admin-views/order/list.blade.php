@@ -386,15 +386,15 @@
                                     </span>
                                 @elseif($order['order_status']=='delivered')
                                     <span class="badge badge-soft-success">
-                                      {{translate('messages.delivered')}}
+                                      {{$order['order_type'] == 'take_away' ? translate('messages.delivered_to_customer') : translate('messages.delivered')}}
                                     </span>
                                 @elseif($order['order_status']=='failed')
                                     <span class="badge badge-soft-danger">
                                       {{translate('messages.payment_failed')}}
                                     </span>
                                 @elseif($order['order_status']=='handover')
-                                    <span class="badge badge-soft-danger">
-                                      {{translate('messages.handover')}}
+                                    <span class="badge badge-soft-warning">
+                                      {{$order['order_type'] == 'take_away' ? translate('messages.waiting_for_customer') : translate('messages.handover')}}
                                     </span>
                                 @elseif($order['order_status']=='canceled')
                                     <span class="badge badge-soft-danger">

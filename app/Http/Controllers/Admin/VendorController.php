@@ -416,7 +416,9 @@ class VendorController extends Controller
         }
         if($tab == 'settings')
         {
-            return view('admin-views.vendor.view.settings', compact('store'));
+            $toggle_veg_non_veg = (int)(BusinessSetting::where('key', 'toggle_veg_non_veg')->first()?->value ?? 0);
+
+            return view('admin-views.vendor.view.settings', compact('store', 'toggle_veg_non_veg'));
         }
         else if($tab == 'order')
         {

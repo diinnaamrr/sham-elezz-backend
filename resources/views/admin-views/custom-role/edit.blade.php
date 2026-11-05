@@ -269,6 +269,13 @@
                                     <label class="form-check-label qcont text-dark" for="subscription">{{translate('messages.subscription')}}</label>
                                 </div>
                             </div>
+                            <div class="check-item">
+                                <div class="form-group form-check form--check">
+                                    <input type="checkbox" name="modules[]" value="food_menu_management" class="form-check-input"
+                                           id="food_menu_management"  {{in_array('food_menu_management',(array)json_decode($role['modules']))?'checked':''}}>
+                                    <label class="form-check-label qcont text-dark" for="food_menu_management">{{translate('messages.food_menu_management')}}</label>
+                                </div>
+                            </div>
                         </div>
                         <div class="btn--container justify-content-end mt-4">
                             <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>

@@ -338,10 +338,15 @@
 
 <div class="hero">
     <div class="video-container"> 
-        <video autoplay muted loop>
-            <source src="{{ asset('public/assets/landing/v.mp4') }}" type="video/mp4">
-            {{ __('messages.Your browser does not support video.') }}
-        </video>
+        @php($fixed_header_img = \App\Models\DataSetting::where('type','admin_landing_page')->where('key','fixed_header_image')->first())
+        @if(isset($fixed_header_img) && $fixed_header_img->value)
+            <img src="{{ asset('storage/app/public/landing/'.$fixed_header_img->value) }}" alt="Hero Banner" class="onerror-image" data-onerror-image="{{ asset('public/assets/landing/img/z1.jpg') }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+        @else
+            <video autoplay muted loop>
+                <source src="{{ asset('public/assets/landing/v.mp4') }}" type="video/mp4">
+                {{ __('messages.Your browser does not support video.') }}
+            </video>
+        @endif
     </div>
 
     <div class="hero-content">
@@ -370,41 +375,55 @@
     <h2>{{ __('messages.Enjoy the most delicious meals') }}</h2>
 
     <div class="offers-container">
+        @if(isset($landing_data['promotional_banners']) && count($landing_data['promotional_banners']) > 0)
+            @foreach($landing_data['promotional_banners'] as $banner)
+                <div class="offer-card">
+                    <img src="{{ $banner['image_full_url'] ?? asset('storage/app/public/promotional_banner/'.($banner['image'] ?? '')) }}" alt="{{ $banner['title'] ?? '' }}" class="onerror-image" data-onerror-image="{{ asset('public/assets/landing/img/mashawy.jpg') }}">
 
-        <!-- كارت 1 -->
-        <div class="offer-card">
-            <img src="{{ asset('public/assets/landing/img/mashawy.jpg') }}" alt="مشويات مشكلة">
+                    <div class="offer-content"> 
+                        <div class="offer-title">{{ $banner['title'] ?? '' }}</div>
 
-            <div class="offer-content"> 
-                <div class="offer-title">{{ __('messages.Mix grill') }}</div>
-
-                <div class="offer-desc">
-                    {{ __('messages.A selection of the finest Levantine grills Served with rice and bread') }}
+                        <div class="offer-desc">
+                            {{ $banner['sub_title'] ?? '' }}
+                        </div>
+                    </div> 
                 </div>
+            @endforeach
+        @else
+            <!-- كارت 1 -->
+            <div class="offer-card">
+                <img src="{{ asset('public/assets/landing/img/mashawy.jpg') }}" alt="مشويات مشكلة">
 
-                <div class="offer-discount">
-                    {{ __('messages.20% discount for a limited time') }}
-                </div>
-            </div> 
-        </div>
+                <div class="offer-content"> 
+                    <div class="offer-title">{{ __('messages.Mix grill') }}</div>
 
-        <!-- كارت 2 -->
-        <div class="offer-card">
-            <img src="{{ asset('public/assets/landing/img/mesahb.png') }}" alt="مسحب دجاج">
+                    <div class="offer-desc">
+                        {{ __('messages.A selection of the finest Levantine grills Served with rice and bread') }}
+                    </div>
 
-            <div class="offer-content">
-                <div class="offer-title">{{ __('messages.Boneless chicken') }}</div>
+                    <div class="offer-discount">
+                        {{ __('messages.20% discount for a limited time') }}
+                    </div>
+                </div> 
+            </div>
 
-                <div class="offer-desc">
-                    {{ __('messages.Marinated chicken pieces prepared in the Levantine style Served with a special sauce') }}
-                </div>
+            <!-- كارت 2 -->
+            <div class="offer-card">
+                <img src="{{ asset('public/assets/landing/img/mesahb.png') }}" alt="مسحب دجاج">
 
-                <div class="offer-discount">
-                    {{ __('messages.20% discount for a limited time') }}
+                <div class="offer-content">
+                    <div class="offer-title">{{ __('messages.Boneless chicken') }}</div>
+
+                    <div class="offer-desc">
+                        {{ __('messages.Marinated chicken pieces prepared in the Levantine style Served with a special sauce') }}
+                    </div>
+
+                    <div class="offer-discount">
+                        {{ __('messages.20% discount for a limited time') }}
+                    </div>
                 </div>
             </div>
-        </div>
-
+        @endif
     </div>
     
     </section>

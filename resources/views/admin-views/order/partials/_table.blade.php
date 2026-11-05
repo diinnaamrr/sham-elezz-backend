@@ -72,13 +72,17 @@
             <span class="badge badge-soft-warning">
               {{translate('messages.processing')}}
             </span>
+        @elseif($order['order_status']=='handover')
+            <span class="badge badge-soft-warning">
+              {{$order['order_type'] == 'take_away' ? translate('messages.waiting_for_customer') : translate('messages.handover')}}
+            </span>
         @elseif($order['order_status']=='picked_up')
             <span class="badge badge-soft-warning">
               {{translate('messages.out_for_delivery')}}
             </span>
         @elseif($order['order_status']=='delivered')
             <span class="badge badge-soft-success">
-              {{translate('messages.delivered')}}
+              {{$order['order_type'] == 'take_away' ? translate('messages.delivered_to_customer') : translate('messages.delivered')}}
             </span>
         @elseif($order['order_status']=='failed')
             <span class="badge badge-soft-danger">
