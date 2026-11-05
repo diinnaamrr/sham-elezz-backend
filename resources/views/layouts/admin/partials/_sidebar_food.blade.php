@@ -301,6 +301,12 @@
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.other_banners') }}</span>
                     </a>
                 </li>
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/pages/admin-landing-page-settings/menu-banner*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.admin-landing-page-settings', 'menu-banner') }}" title="{{ translate('messages.menu_banner') }}">
+                        <i class="tio-image nav-icon"></i>
+                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.menu_banner') }}</span>
+                    </a>
+                </li>
                 @endif
                 <!-- End Banner -->
                 <!-- Coupon -->

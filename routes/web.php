@@ -259,6 +259,11 @@ Route::prefix('admin')->group(function () {
     Route::get('menu/items/{id}/edit', [AdminMenuItemControllerv::class, 'edit'])->name('admin.menu.items.edit');
     Route::put('menu/items/{id}', [AdminMenuItemControllerv::class, 'update'])->name('admin.menu.items.update');
     Route::delete('menu/items/{id}', [AdminMenuItemControllerv::class, 'destroy'])->name('admin.menu.items.destroy');
+
+    // Menu Banner
+    Route::get('menu/banner', function () {
+        return redirect()->route('admin.business-settings.admin-landing-page-settings', 'menu-banner');
+    })->name('admin.menu.banner');
 });
 
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');

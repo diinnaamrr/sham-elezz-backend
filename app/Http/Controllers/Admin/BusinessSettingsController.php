@@ -3200,6 +3200,9 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.landing-page-settings.admin-landing-contact');
         } else if ($tab == 'background-color') {
             return view('admin-views.business-settings.landing-page-settings.admin-landing-background-color');
+        } else if ($tab == 'menu-banner') {
+            $menu_banner = \App\Models\BusinessSetting::where('key', 'menu_banner')->first();
+            return view('admin-views.business-settings.landing-page-settings.admin-menu-banner', compact('menu_banner'));
         }
     }
 
@@ -4377,6 +4380,29 @@ class BusinessSettingsController extends Controller
                 ])
             ]);
             Toastr::success(translate('messages.background_updated'));
+        } elseif ($tab == 'menu-banner') {
+            $request->validate([
+                'menu_banner' => 'nullable|image|max:10240',
+            ]);
+
+            if ($request->has('reset_banner')) {
+                $old_banner = \App\Models\BusinessSetting::where('key', 'menu_banner')->first();
+                if ($old_banner) {
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists('banner/' . $old_banner->value)) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete('banner/' . $old_banner->value);
+                    }
+                    $old_banner->delete();
+                }
+                Toastr::success(translate('messages.banner_reset_successfully'));
+                return back();
+            }
+
+            if ($request->hasFile('menu_banner')) {
+                $old_banner = \App\Models\BusinessSetting::where('key', 'menu_banner')->first();
+                $image_name = Helpers::update('banner/', $old_banner?->value, 'png', $request->file('menu_banner'));
+                Helpers::businessUpdateOrInsert(['key' => 'menu_banner'], ['value' => $image_name]);
+                Toastr::success(translate('messages.banner_updated_successfully'));
+            }
         }
         return back();
     }
